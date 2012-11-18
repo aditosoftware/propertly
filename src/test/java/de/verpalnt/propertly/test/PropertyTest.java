@@ -36,13 +36,13 @@ public class PropertyTest extends PropertyPit<PropertyTest> implements ITest
     });
     setX(123);
     setValue(FF, new Dimension(123, 456));
-    System.out.println(getValue(X));
-    for (IPropertyDescription<? super PropertyTest, ?> prop : getProperties())
-      System.out.println(prop);
-    System.out.println(getProperty(FF));
 
-    //IPropertyDescription<ITest, Integer> name = NAME;
-    //System.out.println(name);
+    setValue(CHILD, new PropertyTestChildren());
+    for (IProperty property : getValue(CHILD).getProperties())
+      System.out.println(property);
+
+    for (IProperty property : getProperties())
+      System.out.println(property);
   }
 
   public IProperty<PropertyTest, Integer> getPropertyX()

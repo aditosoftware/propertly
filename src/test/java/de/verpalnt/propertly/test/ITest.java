@@ -11,6 +11,6 @@ import de.verpalnt.propertly.PD;
 public interface ITest
 {
 
-  public static final IPropertyDescription<ITest, IComponent> CHILD = PD.create(ITest.class);
+  public static final IPropertyDescription<ITest, PropertyTestChildren> CHILD = PD.create(ITest.class);
 
 }

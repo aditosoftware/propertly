@@ -11,7 +11,7 @@ import de.verpalnt.propertly.PD;
 public interface IComponent
 {
 
-  public static final IPropertyDescription<PropertyTest, Integer> WIDTH = PD.create(PropertyTest.class);
-  public static final IPropertyDescription<PropertyTest, Integer> HEIGHT = PD.create(PropertyTest.class);
+  public static final IPropertyDescription<IComponent, Integer> WIDTH = PD.create(IComponent.class);
+  public static final IPropertyDescription<IComponent, Integer> HEIGHT = PD.create(IComponent.class);
 
 }

@@ -15,7 +15,7 @@ public class GetterSetterGen
 
   public static void run(IPropertyPit<?> pPit)
   {
-    for (IPropertyDescription<?, ?> prop : pPit.getProperties())
+    for (IPropertyDescription<?, ?> prop : pPit.getPropertyDescriptions())
     {
       System.out.println("public IProperty<" + prop.getParentType().getSimpleName() + ", " +
           prop.getType().getSimpleName() + "> getProperty" + Util.capitalize(prop.getName()) +

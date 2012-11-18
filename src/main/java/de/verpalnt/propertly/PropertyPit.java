@@ -14,26 +14,24 @@ import java.util.*;
 public class PropertyPit<S> implements IPropertyPit<S>
 {
 
-  private final Map<IPropertyDescription<? super S, ?>, IProperty<? super S, ?>> properties;
-
+  private final Map<IPropertyDescription, IProperty> properties = new LinkedHashMap<IPropertyDescription, IProperty>();
   private List<IPropertyEventListener> listenerList;
 
   protected PropertyPit()
   {
-    properties = new LinkedHashMap<IPropertyDescription<? super S, ?>, IProperty<? super S, ?>>();
-    List descriptions = _getProperties(this);
-    //noinspection unchecked
-    for (IPropertyDescription<S, ?> descr : (List<IPropertyDescription<S, ?>>) descriptions)
-      //noinspection unchecked
-      properties.put(descr, new _Property(descr));
+    _init(_getProperties(this));
   }
 
-  private PropertyPit(List<IPropertyDescription<? super S, ?>> pProperties)
+  private PropertyPit(List<IPropertyDescription> pProperties)
   {
-    properties = new LinkedHashMap<IPropertyDescription<? super S, ?>, IProperty<? super S, ?>>();
-    for (IPropertyDescription<? super S, ?> descr : pProperties)
+    _init(pProperties);
+  }
+
+  private void _init(List<IPropertyDescription> pProperties)
+  {
+    for (IPropertyDescription description : pProperties)
       //noinspection unchecked
-      properties.put(descr, new _Property(descr));
+      properties.put(description, new PPProperty(description));
   }
 
   public static <S> IPropertyPit<S> create(S pCreateFor)
@@ -41,9 +39,9 @@ public class PropertyPit<S> implements IPropertyPit<S>
     return new PropertyPit<S>(_getProperties(pCreateFor));
   }
 
-  private static <S> List<IPropertyDescription<? super S, ?>> _getProperties(S pCreateFor)
+  private static <S> List<IPropertyDescription> _getProperties(S pCreateFor)
   {
-    List<IPropertyDescription<? super S, ?>> propertyDescriptions = new ArrayList<IPropertyDescription<? super S, ?>>();
+    List<IPropertyDescription> propertyDescriptions = new ArrayList<IPropertyDescription>();
     for (Field field : Util.getAllFields(pCreateFor.getClass()))
     {
       try
@@ -51,9 +49,11 @@ public class PropertyPit<S> implements IPropertyPit<S>
         field.setAccessible(true);
         if (IPropertyDescription.class.isAssignableFrom(field.getType()))
         {
-          @SuppressWarnings("unchecked")
-          IPropertyDescription<? super S, ?> propertyDescription = (IPropertyDescription<? super S, ?>) field.get(pCreateFor);
-          propertyDescriptions.add(propertyDescription);
+          IPropertyDescription<?, ?> propertyDescription = (IPropertyDescription) field.get(pCreateFor);
+          boolean isParentalType = propertyDescription.getParentType().isAssignableFrom(pCreateFor.getClass());
+          if (isParentalType)
+            propertyDescriptions.add(propertyDescription);
+          assert isParentalType;
         }
       }
       catch (IllegalAccessException e)
@@ -65,14 +65,14 @@ public class PropertyPit<S> implements IPropertyPit<S>
   }
 
   @Override
-  public <SOURCE, T> IProperty<SOURCE, T> findProperty(IPropertyDescription<SOURCE, T> pPropertyDescription)
+  public final <SOURCE, T> IProperty<SOURCE, T> findProperty(IPropertyDescription<SOURCE, T> pPropertyDescription)
   {
-    //noinspection SuspiciousMethodCalls,unchecked
+    //noinspection unchecked
     return (IProperty<SOURCE, T>) properties.get(pPropertyDescription);
   }
 
   @Override
-  public <SOURCE, T> IProperty<SOURCE, T> getProperty(IPropertyDescription<SOURCE, T> pPropertyDescription)
+  public final <SOURCE, T> IProperty<SOURCE, T> getProperty(IPropertyDescription<SOURCE, T> pPropertyDescription)
   {
     IProperty<SOURCE, T> property = findProperty(pPropertyDescription);
     if (property == null)
@@ -81,25 +81,32 @@ public class PropertyPit<S> implements IPropertyPit<S>
   }
 
   @Override
-  public <T> T getValue(IPropertyDescription<? super S, T> pPropertyDescription)
+  public final <T> T getValue(IPropertyDescription<? super S, T> pPropertyDescription)
   {
     return getProperty(pPropertyDescription).getValue();
   }
 
   @Override
-  public <T> void setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue)
+  public final <T> void setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue)
   {
     getProperty(pPropertyDescription).setValue(pValue);
   }
 
   @Override
-  public Set<IPropertyDescription<? super S, ?>> getProperties()
+  public final Set<IPropertyDescription> getPropertyDescriptions()
   {
     return Collections.unmodifiableSet(properties.keySet());
   }
 
+
   @Override
-  public synchronized void addPropertyEventListener(IPropertyEventListener pListener)
+  public List<IProperty> getProperties()
+  {
+    return Collections.unmodifiableList(new ArrayList<IProperty>(properties.values()));
+  }
+
+  @Override
+  public final synchronized void addPropertyEventListener(IPropertyEventListener pListener)
   {
     if (listenerList == null)
       listenerList = new ArrayList<IPropertyEventListener>();
@@ -107,7 +114,7 @@ public class PropertyPit<S> implements IPropertyPit<S>
   }
 
   @Override
-  public synchronized void removePropertyEventListener(IPropertyEventListener pListener)
+  public final synchronized void removePropertyEventListener(IPropertyEventListener pListener)
   {
     if (listenerList != null)
     {
@@ -116,23 +123,28 @@ public class PropertyPit<S> implements IPropertyPit<S>
     }
   }
 
-  public synchronized List<IPropertyEventListener> _getListeners()
+  private synchronized List<IPropertyEventListener> _getListeners()
   {
     if (listenerList == null)
       return Collections.emptyList();
     return new ArrayList<IPropertyEventListener>(listenerList);
   }
 
+  Map<IPropertyDescription, IProperty> getPropertyMap()
+  {
+    return properties;
+  }
+
 
   /**
    * PropertyImpl
    */
-  private class _Property<S, T> implements IProperty<S, T>
+  class PPProperty<S, T> implements IProperty<S, T>
   {
     private IPropertyDescription<S, T> propertyDescription;
     private T value;
 
-    private _Property(IPropertyDescription<S, T> propertyDescription)
+    PPProperty(IPropertyDescription<S, T> propertyDescription)
     {
       this.propertyDescription = propertyDescription;
     }
@@ -154,12 +166,16 @@ public class PropertyPit<S> implements IPropertyPit<S>
     {
       final T oldValue = value;
       value = pValue;
+
+      if (value == oldValue || (value != null && value.equals(oldValue)))
+        return;
+
       IPropertyEvent<S, T> evt = new IPropertyEvent<S, T>()
       {
         @Override
         public IProperty<S, T> getProperty()
         {
-          return _Property.this;
+          return PPProperty.this;
         }
 
         @Override
@@ -168,7 +184,6 @@ public class PropertyPit<S> implements IPropertyPit<S>
           return oldValue;
         }
       };
-      //new PropertyChangeEvent(this, getDescription().getName(), oldValue, pValue);
       for (IPropertyEventListener propertyEventListener : _getListeners())
         propertyEventListener.propertyChange(evt);
     }
@@ -176,7 +191,7 @@ public class PropertyPit<S> implements IPropertyPit<S>
     @Override
     public String toString()
     {
-      return "_Property@" + Integer.toHexString(hashCode()) + "{" + propertyDescription + ", value=" + value + '}';
+      return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode()) + "{" + propertyDescription + ", value=" + value + '}';
     }
   }
 

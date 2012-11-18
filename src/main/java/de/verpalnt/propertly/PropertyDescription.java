@@ -18,9 +18,6 @@ public class PropertyDescription<S, T> implements IPropertyDescription<S, T>
   private String name;
   private List<? extends Annotation> annotations;
 
-  protected PropertyDescription()
-  {
-  }
 
   private PropertyDescription(Class<S> pParentType, Class<T> pType, String pName,
                               Iterable<? extends Annotation> pAnnotations)
