@@ -3,6 +3,8 @@ package de.verpalnt.propertly;
 import de.verpalnt.propertly.listener.IPropertyEvent;
 import de.verpalnt.propertly.listener.IPropertyEventListener;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -87,9 +89,10 @@ public class PropertyPit<S> implements IPropertyPit<S>
   }
 
   @Override
-  public final <T> void setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue)
+  public final <T> T setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue)
   {
     getProperty(pPropertyDescription).setValue(pValue);
+    return pValue;
   }
 
   @Override
@@ -162,30 +165,39 @@ public class PropertyPit<S> implements IPropertyPit<S>
     }
 
     @Override
-    public void setValue(T pValue)
+    public T setValue(final T pValue)
     {
       final T oldValue = value;
       value = pValue;
 
-      if (value == oldValue || (value != null && value.equals(oldValue)))
-        return;
-
-      IPropertyEvent<S, T> evt = new IPropertyEvent<S, T>()
+      if (value != oldValue && (value == null || !value.equals(oldValue)))
       {
-        @Override
-        public IProperty<S, T> getProperty()
+        IPropertyEvent<S, T> evt = new IPropertyEvent<S, T>()
         {
-          return PPProperty.this;
-        }
+          @Nonnull
+          @Override
+          public IProperty<S, T> getProperty()
+          {
+            return PPProperty.this;
+          }
 
-        @Override
-        public T oldValue()
-        {
-          return oldValue;
-        }
-      };
-      for (IPropertyEventListener propertyEventListener : _getListeners())
-        propertyEventListener.propertyChange(evt);
+          @Override
+          public T oldValue()
+          {
+            return oldValue;
+          }
+
+          @Nullable
+          @Override
+          public T newValue()
+          {
+            return pValue;
+          }
+        };
+        for (IPropertyEventListener propertyEventListener : _getListeners())
+          propertyEventListener.propertyChange(evt);
+      }
+      return value;
     }
 
     @Override

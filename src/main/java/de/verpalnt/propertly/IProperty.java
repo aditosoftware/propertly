@@ -1,7 +1,5 @@
 package de.verpalnt.propertly;
 
-import java.beans.PropertyChangeListener;
-
 /**
  * @author PaL
  *         Date: 29.09.11
@@ -14,6 +12,6 @@ public interface IProperty<S, T>
 
   T getValue();
 
-  void setValue(T pValue);
+  T setValue(T pValue);
 
 }

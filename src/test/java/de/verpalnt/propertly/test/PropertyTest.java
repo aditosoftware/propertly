@@ -34,7 +34,10 @@ public class PropertyTest extends PropertyPit<PropertyTest> implements ITest
     setX(123);
     setValue(FF, new Dimension(123, 456));
 
-    setValue(CHILD, new PropertyTestChildren());
+    PropertyTestChildren children = setValue(CHILD, new PropertyTestChildren());
+    children.addProperty(PropertyDescription.create(PropertyTestChildren.class, Font.class, "font", null));
+    children.addProperty(PropertyDescription.create(PropertyTestChildren.class, Color.class, "color", null));
+
     for (IProperty property : getValue(CHILD).getProperties())
       System.out.println(property);
 

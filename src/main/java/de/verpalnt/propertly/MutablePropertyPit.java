@@ -1,5 +1,7 @@
 package de.verpalnt.propertly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -10,6 +12,7 @@ import java.util.Map;
 public class MutablePropertyPit<S> extends PropertyPit<S> implements IMutablePropertyPit<S>
 {
 
+  @Nonnull
   @Override
   public synchronized <T> IProperty<? super S, T> addProperty(IPropertyDescription<? super S, T> pPropertyDescription)
   {
@@ -23,6 +26,7 @@ public class MutablePropertyPit<S> extends PropertyPit<S> implements IMutablePro
     return property;
   }
 
+  @Nullable
   @Override
   public synchronized <T> IProperty<? super S, T> removeProperty(IPropertyDescription<? super S, T> pPropertyDescription)
   {

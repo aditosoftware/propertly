@@ -20,7 +20,7 @@ public interface IPropertyPit<S>
 
   <T> T getValue(IPropertyDescription<? super S, T> pPropertyDescription);
 
-  <T> void setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue);
+  <T> T setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue);
 
   Set<IPropertyDescription> getPropertyDescriptions();
 

@@ -13,10 +13,4 @@ import java.awt.*;
 public class PropertyTestChildren extends MutablePropertyPit<PropertyTestChildren>
 {
 
-  public PropertyTestChildren()
-  {
-    addProperty(PropertyDescription.create(PropertyTestChildren.class, Font.class, "font", null));
-    addProperty(PropertyDescription.create(PropertyTestChildren.class, Color.class, "color", null));
-  }
-
 }

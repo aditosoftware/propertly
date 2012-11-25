@@ -5,9 +5,9 @@ package de.verpalnt.propertly.listener;
  *         Date: 13.11.12
  *         Time: 20:17
  */
-public interface IPropertyEventListener
+public interface IPropertyEventListener<S, T>
 {
 
-  void propertyChange(IPropertyEvent pEvent);
+  void propertyChange(IPropertyEvent<S, T> pEvent);
 
 }
