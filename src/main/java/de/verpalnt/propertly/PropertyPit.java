@@ -1,12 +1,10 @@
 package de.verpalnt.propertly;
 
-import de.verpalnt.propertly.listener.IPropertyEvent;
 import de.verpalnt.propertly.listener.IPropertyEventListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author PaL
@@ -126,7 +124,7 @@ public class PropertyPit<S> implements IPropertyPit<S>
     }
   }
 
-  private synchronized List<IPropertyEventListener> _getListeners()
+  synchronized List<IPropertyEventListener> getListeners()
   {
     if (listenerList == null)
       return Collections.emptyList();
@@ -145,7 +143,7 @@ public class PropertyPit<S> implements IPropertyPit<S>
   class PPProperty<S, T> implements IProperty<S, T>
   {
     private IPropertyDescription<S, T> propertyDescription;
-    private T value;
+    private AtomicReference<T> value = new AtomicReference<T>();
 
     PPProperty(IPropertyDescription<S, T> propertyDescription)
     {
@@ -161,49 +159,25 @@ public class PropertyPit<S> implements IPropertyPit<S>
     @Override
     public T getValue()
     {
-      return value;
+      return value.get();
     }
 
     @Override
-    public T setValue(final T pValue)
+    public T setValue(T pValue)
     {
-      final T oldValue = value;
-      value = pValue;
-
-      if (value != oldValue && (value == null || !value.equals(oldValue)))
+      final T oldValue = value.getAndSet(pValue);
+      if (pValue != oldValue && (pValue == null || !pValue.equals(oldValue)))
       {
-        IPropertyEvent<S, T> evt = new IPropertyEvent<S, T>()
-        {
-          @Nonnull
-          @Override
-          public IProperty<S, T> getProperty()
-          {
-            return PPProperty.this;
-          }
-
-          @Override
-          public T oldValue()
-          {
-            return oldValue;
-          }
-
-          @Nullable
-          @Override
-          public T newValue()
-          {
-            return pValue;
-          }
-        };
-        for (IPropertyEventListener propertyEventListener : _getListeners())
-          propertyEventListener.propertyChange(evt);
+        for (IPropertyEventListener propertyEventListener : getListeners())
+          propertyEventListener.propertyChange(this, oldValue, pValue);
       }
-      return value;
+      return pValue;
     }
 
     @Override
     public String toString()
     {
-      return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode()) + "{" + propertyDescription + ", value=" + value + '}';
+      return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode()) + "{" + propertyDescription + ", value=" + value.get() + '}';
     }
   }
 
