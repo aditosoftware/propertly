@@ -1,9 +1,6 @@
 package de.verpalnt.propertly.test;
 
-import de.verpalnt.propertly.IProperty;
-import de.verpalnt.propertly.IPropertyDescription;
-import de.verpalnt.propertly.PD;
-import de.verpalnt.propertly.PropertyPit;
+import de.verpalnt.propertly.*;
 import de.verpalnt.propertly.listener.IPropertyEvent;
 import de.verpalnt.propertly.listener.IPropertyEventListener;
 import org.testng.annotations.Test;
@@ -25,7 +22,7 @@ public class PropertyTest extends PropertyPit<PropertyTest> implements ITest
   @Test
   public PropertyTest()
   {
-    //GetterSetterGen.run(pit);
+    GetterSetterGen.run(this);
     addPropertyEventListener(new IPropertyEventListener()
     {
       @Override
@@ -45,34 +42,17 @@ public class PropertyTest extends PropertyPit<PropertyTest> implements ITest
       System.out.println(property);
   }
 
-  public IProperty<PropertyTest, Integer> getPropertyX()
-  {
-    return getProperty(X);
-  }
-
-  public Integer getX()
-  {
-    return getValue(X);
-  }
-
-  public void setX(Integer pX)
-  {
-    setValue(X, pX);
-  }
-
-  public IProperty<PropertyTest, Integer> getPropertyY()
-  {
-    return getProperty(Y);
-  }
-
-  public Integer getY()
-  {
-    return getValue(Y);
-  }
-
-  public void setY(Integer pY)
-  {
-    setValue(Y, pY);
-  }
+  public IProperty<PropertyTest, Integer> getPropertyX(){return getProperty(X);}
+  public Integer getX(){return getValue(X);}
+  public void setX(Integer pX){setValue(X, pX);}
+  public IProperty<PropertyTest, Integer> getPropertyY(){return getProperty(Y);}
+  public Integer getY(){return getValue(Y);}
+  public void setY(Integer pY){setValue(Y, pY);}
+  public IProperty<PropertyTest, Dimension> getPropertyFF(){return getProperty(FF);}
+  public Dimension getFF(){return getValue(FF);}
+  public void setFF(Dimension pFF){setValue(FF, pFF);}
+  public IProperty<ITest, PropertyTestChildren> getPropertyCHILD(){return getProperty(CHILD);}
+  public PropertyTestChildren getCHILD(){return getValue(CHILD);}
+  public void setCHILD(PropertyTestChildren pCHILD){setValue(CHILD, pCHILD);}
 
 }
