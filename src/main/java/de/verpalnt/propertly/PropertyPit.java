@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PropertyPit<S> implements IPropertyPit<S>
 {
 
+  private IPropertyPitProvider parent;
   private final Map<IPropertyDescription, IProperty> properties = new LinkedHashMap<IPropertyDescription, IProperty>();
   private List<IPropertyEventListener> listenerList;
 
@@ -62,6 +63,12 @@ public class PropertyPit<S> implements IPropertyPit<S>
       }
     }
     return propertyDescriptions;
+  }
+
+  @Override
+  public final IPropertyPitProvider getParent()
+  {
+    return parent;
   }
 
   @Override
@@ -122,6 +129,12 @@ public class PropertyPit<S> implements IPropertyPit<S>
       if (listenerList.remove(pListener) && listenerList.isEmpty())
         listenerList = null;
     }
+  }
+
+  @Override
+  public IPropertyPit<S> getPit()
+  {
+    return this;
   }
 
   synchronized List<IPropertyEventListener> getListeners()

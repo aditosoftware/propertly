@@ -12,8 +12,10 @@ import java.util.Set;
  *         Date: 14.10.12
  *         Time: 15:52
  */
-public interface IPropertyPit<S>
+public interface IPropertyPit<S> extends IPropertyPitProvider<S>
 {
+  IPropertyPitProvider getParent();
+
   <SOURCE, T> IProperty<SOURCE, T> findProperty(IPropertyDescription<SOURCE, T> pPropertyDescription);
 
   <SOURCE, T> IProperty<SOURCE, T> getProperty(IPropertyDescription<SOURCE, T> pPropertyDescription);

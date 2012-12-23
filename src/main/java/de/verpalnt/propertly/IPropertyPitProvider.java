@@ -8,6 +8,6 @@ package de.verpalnt.propertly;
 public interface IPropertyPitProvider<S>
 {
 
-  IPropertyPit<S> get();
+  IPropertyPit<S> getPit();
 
 }
