@@ -3,7 +3,6 @@ package de.verpalnt.propertly;
 import de.verpalnt.propertly.listener.IPropertyEventListener;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * An IPropertyPit gives access to a set of Properties and supplies listener for registering changes to them.
@@ -12,7 +11,7 @@ import java.util.Set;
  *         Date: 14.10.12
  *         Time: 15:52
  */
-public interface IPropertyPit<S> extends IPropertyPitProvider<S>
+public interface IPropertyPit<S> extends IPropertyPitProvider<S>, IPropertyPitDescription
 {
   IPropertyPitProvider getParent();
 
@@ -23,8 +22,6 @@ public interface IPropertyPit<S> extends IPropertyPitProvider<S>
   <T> T getValue(IPropertyDescription<? super S, T> pPropertyDescription);
 
   <T> T setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue);
-
-  Set<IPropertyDescription> getPropertyDescriptions();
 
   List<IProperty> getProperties();
 
