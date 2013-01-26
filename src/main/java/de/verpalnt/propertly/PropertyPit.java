@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PropertyPit<S> implements IPropertyPit<S>
 {
 
-  private IPropertyPitProvider parent;
+  private IPropertyPitParentProvider parent;
   private final Map<IPropertyDescription, IProperty> properties = new LinkedHashMap<IPropertyDescription, IProperty>();
   private List<IPropertyEventListener> listenerList;
 
@@ -68,7 +68,7 @@ public class PropertyPit<S> implements IPropertyPit<S>
   @Override
   public final IPropertyPitProvider getParent()
   {
-    return parent;
+    return parent == null ? null : parent.get();
   }
 
   @Override
@@ -178,6 +178,32 @@ public class PropertyPit<S> implements IPropertyPit<S>
     @Override
     public T setValue(T pValue)
     {
+      if (pValue instanceof IPropertyPitProvider)
+      {
+        IPropertyPit pit = ((IPropertyPitProvider) pValue).getPit();
+        if (pit instanceof PropertyPit)
+        {
+          PropertyPit pp = (PropertyPit) pit;
+          if (pp.parent != null)
+            pp.parent.remove();
+          pp.parent = new IPropertyPitParentProvider()
+          {
+            @Override
+            public IPropertyPitProvider get()
+            {
+              return PropertyPit.this;
+            }
+
+            @Override
+            public void remove()
+            {
+              setValue(null);
+            }
+          };
+        }
+        else
+          throw new UnsupportedOperationException();
+      }
       final T oldValue = value.getAndSet(pValue);
       if (pValue != oldValue && (pValue == null || !pValue.equals(oldValue)))
       {

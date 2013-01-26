@@ -18,10 +18,10 @@ public class GetterSetterGen
     run(pPit, null);
   }
 
-  public static void run(IPropertyPit<?> pPit, String pPitName)
+  public static void run(IPropertyPitProvider<?> pPitProvider, String pPitName)
   {
     String pit = pPitName == null || pPitName.isEmpty() ? "" : pPitName + ".";
-    for (IPropertyDescription<?, ?> prop : pPit.getPropertyDescriptions())
+    for (IPropertyDescription<?, ?> prop : pPitProvider.getPit().getPropertyDescriptions())
     {
       System.out.println("public IProperty<" + prop.getParentType().getSimpleName() + ", " +
           prop.getType().getSimpleName() + "> getProperty" + Util.capitalize(prop.getName()) +

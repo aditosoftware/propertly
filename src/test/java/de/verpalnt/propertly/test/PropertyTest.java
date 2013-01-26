@@ -20,7 +20,7 @@ public class PropertyTest
   {
     TProperty tProperty = new TProperty();
     //GetterSetterGen.run(tProperty);
-    tProperty.addPropertyEventListener(new PropertyEventAdapter()
+    tProperty.getPit().addPropertyEventListener(new PropertyEventAdapter()
     {
       @Override
       public void propertyChange(IProperty pProperty, Object pOldValue, Object pNewValue)
@@ -28,7 +28,8 @@ public class PropertyTest
         System.out.println("CHANGE: " + pProperty);
       }
     });
-    PropertyTestChildren children = tProperty.setValue(TProperty.CHILD, new PropertyTestChildren());
+    PropertyTestChildren children = new PropertyTestChildren();
+    tProperty.setCHILD(new PropertyTestChildren());
     children.addPropertyEventListener(new PropertyEventAdapter()
     {
       @Override
@@ -46,10 +47,12 @@ public class PropertyTest
 
     System.out.println("-------------------------------------------------------------------");
 
-    for (IProperty property : tProperty.getValue(TProperty.CHILD).getProperties())
+    System.out.println("child parent=" + tProperty.getCHILD().getParent());
+    for (IProperty property : tProperty.getCHILD().getProperties())
       System.out.println(property);
 
-    for (IProperty property : tProperty.getProperties())
+    System.out.println("tProperty parent=" + tProperty.getPit().getParent());
+    for (IProperty property : tProperty.getPit().getProperties())
       System.out.println(property);
   }
 
