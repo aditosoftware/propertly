@@ -11,9 +11,10 @@ import java.util.concurrent.atomic.AtomicReference;
  *         Date: 03.10.11
  *         Time: 22:02
  */
-public class PropertyPit<S> implements IPropertyPit<S>
+public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit<S>
 {
 
+  private S source;
   private IPropertyPitParentProvider parent;
   private final Map<IPropertyDescription, IProperty> properties = new LinkedHashMap<IPropertyDescription, IProperty>();
   private List<IPropertyEventListener> listenerList;
@@ -21,11 +22,13 @@ public class PropertyPit<S> implements IPropertyPit<S>
   protected PropertyPit()
   {
     _init(_getProperties(this));
+    source = (S) this;
   }
 
-  private PropertyPit(List<IPropertyDescription> pProperties)
+  private PropertyPit(S pSource, List<IPropertyDescription> pProperties)
   {
     _init(pProperties);
+    source = pSource;
   }
 
   private void _init(List<IPropertyDescription> pProperties)
@@ -35,12 +38,12 @@ public class PropertyPit<S> implements IPropertyPit<S>
       properties.put(description, new PPProperty(description));
   }
 
-  public static <S> IPropertyPit<S> create(S pCreateFor)
+  public static <S extends IPropertyPitProvider> IPropertyPit<S> create(S pCreateFor)
   {
-    return new PropertyPit<S>(_getProperties(pCreateFor));
+    return new PropertyPit<S>(pCreateFor, _getProperties(pCreateFor));
   }
 
-  private static <S> List<IPropertyDescription> _getProperties(S pCreateFor)
+  private static <S extends IPropertyPitProvider> List<IPropertyDescription> _getProperties(S pCreateFor)
   {
     List<IPropertyDescription> propertyDescriptions = new ArrayList<IPropertyDescription>();
     for (Field field : Util.getAllFields(pCreateFor.getClass()))
@@ -191,7 +194,7 @@ public class PropertyPit<S> implements IPropertyPit<S>
             @Override
             public IPropertyPitProvider get()
             {
-              return PropertyPit.this;
+              return source;
             }
 
             @Override

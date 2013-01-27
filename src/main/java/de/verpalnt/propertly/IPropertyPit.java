@@ -11,7 +11,7 @@ import java.util.List;
  *         Date: 14.10.12
  *         Time: 15:52
  */
-public interface IPropertyPit<S> extends IPropertyPitProvider<S>, IPropertyPitDescription
+public interface IPropertyPit<S extends IPropertyPitProvider> extends IPropertyPitProvider<S>, IPropertyPitDescription
 {
   IPropertyPitProvider getParent();
 

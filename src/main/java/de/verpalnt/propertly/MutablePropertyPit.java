@@ -11,7 +11,7 @@ import java.util.Map;
  *         Date: 18.11.12
  *         Time: 21:51
  */
-public class MutablePropertyPit<S> extends PropertyPit<S> implements IMutablePropertyPit<S>
+public class MutablePropertyPit<S extends IPropertyPitProvider> extends PropertyPit<S> implements IMutablePropertyPit<S>
 {
   private final Object syncject = new Object();
 
