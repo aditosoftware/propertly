@@ -5,8 +5,16 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>de.verpalnt.propertly</groupId>
-  <artifactId>propertly</artifactId>
+  <artifactId>propertly.parent</artifactId>
+  <packaging>pom</packaging>
   <version>0.1-SNAPSHOT</version>
+
+
+  <modules>
+    <module>propertly.core</module>
+    <module>propertly.guibuilder</module>
+  </modules>
+
 
   <repositories>
     <repository>

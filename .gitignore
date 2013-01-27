@@ -4,3 +4,5 @@
 
 # maven
 /target
+/propertly.core/target
+/propertly.guibuilder/target
