@@ -1,8 +1,8 @@
 package de.verpalnt.propertly.core;
 
+import de.verpalnt.propertly.core.common.PPPIntrospector;
 import de.verpalnt.propertly.core.listener.IPropertyEventListener;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -21,7 +21,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 
   protected PropertyPit()
   {
-    _init(_getProperties(this));
+    _init(PPPIntrospector.get(getClass()));
     source = (S) this;
   }
 
@@ -40,32 +40,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 
   public static <S extends IPropertyPitProvider> IPropertyPit<S> create(S pCreateFor)
   {
-    return new PropertyPit<S>(pCreateFor, _getProperties(pCreateFor));
-  }
-
-  private static <S extends IPropertyPitProvider> List<IPropertyDescription> _getProperties(S pCreateFor)
-  {
-    List<IPropertyDescription> propertyDescriptions = new ArrayList<IPropertyDescription>();
-    for (Field field : Util.getAllFields(pCreateFor.getClass()))
-    {
-      try
-      {
-        field.setAccessible(true);
-        if (IPropertyDescription.class.isAssignableFrom(field.getType()))
-        {
-          IPropertyDescription<?, ?> propertyDescription = (IPropertyDescription) field.get(pCreateFor);
-          boolean isParentalType = propertyDescription.getParentType().isAssignableFrom(pCreateFor.getClass());
-          if (isParentalType)
-            propertyDescriptions.add(propertyDescription);
-          assert isParentalType;
-        }
-      }
-      catch (IllegalAccessException e)
-      {
-        // skip
-      }
-    }
-    return propertyDescriptions;
+    return new PropertyPit<S>(pCreateFor, PPPIntrospector.get(pCreateFor.getClass()));
   }
 
   @Override
@@ -179,7 +154,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     }
 
     @Override
-    public T setValue(T pValue)
+    public void setValue(T pValue)
     {
       if (pValue instanceof IPropertyPitProvider)
       {
@@ -213,7 +188,6 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
         for (IPropertyEventListener propertyEventListener : getListeners())
           propertyEventListener.propertyChange(this, oldValue, pValue);
       }
-      return pValue;
     }
 
     @Override

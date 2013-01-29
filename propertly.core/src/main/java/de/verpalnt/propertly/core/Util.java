@@ -21,15 +21,4 @@ class Util
     return pStr.substring(0, 1).toUpperCase() + pStr.substring(1, pStr.length());
   }
 
-  static List<Field> getAllFields(Class pCls)
-  {
-    List<Field> fields = new ArrayList<Field>();
-    Collections.addAll(fields, pCls.getDeclaredFields());
-    for (Class<?> c = pCls; c != null; c = c.getSuperclass())
-      fields.addAll(Arrays.asList(c.getDeclaredFields()));
-    for (Class<?> face : pCls.getInterfaces())
-      Collections.addAll(fields, face.getDeclaredFields());
-    return fields;
-  }
-
 }
