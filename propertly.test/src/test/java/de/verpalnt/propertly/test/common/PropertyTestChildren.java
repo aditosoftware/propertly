@@ -1,4 +1,4 @@
-package de.verpalnt.propertly.core.test;
+package de.verpalnt.propertly.test.common;
 
 
 import de.verpalnt.propertly.core.MutablePropertyPit;

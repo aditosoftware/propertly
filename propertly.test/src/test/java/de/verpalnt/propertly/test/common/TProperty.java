@@ -1,4 +1,4 @@
-package de.verpalnt.propertly.guibuilder;
+package de.verpalnt.propertly.test.common;
 
 import de.verpalnt.propertly.core.*;
 
@@ -73,9 +73,9 @@ public class TProperty implements IPropertyPitProvider<TProperty>, ITest
     return pit.getValue(CHILD);
   }
 
-  public void setCHILD(PropertyTestChildren pCHILD)
+  public PropertyTestChildren setCHILD(PropertyTestChildren pCHILD)
   {
-    pit.setValue(CHILD, pCHILD);
+    return pit.setValue(CHILD, pCHILD);
   }
 
 

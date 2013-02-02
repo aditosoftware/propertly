@@ -1,9 +1,11 @@
-package de.verpalnt.propertly.core.test;
+package de.verpalnt.propertly.test.core;
 
 import de.verpalnt.propertly.core.IProperty;
 import de.verpalnt.propertly.core.PropertyDescription;
 import de.verpalnt.propertly.core.hierarchy.Hierarchy;
 import de.verpalnt.propertly.core.listener.PropertyEventAdapter;
+import de.verpalnt.propertly.test.common.PropertyTestChildren;
+import de.verpalnt.propertly.test.common.TProperty;
 import org.testng.annotations.Test;
 
 import java.awt.*;

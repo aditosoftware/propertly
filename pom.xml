@@ -13,6 +13,7 @@
   <modules>
     <module>propertly.core</module>
     <module>propertly.guibuilder</module>
+    <module>propertly.test</module>
   </modules>
 
 

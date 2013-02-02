@@ -1,4 +1,4 @@
-package de.verpalnt.propertly.guibuilder;
+package de.verpalnt.propertly.test.common;
 
 import de.verpalnt.propertly.core.IPropertyDescription;
 import de.verpalnt.propertly.core.PD;
