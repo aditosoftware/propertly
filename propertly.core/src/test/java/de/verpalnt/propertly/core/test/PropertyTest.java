@@ -2,6 +2,7 @@ package de.verpalnt.propertly.core.test;
 
 import de.verpalnt.propertly.core.IProperty;
 import de.verpalnt.propertly.core.PropertyDescription;
+import de.verpalnt.propertly.core.hierarchy.Hierarchy;
 import de.verpalnt.propertly.core.listener.PropertyEventAdapter;
 import org.testng.annotations.Test;
 
@@ -18,7 +19,7 @@ public class PropertyTest
   @Test
   public PropertyTest()
   {
-    TProperty tProperty = new TProperty();
+    TProperty tProperty = Hierarchy.create("root", new TProperty());
     //GetterSetterGen.run(tProperty);
     tProperty.getPit().addPropertyEventListener(new PropertyEventAdapter()
     {
@@ -28,8 +29,7 @@ public class PropertyTest
         System.out.println("CHANGE: " + pProperty);
       }
     });
-    PropertyTestChildren children = new PropertyTestChildren();
-    tProperty.setCHILD(new PropertyTestChildren());
+    PropertyTestChildren children = tProperty.setCHILD(new PropertyTestChildren());
     children.addPropertyEventListener(new PropertyEventAdapter()
     {
       @Override

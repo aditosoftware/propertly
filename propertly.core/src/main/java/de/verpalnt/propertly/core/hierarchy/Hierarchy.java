@@ -25,6 +25,17 @@ public class Hierarchy
     listeners = new LinkedHashSet<NodeListener>();
   }
 
+  public Hierarchy(String pName, IPropertyPitProvider pPPP)
+  {
+    this(pName);
+    node.setValue(pPPP);
+  }
+
+  public static <T extends IPropertyPitProvider> T create(String pName, T pPPP)
+  {
+    return (T) new Hierarchy(pName, pPPP).getNode().getValue();
+  }
+
   public Node getNode()
   {
     return node;

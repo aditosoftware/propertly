@@ -1,5 +1,7 @@
 package de.verpalnt.propertly.guibuilder;
 
+//import de.verpalnt.propertly.core.MutablePropertyPit;
+
 import de.verpalnt.propertly.core.MutablePropertyPit;
 
 /**

@@ -1,10 +1,10 @@
 package de.verpalnt.propertly.core;
 
-import de.verpalnt.propertly.core.common.PPPIntrospector;
+import de.verpalnt.propertly.core.hierarchy.Node;
+import de.verpalnt.propertly.core.hierarchy.PPPSupport;
 import de.verpalnt.propertly.core.listener.IPropertyEventListener;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author PaL
@@ -15,45 +15,45 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 {
 
   private S source;
-  private IPropertyPitParentProvider parent;
-  private final Map<IPropertyDescription, IProperty> properties = new LinkedHashMap<IPropertyDescription, IProperty>();
   private List<IPropertyEventListener> listenerList;
+  private Node node;
 
   protected PropertyPit()
   {
-    _init(PPPIntrospector.get(getClass()));
     source = (S) this;
   }
 
-  private PropertyPit(S pSource, List<IPropertyDescription> pProperties)
+  private PropertyPit(S pSource)
   {
-    _init(pProperties);
     source = pSource;
-  }
-
-  private void _init(List<IPropertyDescription> pProperties)
-  {
-    for (IPropertyDescription description : pProperties)
-      //noinspection unchecked
-      properties.put(description, new PPProperty(description));
   }
 
   public static <S extends IPropertyPitProvider> IPropertyPit<S> create(S pCreateFor)
   {
-    return new PropertyPit<S>(pCreateFor, PPPIntrospector.get(pCreateFor.getClass()));
+    return new PropertyPit<S>(pCreateFor);
   }
 
   @Override
   public final IPropertyPitProvider getParent()
   {
-    return parent == null ? null : parent.get();
+    Node parent = node.getParent();
+    if (parent == null)
+      return null;
+    return (IPropertyPitProvider) parent.getProperty().getValue();
   }
 
   @Override
   public final <SOURCE, T> IProperty<SOURCE, T> findProperty(IPropertyDescription<SOURCE, T> pPropertyDescription)
   {
-    //noinspection unchecked
-    return (IProperty<SOURCE, T>) properties.get(pPropertyDescription);
+    List<Node> children = node.getChildren();
+    if (children != null)
+      for (Node childNode : children)
+      {
+        IProperty property = childNode.getProperty();
+        if (property.getDescription().equals(pPropertyDescription))
+          return property;
+      }
+    return null;
   }
 
   @Override
@@ -74,21 +74,25 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   @Override
   public final <T> T setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue)
   {
-    getProperty(pPropertyDescription).setValue(pValue);
-    return pValue;
+    return getProperty(pPropertyDescription).setValue(pValue);
   }
 
   @Override
   public final Set<IPropertyDescription> getPropertyDescriptions()
   {
-    return Collections.unmodifiableSet(properties.keySet());
+    Set<IPropertyDescription> set = new HashSet<IPropertyDescription>();
+    for (Node childNode : node.getChildren())
+      set.add(childNode.getProperty().getDescription());
+    return set;
   }
-
 
   @Override
   public List<IProperty> getProperties()
   {
-    return Collections.unmodifiableList(new ArrayList<IProperty>(properties.values()));
+    List<IProperty> properties = new ArrayList<IProperty>();
+    for (Node childNode : node.getChildren())
+      properties.add(childNode.getProperty());
+    return properties;
   }
 
   @Override
@@ -122,79 +126,13 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return new ArrayList<IPropertyEventListener>(listenerList);
   }
 
-  Map<IPropertyDescription, IProperty> getPropertyMap()
+  public void setNode(Node pNode)
   {
-    return properties;
+    node = pNode;
   }
 
-
-  /**
-   * PropertyImpl
-   */
-  class PPProperty<S, T> implements IProperty<S, T>
+  public Node getNode()
   {
-    private IPropertyDescription<S, T> propertyDescription;
-    private AtomicReference<T> value = new AtomicReference<T>();
-
-    PPProperty(IPropertyDescription<S, T> propertyDescription)
-    {
-      this.propertyDescription = propertyDescription;
-    }
-
-    @Override
-    public IPropertyDescription<S, T> getDescription()
-    {
-      return propertyDescription;
-    }
-
-    @Override
-    public T getValue()
-    {
-      return value.get();
-    }
-
-    @Override
-    public void setValue(T pValue)
-    {
-      if (pValue instanceof IPropertyPitProvider)
-      {
-        IPropertyPit pit = ((IPropertyPitProvider) pValue).getPit();
-        if (pit instanceof PropertyPit)
-        {
-          PropertyPit pp = (PropertyPit) pit;
-          if (pp.parent != null)
-            pp.parent.remove();
-          pp.parent = new IPropertyPitParentProvider()
-          {
-            @Override
-            public IPropertyPitProvider get()
-            {
-              return source;
-            }
-
-            @Override
-            public void remove()
-            {
-              setValue(null);
-            }
-          };
-        }
-        else
-          throw new UnsupportedOperationException();
-      }
-      final T oldValue = value.getAndSet(pValue);
-      if (pValue != oldValue && (pValue == null || !pValue.equals(oldValue)))
-      {
-        for (IPropertyEventListener propertyEventListener : getListeners())
-          propertyEventListener.propertyChange(this, oldValue, pValue);
-      }
-    }
-
-    @Override
-    public String toString()
-    {
-      return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode()) + "{" + propertyDescription + ", value=" + value.get() + '}';
-    }
+    return node;
   }
-
 }

@@ -1,5 +1,6 @@
 package de.verpalnt.propertly.core;
 
+import de.verpalnt.propertly.core.hierarchy.Node;
 import de.verpalnt.propertly.core.listener.IPropertyEventListener;
 
 import java.util.List;
@@ -28,4 +29,9 @@ public interface IPropertyPit<S extends IPropertyPitProvider> extends IPropertyP
   void addPropertyEventListener(IPropertyEventListener pListener);
 
   void removePropertyEventListener(IPropertyEventListener pListener);
+
+  void setNode(Node pNode);
+
+  Node getNode();
+
 }

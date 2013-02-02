@@ -14,18 +14,18 @@ import java.util.*;
 public class PPPIntrospector
 {
 
-  private static final Map<Class, List<IPropertyDescription>> ALREADY_KNOWN = new HashMap<Class, List<IPropertyDescription>>();
+  private static final Map<Class, Set<IPropertyDescription>> ALREADY_KNOWN = new HashMap<Class, Set<IPropertyDescription>>();
 
   private PPPIntrospector()
   {
   }
 
-  public static List<IPropertyDescription> get(Class<? extends IPropertyPitProvider> pPPPClass)
+  public static Set<IPropertyDescription> get(Class<? extends IPropertyPitProvider> pPPPClass)
   {
-    List<IPropertyDescription> propertyDescriptions = ALREADY_KNOWN.get(pPPPClass);
+    Set<IPropertyDescription> propertyDescriptions = ALREADY_KNOWN.get(pPPPClass);
     if (propertyDescriptions == null)
     {
-      propertyDescriptions = new ArrayList<IPropertyDescription>();
+      propertyDescriptions = new HashSet<IPropertyDescription>();
       for (Field field : _getAllFields(pPPPClass))
       {
         try
@@ -45,6 +45,7 @@ public class PPPIntrospector
           // skip
         }
       }
+      propertyDescriptions = Collections.unmodifiableSet(propertyDescriptions);
       ALREADY_KNOWN.put(pPPPClass, propertyDescriptions);
     }
     return propertyDescriptions;

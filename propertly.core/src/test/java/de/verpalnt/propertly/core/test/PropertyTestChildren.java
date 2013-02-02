@@ -1,5 +1,6 @@
 package de.verpalnt.propertly.core.test;
 
+
 import de.verpalnt.propertly.core.MutablePropertyPit;
 
 /**

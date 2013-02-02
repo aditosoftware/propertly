@@ -33,8 +33,15 @@ public class HierarchyProperty implements IProperty
   }
 
   @Override
-  public void setValue(Object pValue)
+  public Object setValue(Object pValue)
   {
-    node.setValue(pValue);
+    return node.setValue(pValue);
   }
+
+  @Override
+  public String toString()
+  {
+    return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode()) + "{" + propertyDescription + ", value=" + getValue() + '}';
+  }
+
 }

@@ -1,5 +1,6 @@
 package de.verpalnt.propertly.core;
 
+import de.verpalnt.propertly.core.hierarchy.Node;
 import de.verpalnt.propertly.core.listener.IPropertyEventListener;
 
 import javax.annotation.Nonnull;
@@ -19,17 +20,8 @@ public class MutablePropertyPit<S extends IPropertyPitProvider> extends Property
   @Override
   public <T> IProperty<? super S, T> addProperty(IPropertyDescription<? super S, T> pPropertyDescription)
   {
-    IProperty<? super S, T> property;
-    synchronized (syncject)
-    {
-      Map<IPropertyDescription, IProperty> propertyMap = getPropertyMap();
-      IProperty existingProperty = propertyMap.get(pPropertyDescription);
-      if (existingProperty != null)
-        throw new IllegalStateException("Property for '" + pPropertyDescription + "' already exists in '" + this + "'.");
-      //noinspection unchecked
-      property = new _MutablePPProperty(pPropertyDescription);
-      propertyMap.put(pPropertyDescription, property);
-    }
+    getNode().addProperty(pPropertyDescription);
+    IProperty<? super S, T> property = getProperty(pPropertyDescription);
     for (IPropertyEventListener listener : getListeners())
       listener.propertyAdded(property);
     return property;
@@ -39,34 +31,13 @@ public class MutablePropertyPit<S extends IPropertyPitProvider> extends Property
   @Override
   public <T> IProperty<? super S, T> removeProperty(IPropertyDescription<? super S, T> pPropertyDescription)
   {
-    IProperty<? super S, T> property;
-    synchronized (syncject)
+    IProperty<? super S, T> property = getProperty(pPropertyDescription);
+    if (property != null)
     {
-      Map<IPropertyDescription, IProperty> propertyMap = getPropertyMap();
-      IProperty existingProperty = propertyMap.get(pPropertyDescription);
-      if (existingProperty == null)
-        return null;
-      if (existingProperty instanceof _MutablePPProperty)
-        //noinspection unchecked
-        property = propertyMap.remove(pPropertyDescription);
-      else
-        throw new IllegalStateException("Property for '" + pPropertyDescription + "' mustn't be removed from '" + this + "' " +
-            "since it's not a mutable property.");
+      getNode().removeProperty(pPropertyDescription.getName());
+      for (IPropertyEventListener listener : getListeners())
+        listener.propertyRemoved(property);
     }
-    for (IPropertyEventListener listener : getListeners())
-      listener.propertyRemoved(property);
     return property;
   }
-
-  /**
-   * PropertyImpl
-   */
-  private class _MutablePPProperty<S, T> extends PPProperty<S, T>
-  {
-    private _MutablePPProperty(IPropertyDescription<S, T> propertyDescription)
-    {
-      super(propertyDescription);
-    }
-  }
-
 }

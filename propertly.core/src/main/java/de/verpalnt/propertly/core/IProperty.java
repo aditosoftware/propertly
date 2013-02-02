@@ -12,6 +12,6 @@ public interface IProperty<S, T>
 
   T getValue();
 
-  void setValue(T pValue);
+  T setValue(T pValue);
 
 }

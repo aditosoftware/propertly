@@ -73,9 +73,9 @@ public class TProperty implements IPropertyPitProvider<TProperty>, ITest
     return pit.getValue(CHILD);
   }
 
-  public void setCHILD(PropertyTestChildren pCHILD)
+  public PropertyTestChildren setCHILD(PropertyTestChildren pCHILD)
   {
-    pit.setValue(CHILD, pCHILD);
+    return pit.setValue(CHILD, pCHILD);
   }
 
 
