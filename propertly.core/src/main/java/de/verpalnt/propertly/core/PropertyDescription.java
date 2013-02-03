@@ -1,5 +1,7 @@
 package de.verpalnt.propertly.core;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,8 +88,9 @@ public class PropertyDescription<S, T> implements IPropertyDescription<S, T>
     this.annotations = annotations;
   }
 
-  public static <S, T> IPropertyDescription<S, T> create(Class<S> pParentType, Class<T> pType, String pName,
-                                                         Iterable<? extends Annotation> pAnnotations)
+  public static <S, T> IPropertyDescription<S, T> create(@Nonnull Class<S> pParentType, @Nonnull Class<T> pType,
+                                                         @Nonnull String pName,
+                                                         @Nullable Iterable<? extends Annotation> pAnnotations)
   {
     return new PropertyDescription<S, T>(pParentType, pType, pName, pAnnotations);
   }

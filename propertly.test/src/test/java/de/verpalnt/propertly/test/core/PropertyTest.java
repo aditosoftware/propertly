@@ -2,7 +2,6 @@ package de.verpalnt.propertly.test.core;
 
 import de.verpalnt.propertly.core.IProperty;
 import de.verpalnt.propertly.core.IPropertyDescription;
-import de.verpalnt.propertly.core.PropertyDescription;
 import de.verpalnt.propertly.core.hierarchy.Hierarchy;
 import de.verpalnt.propertly.core.listener.PropertyEventAdapter;
 import de.verpalnt.propertly.test.common.PropertyTestChildren;
@@ -45,8 +44,8 @@ public class PropertyTest
     tProperty.setX(123);
     tProperty.setFF(new Dimension(123, 456));
 
-    children.addProperty(PropertyDescription.create(PropertyTestChildren.class, Font.class, "font", null));
-    children.addProperty(PropertyDescription.create(PropertyTestChildren.class, Color.class, "color", null));
+    children.addProperty(Color.class, "color1", null).setValue(Color.BLACK);
+    children.addProperty(Color.class, "color2", null).setValue(Color.RED);
 
     System.out.println("-------------------------------------------------------------------");
 

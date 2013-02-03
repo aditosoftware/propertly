@@ -22,21 +22,18 @@ public class Node
 
   private final Hierarchy hierarchy;
   private final Node parent;
-  private IProperty property;
 
+  private IProperty property;
   private Object value;
+
   private List<Node> children;
-  private List<NodeListener> listeners;
 
 
   public Node(@Nonnull Hierarchy pHierarchy, @Nullable Node pParent, @Nonnull IPropertyDescription pPropertyDescription)
   {
     hierarchy = pHierarchy;
     parent = pParent;
-    if (IMutablePropertyPitProvider.class.isAssignableFrom(pPropertyDescription.getType()))
-      property = new MutableHierarchyProperty(this, pPropertyDescription);
-    else
-      property = new HierarchyProperty(this, pPropertyDescription);
+    property = new HierarchyProperty(this, pPropertyDescription);
   }
 
   public Object setValue(Object pValue)
@@ -46,7 +43,7 @@ public class Node
 
     if (pValue != null)
     {
-      Class type = property.getDescription().getType();
+      Class type = property.getType();
       if (!type.isAssignableFrom(pValue.getClass()))
         throw new IllegalArgumentException("'" + pValue + "' can't be set for field with type '" + type + "'.");
     }
@@ -124,7 +121,7 @@ public class Node
   public String getPath()
   {
     Node parentNode = getParent();
-    String name = getProperty().getDescription().getName();
+    String name = getProperty().getName();
     return parentNode == null ? name : parentNode.getPath() + "/" + name;
   }
 
@@ -152,9 +149,14 @@ public class Node
     return property;
   }
 
+  public IPropertyDescription getPropertyDescription()
+  {
+    return property.getDescription();
+  }
+
   public boolean isLeaf()
   {
-    return IPropertyPitProvider.class.isAssignableFrom(property.getDescription().getType());
+    return IPropertyPitProvider.class.isAssignableFrom(property.getType());
   }
 
   public void addProperty(IPropertyDescription pPropertyDescription)
@@ -168,7 +170,7 @@ public class Node
     hierarchy.fireNodeAdded(this, pPropertyDescription);
   }
 
-  public void removeProperty(String pName)
+  public boolean removeProperty(String pName)
   {
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + property);
@@ -176,20 +178,22 @@ public class Node
     if (node != null)
     {
       IProperty nProp = node.getProperty();
-      if (nProp instanceof MutableHierarchyProperty)
+      if (IMutablePropertyPitProvider.class.isAssignableFrom(nProp.getType()))
       {
         IPropertyDescription descr = nProp.getDescription();
         children.remove(node);
         hierarchy.fireNodeRemoved(this, descr);
+        return true;
       }
     }
+    return false;
   }
 
   private Node _find(String pName)
   {
     if (children != null)
       for (Node child : children)
-        if (pName.equals(child.getProperty().getDescription().getName()))
+        if (pName.equals(child.getProperty().getName()))
           return child;
     return null;
   }

@@ -5,6 +5,8 @@ import de.verpalnt.propertly.core.hierarchy.NodeListener;
 import de.verpalnt.propertly.core.listener.IPropertyEventListener;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.Set;
  *         Date: 03.10.11
  *         Time: 22:02
  */
-public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit<S>
+public class PropertyPit<S extends IPropertyPitProvider<S>> implements IPropertyPitProvider<S>
 {
 
   private S source;
@@ -26,26 +28,30 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     source = (S) this;
   }
 
-  private PropertyPit(S pSource)
+  PropertyPit(S pSource)
   {
     source = pSource;
   }
 
-  public static <S extends IPropertyPitProvider> IPropertyPit<S> create(S pCreateFor)
+  public static <S extends IPropertyPitProvider<S>> PropertyPit<S> create(S pCreateFor)
   {
     return new PropertyPit<S>(pCreateFor);
   }
 
-  @Override
+  @Nonnull
+  public S getSource()
+  {
+    return source;
+  }
+
+  @Nullable
   public final IPropertyPitProvider getParent()
   {
     Node parent = node.getParent();
-    if (parent == null)
-      return null;
-    return (IPropertyPitProvider) parent.getProperty().getValue();
+    return parent == null ? null : (IPropertyPitProvider) parent.getProperty().getValue();
   }
 
-  @Override
+  @Nullable
   public final <SOURCE, T> IProperty<SOURCE, T> findProperty(IPropertyDescription<SOURCE, T> pPropertyDescription)
   {
     List<Node> children = node.getChildren();
@@ -59,7 +65,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return null;
   }
 
-  @Override
+  @Nonnull
   public final <SOURCE, T> IProperty<SOURCE, T> getProperty(IPropertyDescription<SOURCE, T> pPropertyDescription)
   {
     IProperty<SOURCE, T> property = findProperty(pPropertyDescription);
@@ -68,19 +74,18 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return property;
   }
 
-  @Override
+  @Nullable
   public final <T> T getValue(IPropertyDescription<? super S, T> pPropertyDescription)
   {
     return getProperty(pPropertyDescription).getValue();
   }
 
-  @Override
+  @Nullable
   public final <T> T setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue)
   {
     return getProperty(pPropertyDescription).setValue(pValue);
   }
 
-  @Override
   public final Set<IPropertyDescription> getPropertyDescriptions()
   {
     Set<IPropertyDescription> set = new HashSet<IPropertyDescription>();
@@ -89,7 +94,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return set;
   }
 
-  @Override
+  @Nonnull
   public List<IProperty> getProperties()
   {
     List<IProperty> properties = new ArrayList<IProperty>();
@@ -98,7 +103,6 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return properties;
   }
 
-  @Override
   public final synchronized void addPropertyEventListener(final IPropertyEventListener pListener)
   {
     node.getHierarchy().addNodeListener(new NodeListener()
@@ -126,14 +130,12 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     });
   }
 
-  @Override
   public final synchronized void removePropertyEventListener(IPropertyEventListener pListener)
   {
     throw new NotImplementedException();
   }
 
-  @Override
-  public IPropertyPit<S> getPit()
+  public PropertyPit<S> getPit()
   {
     return this;
   }

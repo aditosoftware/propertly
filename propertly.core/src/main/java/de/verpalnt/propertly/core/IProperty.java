@@ -5,7 +5,7 @@ package de.verpalnt.propertly.core;
  *         Date: 29.09.11
  *         Time: 21:42
  */
-public interface IProperty<S, T>
+public interface IProperty<S, T> extends IPropertyDescription<S, T>
 {
 
   IPropertyDescription<S, T> getDescription();

@@ -16,7 +16,7 @@ public class TProperty implements IPropertyPitProvider<TProperty>, ITest
   public static final IPropertyDescription<TProperty, Integer> Y = PD.create(TProperty.class);
   public static final IPropertyDescription<TProperty, Dimension> FF = PD.create(TProperty.class);
 
-  private IPropertyPit<TProperty> pit = PropertyPit.create(this);
+  private PropertyPit<TProperty> pit = PropertyPit.create(this);
 
   public IProperty<TProperty, Integer> getPropertyX()
   {
@@ -80,7 +80,7 @@ public class TProperty implements IPropertyPitProvider<TProperty>, ITest
 
 
   @Override
-  public IPropertyPit<TProperty> getPit()
+  public PropertyPit<TProperty> getPit()
   {
     return pit;
   }

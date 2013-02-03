@@ -2,43 +2,64 @@ package de.verpalnt.propertly.core;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.annotation.Annotation;
 
 /**
  * @author PaL
  *         Date: 18.11.12
  *         Time: 21:51
  */
-public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extends PropertyPit<S> implements IMutablePropertyPit<S, T>
+public class MutablePropertyPit<S extends IMutablePropertyPitProvider<S, T>, T> extends PropertyPit<S> implements IMutablePropertyPitProvider<S, T>
 {
-  private final Object syncject = new Object();
+
+  private Class<T> allowedChildType;
+
+  public MutablePropertyPit(Class<T> pAllowedChildType)
+  {
+    super();
+    allowedChildType = pAllowedChildType;
+  }
+
+  MutablePropertyPit(S pSource, Class<T> pAllowedChildType)
+  {
+    super(pSource);
+    allowedChildType = pAllowedChildType;
+  }
+
+  public static <S extends IMutablePropertyPitProvider<S, T>, T> MutablePropertyPit<S, T> create(S pCreateFor, Class<T> pAllowedChildType)
+  {
+    return new MutablePropertyPit<S, T>(pCreateFor, pAllowedChildType);
+  }
+
+  @Override
+  public MutablePropertyPit<S, T> getPit()
+  {
+    return this;
+  }
 
   @Nonnull
-  @Override
-  public <T> IProperty<? super S, T> addProperty(IPropertyDescription<? super S, T> pPropertyDescription)
+  public IProperty<S, T> addProperty(IPropertyDescription<S, T> pPropertyDescription)
   {
     getNode().addProperty(pPropertyDescription);
     return getProperty(pPropertyDescription);
   }
 
-  @Nullable
-  @Override
-  public <T> IProperty<? super S, T> removeProperty(IPropertyDescription<? super S, T> pPropertyDescription)
+  @Nonnull
+  public IProperty<S, T> addProperty(@Nonnull Class<T> pType, @Nonnull String pName,
+                                     @Nullable Iterable<? extends Annotation> pAnnotations)
   {
-    IProperty<? super S, T> property = getProperty(pPropertyDescription);
-    if (property != null)
-      getNode().removeProperty(pPropertyDescription.getName());
-    return property;
+    return addProperty(PropertyDescription.create((Class<S>) getSource().getClass(), pType, pName, pAnnotations));
   }
 
-  @Override
-  public IMutablePropertyPit<S, T> getPit()
+  public boolean removeProperty(IPropertyDescription<S, T> pPropertyDescription)
   {
-    return this;
+    IProperty<S, T> property = getProperty(pPropertyDescription);
+    return getNode().removeProperty(pPropertyDescription.getName());
   }
 
-  @Override
-  public T getChildType()
+  public Class<T> getChildType()
   {
-    return null;
+    return allowedChildType;
   }
+
 }
