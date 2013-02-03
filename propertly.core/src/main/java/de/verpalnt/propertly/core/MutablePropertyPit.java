@@ -1,18 +1,14 @@
 package de.verpalnt.propertly.core;
 
-import de.verpalnt.propertly.core.hierarchy.Node;
-import de.verpalnt.propertly.core.listener.IPropertyEventListener;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
 
 /**
  * @author PaL
  *         Date: 18.11.12
  *         Time: 21:51
  */
-public class MutablePropertyPit<S extends IPropertyPitProvider> extends PropertyPit<S> implements IMutablePropertyPit<S>
+public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extends PropertyPit<S> implements IMutablePropertyPit<S, T>
 {
   private final Object syncject = new Object();
 
@@ -21,10 +17,7 @@ public class MutablePropertyPit<S extends IPropertyPitProvider> extends Property
   public <T> IProperty<? super S, T> addProperty(IPropertyDescription<? super S, T> pPropertyDescription)
   {
     getNode().addProperty(pPropertyDescription);
-    IProperty<? super S, T> property = getProperty(pPropertyDescription);
-    for (IPropertyEventListener listener : getListeners())
-      listener.propertyAdded(property);
-    return property;
+    return getProperty(pPropertyDescription);
   }
 
   @Nullable
@@ -33,11 +26,19 @@ public class MutablePropertyPit<S extends IPropertyPitProvider> extends Property
   {
     IProperty<? super S, T> property = getProperty(pPropertyDescription);
     if (property != null)
-    {
       getNode().removeProperty(pPropertyDescription.getName());
-      for (IPropertyEventListener listener : getListeners())
-        listener.propertyRemoved(property);
-    }
     return property;
+  }
+
+  @Override
+  public IMutablePropertyPit<S, T> getPit()
+  {
+    return this;
+  }
+
+  @Override
+  public T getChildType()
+  {
+    return null;
   }
 }

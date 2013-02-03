@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -27,6 +26,7 @@ public class Node
 
   private Object value;
   private List<Node> children;
+  private List<NodeListener> listeners;
 
 
   public Node(@Nonnull Hierarchy pHierarchy, @Nullable Node pParent, @Nonnull IPropertyDescription pPropertyDescription)
@@ -159,21 +159,30 @@ public class Node
 
   public void addProperty(IPropertyDescription pPropertyDescription)
   {
-    if (children == null)
+    if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + property);
     Node node = _find(pPropertyDescription.getName());
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
     children.add(new Node(hierarchy, this, pPropertyDescription));
+    hierarchy.fireNodeAdded(this, pPropertyDescription);
   }
 
   public void removeProperty(String pName)
   {
-    if (children == null)
+    if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + property);
     Node node = _find(pName);
-    if (node != null && node.getProperty() instanceof MutableHierarchyProperty)
-      children.remove(node);
+    if (node != null)
+    {
+      IProperty nProp = node.getProperty();
+      if (nProp instanceof MutableHierarchyProperty)
+      {
+        IPropertyDescription descr = nProp.getDescription();
+        children.remove(node);
+        hierarchy.fireNodeRemoved(this, descr);
+      }
+    }
   }
 
   private Node _find(String pName)

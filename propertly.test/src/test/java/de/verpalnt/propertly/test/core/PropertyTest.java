@@ -1,6 +1,7 @@
 package de.verpalnt.propertly.test.core;
 
 import de.verpalnt.propertly.core.IProperty;
+import de.verpalnt.propertly.core.IPropertyDescription;
 import de.verpalnt.propertly.core.PropertyDescription;
 import de.verpalnt.propertly.core.hierarchy.Hierarchy;
 import de.verpalnt.propertly.core.listener.PropertyEventAdapter;
@@ -35,9 +36,9 @@ public class PropertyTest
     children.addPropertyEventListener(new PropertyEventAdapter()
     {
       @Override
-      public void propertyAdded(IProperty pProperty)
+      public void propertyAdded(IPropertyDescription pPropertyDescription)
       {
-        System.out.println("ADDED: " + pProperty);
+        System.out.println("ADDED: " + pPropertyDescription);
       }
     });
 

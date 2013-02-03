@@ -1,6 +1,7 @@
 package de.verpalnt.propertly.core.listener;
 
 import de.verpalnt.propertly.core.IProperty;
+import de.verpalnt.propertly.core.IPropertyDescription;
 
 /**
  * @author PaL
@@ -15,12 +16,12 @@ public abstract class PropertyEventAdapter<S, T> implements IPropertyEventListen
   }
 
   @Override
-  public void propertyAdded(IProperty<S, T> pProperty)
+  public void propertyAdded(IPropertyDescription<S, T> pPropertyDescription)
   {
   }
 
   @Override
-  public void propertyRemoved(IProperty<S, T> pProperty)
+  public void propertyRemoved(IPropertyDescription<S, T> pPropertyDescription)
   {
   }
 }

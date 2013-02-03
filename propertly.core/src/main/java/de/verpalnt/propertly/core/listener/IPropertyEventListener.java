@@ -1,6 +1,7 @@
 package de.verpalnt.propertly.core.listener;
 
 import de.verpalnt.propertly.core.IProperty;
+import de.verpalnt.propertly.core.IPropertyDescription;
 
 /**
  * @author PaL
@@ -12,8 +13,8 @@ public interface IPropertyEventListener<S, T>
 
   void propertyChange(IProperty<S, T> pProperty, T pOldValue, T pNewValue);
 
-  void propertyAdded(IProperty<S, T> pProperty);
+  void propertyAdded(IPropertyDescription<S, T> pPropertyDescription);
 
-  void propertyRemoved(IProperty<S, T> pProperty);
+  void propertyRemoved(IPropertyDescription<S, T> pPropertyDescription);
 
 }

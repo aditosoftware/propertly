@@ -1,5 +1,6 @@
 package de.verpalnt.propertly.core.hierarchy;
 
+import de.verpalnt.propertly.core.IPropertyDescription;
 import de.verpalnt.propertly.core.IPropertyPitProvider;
 import de.verpalnt.propertly.core.PropertyDescription;
 
@@ -55,6 +56,18 @@ public class Hierarchy
   {
     for (NodeListener listener : listeners)
       listener.valueChanged(pNode, pOldValue, pNewValue);
+  }
+
+  void fireNodeAdded(Node pParentNode, IPropertyDescription pDescription)
+  {
+    for (NodeListener listener : listeners)
+      listener.nodeAdded(pParentNode, pDescription);
+  }
+
+  void fireNodeRemoved(Node pParentNode, IPropertyDescription pDescription)
+  {
+    for (NodeListener listener : listeners)
+      listener.nodeRemoved(pParentNode, pDescription);
   }
 
 }

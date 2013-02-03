@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
  *         Date: 18.11.12
  *         Time: 15:44
  */
-public interface IMutablePropertyPit<S extends IPropertyPitProvider> extends IPropertyPit<S>
+public interface IMutablePropertyPit<S extends IMutablePropertyPitProvider, T> extends IPropertyPit<S>, IMutablePropertyPitProvider<S, T>
 {
 
   @Nonnull

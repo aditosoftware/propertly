@@ -8,7 +8,7 @@ import de.verpalnt.propertly.core.MutablePropertyPit;
  *         Date: 18.11.12
  *         Time: 23:43
  */
-public class PropertyTestChildren extends MutablePropertyPit<PropertyTestChildren>
+public class PropertyTestChildren extends MutablePropertyPit<PropertyTestChildren, Object>
 {
 
 }

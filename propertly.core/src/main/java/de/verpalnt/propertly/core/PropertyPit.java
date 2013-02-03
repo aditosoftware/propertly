@@ -1,10 +1,14 @@
 package de.verpalnt.propertly.core;
 
 import de.verpalnt.propertly.core.hierarchy.Node;
-import de.verpalnt.propertly.core.hierarchy.PPPSupport;
+import de.verpalnt.propertly.core.hierarchy.NodeListener;
 import de.verpalnt.propertly.core.listener.IPropertyEventListener;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author PaL
@@ -15,7 +19,6 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 {
 
   private S source;
-  private List<IPropertyEventListener> listenerList;
   private Node node;
 
   protected PropertyPit()
@@ -96,34 +99,43 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   }
 
   @Override
-  public final synchronized void addPropertyEventListener(IPropertyEventListener pListener)
+  public final synchronized void addPropertyEventListener(final IPropertyEventListener pListener)
   {
-    if (listenerList == null)
-      listenerList = new ArrayList<IPropertyEventListener>();
-    listenerList.add(pListener);
+    node.getHierarchy().addNodeListener(new NodeListener()
+    {
+      @Override
+      public void valueChanged(Node pNode, Object pOldValue, Object pNewValue)
+      {
+        if (node.equals(pNode) || node.equals(pNode.getParent()))
+          pListener.propertyChange(pNode.getProperty(), pOldValue, pNewValue);
+      }
+
+      @Override
+      public void nodeAdded(Node pParent, IPropertyDescription pPropertyDescription)
+      {
+        if (node.equals(pParent))
+          pListener.propertyAdded(pPropertyDescription);
+      }
+
+      @Override
+      public void nodeRemoved(Node pParent, IPropertyDescription pPropertyDescription)
+      {
+        if (node.equals(pParent))
+          pListener.propertyRemoved(pPropertyDescription);
+      }
+    });
   }
 
   @Override
   public final synchronized void removePropertyEventListener(IPropertyEventListener pListener)
   {
-    if (listenerList != null)
-    {
-      if (listenerList.remove(pListener) && listenerList.isEmpty())
-        listenerList = null;
-    }
+    throw new NotImplementedException();
   }
 
   @Override
   public IPropertyPit<S> getPit()
   {
     return this;
-  }
-
-  synchronized List<IPropertyEventListener> getListeners()
-  {
-    if (listenerList == null)
-      return Collections.emptyList();
-    return new ArrayList<IPropertyEventListener>(listenerList);
   }
 
   public void setNode(Node pNode)

@@ -9,7 +9,7 @@ public interface IMutablePropertyPitProvider<S extends IMutablePropertyPitProvid
 {
 
   @Override
-  IMutablePropertyPit<S> getPit();
+  IMutablePropertyPit<S, T> getPit();
 
   T getChildType();
 
