@@ -1,6 +1,10 @@
 package de.verpalnt.propertly.test.common;
 
-import de.verpalnt.propertly.core.*;
+import de.verpalnt.propertly.core.api.IProperty;
+import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.common.PD;
+import de.verpalnt.propertly.core.hierarchy.PropertyPit;
 
 import java.awt.*;
 

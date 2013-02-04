@@ -1,8 +1,7 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.IPropertyDescription;
-import de.verpalnt.propertly.core.IPropertyPitProvider;
-import de.verpalnt.propertly.core.PropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;
@@ -42,12 +41,12 @@ public class Hierarchy
     return node;
   }
 
-  public void addNodeListener(NodeListener pListener)
+  void addNodeListener(NodeListener pListener)
   {
     listeners.add(pListener);
   }
 
-  public void removeNodeListener(NodeListener pListener)
+  void removeNodeListener(NodeListener pListener)
   {
     listeners.remove(pListener);
   }

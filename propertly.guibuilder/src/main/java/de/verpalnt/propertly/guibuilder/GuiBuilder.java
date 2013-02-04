@@ -1,7 +1,7 @@
 package de.verpalnt.propertly.guibuilder;
 
-import de.verpalnt.propertly.core.IProperty;
-import de.verpalnt.propertly.core.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.IProperty;
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

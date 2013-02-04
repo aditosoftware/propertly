@@ -1,9 +1,9 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.IMutablePropertyPitProvider;
-import de.verpalnt.propertly.core.IProperty;
-import de.verpalnt.propertly.core.IPropertyDescription;
-import de.verpalnt.propertly.core.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.IMutablePropertyPitProvider;
+import de.verpalnt.propertly.core.api.IProperty;
+import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 import de.verpalnt.propertly.core.common.PPPIntrospector;
 
 import javax.annotation.Nonnull;
@@ -29,14 +29,14 @@ public class Node
   private List<Node> children;
 
 
-  public Node(@Nonnull Hierarchy pHierarchy, @Nullable Node pParent, @Nonnull IPropertyDescription pPropertyDescription)
+  protected Node(@Nonnull Hierarchy pHierarchy, @Nullable Node pParent, @Nonnull IPropertyDescription pPropertyDescription)
   {
     hierarchy = pHierarchy;
     parent = pParent;
     property = new HierarchyProperty(this, pPropertyDescription);
   }
 
-  public Object setValue(Object pValue)
+  protected Object setValue(Object pValue)
   {
     if ((value == pValue) || (value != null && value.equals(pValue)))
       return value; // nothing changes with equal values.
@@ -103,22 +103,22 @@ public class Node
     return value;
   }
 
-  public Object getValue()
+  protected Object getValue()
   {
     return value;
   }
 
-  public Hierarchy getHierarchy()
+  protected Hierarchy getHierarchy()
   {
     return hierarchy;
   }
 
-  public Node getParent()
+  protected Node getParent()
   {
     return parent;
   }
 
-  public String getPath()
+  protected String getPath()
   {
     Node parentNode = getParent();
     String name = getProperty().getName();
@@ -126,40 +126,27 @@ public class Node
   }
 
   @Nullable
-  public List<Node> getChildren()
+  protected List<Node> getChildren()
   {
     return children;
   }
 
-  @Nullable
-  public PPPSupport getPPPSupport()
-  {
-    return value instanceof PPPSupport ? (PPPSupport) value : null;
-  }
-
-  @Nullable
-  public IPropertyPitProvider getPropertyPitProvider()
-  {
-    PPPSupport pppSupport = getPPPSupport();
-    return pppSupport == null ? null : pppSupport.getPPP();
-  }
-
-  public IProperty getProperty()
+  protected IProperty getProperty()
   {
     return property;
   }
 
-  public IPropertyDescription getPropertyDescription()
+  protected IPropertyDescription getPropertyDescription()
   {
     return property.getDescription();
   }
 
-  public boolean isLeaf()
+  protected boolean isLeaf()
   {
     return IPropertyPitProvider.class.isAssignableFrom(property.getType());
   }
 
-  public void addProperty(IPropertyDescription pPropertyDescription)
+  protected void addProperty(IPropertyDescription pPropertyDescription)
   {
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + property);
@@ -170,7 +157,7 @@ public class Node
     hierarchy.fireNodeAdded(this, pPropertyDescription);
   }
 
-  public boolean removeProperty(String pName)
+  protected boolean removeProperty(String pName)
   {
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + property);

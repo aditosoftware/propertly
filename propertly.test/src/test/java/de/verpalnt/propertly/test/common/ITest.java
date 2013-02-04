@@ -1,7 +1,7 @@
 package de.verpalnt.propertly.test.common;
 
-import de.verpalnt.propertly.core.IPropertyDescription;
-import de.verpalnt.propertly.core.PD;
+import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.common.PD;
 
 /**
  * @author PaL

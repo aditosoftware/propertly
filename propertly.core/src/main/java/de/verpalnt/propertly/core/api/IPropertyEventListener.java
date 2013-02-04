@@ -1,7 +1,4 @@
-package de.verpalnt.propertly.core.listener;
-
-import de.verpalnt.propertly.core.IProperty;
-import de.verpalnt.propertly.core.IPropertyDescription;
+package de.verpalnt.propertly.core.api;
 
 /**
  * @author PaL

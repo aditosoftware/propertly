@@ -1,8 +1,9 @@
-package de.verpalnt.propertly.core;
+package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.hierarchy.Node;
-import de.verpalnt.propertly.core.hierarchy.NodeListener;
-import de.verpalnt.propertly.core.listener.IPropertyEventListener;
+import de.verpalnt.propertly.core.api.IProperty;
+import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyEventListener;
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nonnull;
@@ -140,12 +141,12 @@ public class PropertyPit<S extends IPropertyPitProvider<S>> implements IProperty
     return this;
   }
 
-  public void setNode(Node pNode)
+  void setNode(Node pNode)
   {
     node = pNode;
   }
 
-  public Node getNode()
+  Node getNode()
   {
     return node;
   }

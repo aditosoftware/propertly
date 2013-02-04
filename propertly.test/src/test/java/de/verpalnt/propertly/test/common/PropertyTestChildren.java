@@ -1,7 +1,7 @@
 package de.verpalnt.propertly.test.common;
 
 
-import de.verpalnt.propertly.core.MutablePropertyPit;
+import de.verpalnt.propertly.core.hierarchy.MutablePropertyPit;
 
 import java.awt.*;
 

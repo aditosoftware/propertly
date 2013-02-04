@@ -1,7 +1,7 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.IProperty;
-import de.verpalnt.propertly.core.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IProperty;
+import de.verpalnt.propertly.core.api.IPropertyDescription;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -11,13 +11,13 @@ import java.util.List;
  *         Date: 30.01.13
  *         Time: 00:30
  */
-public class HierarchyProperty implements IProperty
+class HierarchyProperty implements IProperty
 {
 
   private Node node;
   private IPropertyDescription propertyDescription;
 
-  public HierarchyProperty(Node pNode, IPropertyDescription pPropertyDescription)
+  HierarchyProperty(Node pNode, IPropertyDescription pPropertyDescription)
   {
     node = pNode;
     propertyDescription = pPropertyDescription;

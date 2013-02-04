@@ -1,7 +1,7 @@
 package de.verpalnt.propertly.core.common;
 
-import de.verpalnt.propertly.core.IPropertyDescription;
-import de.verpalnt.propertly.core.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 
 import java.lang.reflect.Field;
 import java.util.*;

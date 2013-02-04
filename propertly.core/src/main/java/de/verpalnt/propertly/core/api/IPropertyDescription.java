@@ -1,4 +1,4 @@
-package de.verpalnt.propertly.core;
+package de.verpalnt.propertly.core.api;
 
 import java.lang.annotation.Annotation;
 import java.util.List;

@@ -1,4 +1,6 @@
-package de.verpalnt.propertly.core;
+package de.verpalnt.propertly.core.api;
+
+import de.verpalnt.propertly.core.hierarchy.MutablePropertyPit;
 
 /**
  * @author PaL

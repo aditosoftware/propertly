@@ -1,4 +1,8 @@
-package de.verpalnt.propertly.core;
+package de.verpalnt.propertly.core.hierarchy;
+
+import de.verpalnt.propertly.core.api.IMutablePropertyPitProvider;
+import de.verpalnt.propertly.core.api.IProperty;
+import de.verpalnt.propertly.core.api.IPropertyDescription;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

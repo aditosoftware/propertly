@@ -1,4 +1,7 @@
-package de.verpalnt.propertly.core;
+package de.verpalnt.propertly.core.common;
+
+import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.hierarchy.PropertyDescription;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

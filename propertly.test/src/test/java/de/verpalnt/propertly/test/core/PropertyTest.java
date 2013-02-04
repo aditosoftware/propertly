@@ -1,7 +1,7 @@
 package de.verpalnt.propertly.test.core;
 
-import de.verpalnt.propertly.core.IProperty;
-import de.verpalnt.propertly.core.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IProperty;
+import de.verpalnt.propertly.core.api.IPropertyDescription;
 import de.verpalnt.propertly.core.hierarchy.Hierarchy;
 import de.verpalnt.propertly.core.listener.PropertyEventAdapter;
 import de.verpalnt.propertly.test.common.PropertyTestChildren;

@@ -1,4 +1,4 @@
-package de.verpalnt.propertly.core;
+package de.verpalnt.propertly.core.api;
 
 /**
  * @author PaL
