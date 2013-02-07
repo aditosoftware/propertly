@@ -18,11 +18,6 @@ public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extend
 
   private Class<T> allowedChildType;
 
-  public MutablePropertyPit(Class<T> pAllowedChildType)
-  {
-    super();
-    allowedChildType = pAllowedChildType;
-  }
 
   MutablePropertyPit(S pSource, Class<T> pAllowedChildType)
   {

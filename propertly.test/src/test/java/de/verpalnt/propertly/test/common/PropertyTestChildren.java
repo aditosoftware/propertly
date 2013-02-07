@@ -1,7 +1,7 @@
 package de.verpalnt.propertly.test.common;
 
 
-import de.verpalnt.propertly.core.hierarchy.MutablePropertyPit;
+import de.verpalnt.propertly.core.api.AbstractMutablePPP;
 
 import java.awt.*;
 
@@ -10,7 +10,7 @@ import java.awt.*;
  *         Date: 18.11.12
  *         Time: 23:43
  */
-public class PropertyTestChildren extends MutablePropertyPit<PropertyTestChildren, Color>
+public class PropertyTestChildren extends AbstractMutablePPP<PropertyTestChildren, Color>
 {
   public PropertyTestChildren()
   {

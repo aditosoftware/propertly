@@ -20,10 +20,6 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   private S source;
   private Node node;
 
-  protected PropertyPit()
-  {
-    source = (S) this;
-  }
 
   PropertyPit(S pSource)
   {

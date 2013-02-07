@@ -1,10 +1,9 @@
 package de.verpalnt.propertly.test.common;
 
+import de.verpalnt.propertly.core.api.AbstractPPP;
 import de.verpalnt.propertly.core.api.IProperty;
 import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 import de.verpalnt.propertly.core.common.PD;
-import de.verpalnt.propertly.core.hierarchy.PropertyPit;
 
 import java.awt.*;
 
@@ -13,79 +12,72 @@ import java.awt.*;
  *         Date: 26.11.12
  *         Time: 21:39
  */
-public class TProperty implements IPropertyPitProvider, ITest, IComponent
+public class TProperty extends AbstractPPP<TProperty> implements ITest, IComponent
 {
 
   public static final IPropertyDescription<TProperty, Integer> X = PD.create(TProperty.class);
   public static final IPropertyDescription<TProperty, Integer> Y = PD.create(TProperty.class);
   public static final IPropertyDescription<TProperty, Dimension> FF = PD.create(TProperty.class);
 
-  private PropertyPit<TProperty> pit = PropertyPit.create(this);
 
   public IProperty<TProperty, Integer> getPropertyX()
   {
-    return pit.getProperty(X);
+    return getProperty(X);
   }
 
   public Integer getX()
   {
-    return pit.getValue(X);
+    return getPit().getValue(X);
   }
 
   public void setX(Integer pX)
   {
-    pit.setValue(X, pX);
+    setValue(X, pX);
   }
 
   public IProperty<TProperty, Integer> getPropertyY()
   {
-    return pit.getProperty(Y);
+    return getProperty(Y);
   }
 
   public Integer getY()
   {
-    return pit.getValue(Y);
+    return getValue(Y);
   }
 
   public void setY(Integer pY)
   {
-    pit.setValue(Y, pY);
+    setValue(Y, pY);
   }
 
   public IProperty<TProperty, Dimension> getPropertyFF()
   {
-    return pit.getProperty(FF);
+    return getProperty(FF);
   }
 
   public Dimension getFF()
   {
-    return pit.getValue(FF);
+    return getValue(FF);
   }
 
   public void setFF(Dimension pFF)
   {
-    pit.setValue(FF, pFF);
+    setValue(FF, pFF);
   }
 
   public IProperty<ITest, PropertyTestChildren> getPropertyCHILD()
   {
-    return pit.getProperty(CHILD);
+    return getProperty(CHILD);
   }
 
   public PropertyTestChildren getCHILD()
   {
-    return pit.getValue(CHILD);
+    return getValue(CHILD);
   }
 
   public PropertyTestChildren setCHILD(PropertyTestChildren pCHILD)
   {
-    return pit.setValue(CHILD, pCHILD);
+    return setValue(CHILD, pCHILD);
   }
 
-
-  @Override
-  public PropertyPit<TProperty> getPit()
-  {
-    return pit;
-  }
 }
