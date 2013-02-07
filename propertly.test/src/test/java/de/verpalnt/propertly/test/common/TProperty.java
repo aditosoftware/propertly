@@ -13,7 +13,7 @@ import java.awt.*;
  *         Date: 26.11.12
  *         Time: 21:39
  */
-public class TProperty implements IPropertyPitProvider<TProperty>, ITest
+public class TProperty implements IPropertyPitProvider, ITest, IComponent
 {
 
   public static final IPropertyDescription<TProperty, Integer> X = PD.create(TProperty.class);

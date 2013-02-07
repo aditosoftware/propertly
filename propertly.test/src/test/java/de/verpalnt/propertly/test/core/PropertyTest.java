@@ -2,8 +2,10 @@ package de.verpalnt.propertly.test.core;
 
 import de.verpalnt.propertly.core.api.IProperty;
 import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyEventListener;
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.common.PropertyEventAdapter;
 import de.verpalnt.propertly.core.hierarchy.Hierarchy;
-import de.verpalnt.propertly.core.listener.PropertyEventAdapter;
 import de.verpalnt.propertly.test.common.PropertyTestChildren;
 import de.verpalnt.propertly.test.common.TProperty;
 import org.testng.annotations.Test;
@@ -21,7 +23,28 @@ public class PropertyTest
   @Test
   public PropertyTest()
   {
-    TProperty tProperty = Hierarchy.create("root", new TProperty());
+    Hierarchy<TProperty> hierarchy = new Hierarchy<TProperty>("root", new TProperty());
+    hierarchy.addPropertyEventListener(new IPropertyEventListener()
+    {
+      @Override
+      public void propertyChange(IProperty pProperty, Object pOldValue, Object pNewValue)
+      {
+        System.out.println("\tG: " + pOldValue + ", " + pNewValue + ", " + pProperty);
+      }
+
+      @Override
+      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
+      {
+        System.out.println("\tG: " + pSource + ", " + pPropertyDescription);
+      }
+
+      @Override
+      public void propertyRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
+      {
+        System.out.println("\tG: " + pSource + ", " + pPropertyDescription);
+      }
+    });
+    TProperty tProperty = hierarchy.getValue();
     //GetterSetterGen.run(tProperty);
     tProperty.getPit().addPropertyEventListener(new PropertyEventAdapter()
     {
@@ -35,7 +58,7 @@ public class PropertyTest
     children.addPropertyEventListener(new PropertyEventAdapter()
     {
       @Override
-      public void propertyAdded(IPropertyDescription pPropertyDescription)
+      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
       {
         System.out.println("ADDED: " + pPropertyDescription);
       }
@@ -50,11 +73,11 @@ public class PropertyTest
     System.out.println("-------------------------------------------------------------------");
 
     System.out.println("child parent=" + tProperty.getCHILD().getParent());
-    for (IProperty property : tProperty.getCHILD().getProperties())
+    for (IProperty property : tProperty.getCHILD())
       System.out.println(property);
 
     System.out.println("tProperty parent=" + tProperty.getPit().getParent());
-    for (IProperty property : tProperty.getPit().getProperties())
+    for (IProperty property : tProperty.getPit())
       System.out.println(property);
   }
 

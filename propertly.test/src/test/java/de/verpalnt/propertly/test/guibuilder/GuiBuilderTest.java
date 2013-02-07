@@ -17,7 +17,7 @@ public class GuiBuilderTest
   {
     JFrame frame = new JFrame();
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    TProperty tProperty = Hierarchy.create("root", new TProperty());
+    TProperty tProperty = new Hierarchy<TProperty>("root", new TProperty()).getValue();
     frame.getContentPane().add(new GuiBuilder(tProperty).build());
     frame.pack();
     frame.setVisible(true);

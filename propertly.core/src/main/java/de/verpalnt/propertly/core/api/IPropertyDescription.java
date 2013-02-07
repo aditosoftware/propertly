@@ -8,7 +8,7 @@ import java.util.List;
  *         Date: 29.09.11
  *         Time: 21:39
  */
-public interface IPropertyDescription<S, T>
+public interface IPropertyDescription<S extends IPropertyPitProvider, T>
 {
 
   Class<S> getParentType();

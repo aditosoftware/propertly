@@ -1,9 +1,6 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IMutablePropertyPitProvider;
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.common.PPPIntrospector;
 
 import javax.annotation.Nonnull;
@@ -22,11 +19,11 @@ public class Node
 
   private final Hierarchy hierarchy;
   private final Node parent;
+  private HierarchyProperty property;
 
-  private IProperty property;
   private Object value;
-
   private List<Node> children;
+  private List<IPropertyEventListener> listeners;
 
 
   protected Node(@Nonnull Hierarchy pHierarchy, @Nullable Node pParent, @Nonnull IPropertyDescription pPropertyDescription)
@@ -99,7 +96,7 @@ public class Node
       value = pValue;
       children = null;
     }
-    hierarchy.fireNodeChanged(this, oldValue, pValue);
+    _fireValueChange(oldValue, pValue);
     return value;
   }
 
@@ -154,7 +151,7 @@ public class Node
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
     children.add(new Node(hierarchy, this, pPropertyDescription));
-    hierarchy.fireNodeAdded(this, pPropertyDescription);
+    _fireNodeAdded(pPropertyDescription);
   }
 
   protected boolean removeProperty(String pName)
@@ -169,11 +166,54 @@ public class Node
       {
         IPropertyDescription descr = nProp.getDescription();
         children.remove(node);
-        hierarchy.fireNodeRemoved(this, descr);
+        _fireNodeRemoved(descr);
         return true;
       }
     }
     return false;
+  }
+
+  protected void addPropertyEventListener(IPropertyEventListener pListener)
+  {
+    if (listeners == null)
+      listeners = new ArrayList<IPropertyEventListener>();
+    listeners.add(pListener);
+  }
+
+  protected void removePropertyEventListener(IPropertyEventListener pListener)
+  {
+    if (listeners != null)
+      listeners.add(pListener);
+  }
+
+  private void _fireValueChange(Object pOldValue, Object pNewValue)
+  {
+    hierarchy.fireNodeChanged(getProperty(), pOldValue, pNewValue);
+    Node p = getParent();
+    if (p != null)
+    {
+      List<IPropertyEventListener> l = p.listeners;
+      if (l != null)
+        for (IPropertyEventListener eventListener : l)
+          eventListener.propertyChange(getProperty(), pOldValue, pNewValue);
+    }
+    property.fire(pOldValue, pNewValue);
+  }
+
+  private void _fireNodeAdded(IPropertyDescription pPropertyDescription)
+  {
+    hierarchy.firePropertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription);
+    if (listeners != null)
+      for (IPropertyEventListener listener : listeners)
+        listener.propertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription);
+  }
+
+  private void _fireNodeRemoved(IPropertyDescription pPropertyDescription)
+  {
+    hierarchy.firePropertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
+    if (listeners != null)
+      for (IPropertyEventListener listener : listeners)
+        listener.propertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
   }
 
   private Node _find(String pName)

@@ -7,7 +7,7 @@ import de.verpalnt.propertly.core.hierarchy.PropertyPit;
  *         Date: 14.10.12
  *         Time: 14:52
  */
-public interface IPropertyPitProvider<S extends IPropertyPitProvider<S>>
+public interface IPropertyPitProvider<S extends IPropertyPitProvider>
 {
 
   PropertyPit<S> getPit();

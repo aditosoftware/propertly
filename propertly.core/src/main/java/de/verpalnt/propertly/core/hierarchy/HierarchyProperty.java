@@ -2,8 +2,10 @@ package de.verpalnt.propertly.core.hierarchy;
 
 import de.verpalnt.propertly.core.api.IProperty;
 import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyEventListener;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +18,7 @@ class HierarchyProperty implements IProperty
 
   private Node node;
   private IPropertyDescription propertyDescription;
+  private List<IPropertyEventListener> listeners;
 
   HierarchyProperty(Node pNode, IPropertyDescription pPropertyDescription)
   {
@@ -63,6 +66,28 @@ class HierarchyProperty implements IProperty
   public List<? extends Annotation> getAnnotations()
   {
     return propertyDescription.getAnnotations();
+  }
+
+  @Override
+  public void addPropertyEventListener(IPropertyEventListener pListener)
+  {
+    if (listeners == null)
+      listeners = new ArrayList<IPropertyEventListener>();
+    listeners.add(pListener);
+  }
+
+  @Override
+  public void removePropertyEventListener(IPropertyEventListener pListener)
+  {
+    if (listeners != null)
+      listeners.remove(pListener);
+  }
+
+  void fire(Object pOldValue, Object pNewValue)
+  {
+    if (listeners != null)
+      for (IPropertyEventListener listener : listeners)
+        listener.propertyChange(this, pOldValue, pNewValue);
   }
 
   @Override

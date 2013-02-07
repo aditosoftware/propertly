@@ -1,6 +1,7 @@
 package de.verpalnt.propertly.core.common;
 
 import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 import de.verpalnt.propertly.core.hierarchy.PropertyDescription;
 
 import java.lang.annotation.Annotation;
@@ -24,7 +25,7 @@ public class PD
   }
 
 
-  public static <S, T> IPropertyDescription<S, T> create(Class<S> pSource)
+  public static <S extends IPropertyPitProvider, T> IPropertyDescription<S, T> create(Class<S> pSource)
   {
     List<Field> fields = FIELD_CACHE.get(pSource);
     if (fields == null)

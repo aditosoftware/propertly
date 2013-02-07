@@ -1,72 +1,70 @@
 package de.verpalnt.propertly.core.hierarchy;
 
+import de.verpalnt.propertly.core.api.IProperty;
 import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyEventListener;
 import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author PaL
  *         Date: 29.01.13
  *         Time: 23:13
  */
-public class Hierarchy
+public class Hierarchy<T extends IPropertyPitProvider>
 {
 
   private final Node node;
-  private final Set<NodeListener> listeners;
+  private final List<IPropertyEventListener> listeners;
 
-  public Hierarchy(String pName)
+  private Hierarchy(String pName)
   {
-    node = new Node(this, null, PropertyDescription.create(null, IPropertyPitProvider.class, pName, Collections.<Annotation>emptySet()));
-    listeners = new LinkedHashSet<NodeListener>();
+    node = new Node(this, null, PropertyDescription.create(IPropertyPitProvider.class, IPropertyPitProvider.class,
+        pName, Collections.<Annotation>emptySet()));
+    listeners = new ArrayList<IPropertyEventListener>();
   }
 
-  public Hierarchy(String pName, IPropertyPitProvider pPPP)
+  public Hierarchy(String pName, T pPPP)
   {
     this(pName);
     node.setValue(pPPP);
   }
 
-  public static <T extends IPropertyPitProvider> T create(String pName, T pPPP)
+  public T getValue()
   {
-    return (T) new Hierarchy(pName, pPPP).getNode().getValue();
+    return (T) node.getValue();
   }
 
-  public Node getNode()
-  {
-    return node;
-  }
-
-  void addNodeListener(NodeListener pListener)
+  public void addPropertyEventListener(IPropertyEventListener pListener)
   {
     listeners.add(pListener);
   }
 
-  void removeNodeListener(NodeListener pListener)
+  public void removePropertyEventListener(IPropertyEventListener pListener)
   {
     listeners.remove(pListener);
   }
 
-  void fireNodeChanged(Node pNode, Object pOldValue, Object pNewValue)
+  void fireNodeChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
   {
-    for (NodeListener listener : listeners)
-      listener.valueChanged(pNode, pOldValue, pNewValue);
+    for (IPropertyEventListener listener : listeners)
+      listener.propertyChange(pProperty, pOldValue, pNewValue);
   }
 
-  void fireNodeAdded(Node pParentNode, IPropertyDescription pDescription)
+  void firePropertyAdded(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
   {
-    for (NodeListener listener : listeners)
-      listener.nodeAdded(pParentNode, pDescription);
+    for (IPropertyEventListener listener : listeners)
+      listener.propertyAdded(pPropertyPitProvider, pDescription);
   }
 
-  void fireNodeRemoved(Node pParentNode, IPropertyDescription pDescription)
+  void firePropertyRemoved(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
   {
-    for (NodeListener listener : listeners)
-      listener.nodeRemoved(pParentNode, pDescription);
+    for (IPropertyEventListener listener : listeners)
+      listener.propertyRemoved(pPropertyPitProvider, pDescription);
   }
 
 }

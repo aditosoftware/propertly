@@ -1,6 +1,7 @@
 package de.verpalnt.propertly.core.hierarchy;
 
 import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,7 +15,7 @@ import java.util.List;
  *         Date: 30.09.11
  *         Time: 23:49
  */
-public class PropertyDescription<S, T> implements IPropertyDescription<S, T>
+public class PropertyDescription<S extends IPropertyPitProvider, T> implements IPropertyDescription<S, T>
 {
 
   private Class<S> parentType;
@@ -90,9 +91,9 @@ public class PropertyDescription<S, T> implements IPropertyDescription<S, T>
     this.annotations = annotations;
   }
 
-  public static <S, T> IPropertyDescription<S, T> create(@Nonnull Class<S> pParentType, @Nonnull Class<T> pType,
-                                                         @Nonnull String pName,
-                                                         @Nullable Iterable<? extends Annotation> pAnnotations)
+  public static <S extends IPropertyPitProvider, T> IPropertyDescription<S, T> create(
+      @Nonnull Class<S> pParentType, @Nonnull Class<T> pType, @Nonnull String pName,
+      @Nullable Iterable<? extends Annotation> pAnnotations)
   {
     return new PropertyDescription<S, T>(pParentType, pType, pName, pAnnotations);
   }

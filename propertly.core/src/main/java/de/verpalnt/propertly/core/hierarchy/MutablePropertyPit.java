@@ -13,7 +13,7 @@ import java.lang.annotation.Annotation;
  *         Date: 18.11.12
  *         Time: 21:51
  */
-public class MutablePropertyPit<S extends IMutablePropertyPitProvider<S, T>, T> extends PropertyPit<S> implements IMutablePropertyPitProvider<S, T>
+public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extends PropertyPit<S> implements IMutablePropertyPitProvider<S, T>
 {
 
   private Class<T> allowedChildType;

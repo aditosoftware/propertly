@@ -4,21 +4,17 @@ import de.verpalnt.propertly.core.api.IProperty;
 import de.verpalnt.propertly.core.api.IPropertyDescription;
 import de.verpalnt.propertly.core.api.IPropertyEventListener;
 import de.verpalnt.propertly.core.api.IPropertyPitProvider;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author PaL
  *         Date: 03.10.11
  *         Time: 22:02
  */
-public class PropertyPit<S extends IPropertyPitProvider<S>> implements IPropertyPitProvider<S>
+public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPitProvider<S>, Iterable<IProperty<S, ?>>
 {
 
   private S source;
@@ -53,7 +49,8 @@ public class PropertyPit<S extends IPropertyPitProvider<S>> implements IProperty
   }
 
   @Nullable
-  public final <SOURCE, T> IProperty<SOURCE, T> findProperty(IPropertyDescription<SOURCE, T> pPropertyDescription)
+  public final <SOURCE extends IPropertyPitProvider, T> IProperty<SOURCE, T> findProperty(
+      IPropertyDescription<SOURCE, T> pPropertyDescription)
   {
     List<Node> children = node.getChildren();
     if (children != null)
@@ -67,7 +64,8 @@ public class PropertyPit<S extends IPropertyPitProvider<S>> implements IProperty
   }
 
   @Nonnull
-  public final <SOURCE, T> IProperty<SOURCE, T> getProperty(IPropertyDescription<SOURCE, T> pPropertyDescription)
+  public final <SOURCE extends IPropertyPitProvider, T> IProperty<SOURCE, T> getProperty(
+      IPropertyDescription<SOURCE, T> pPropertyDescription)
   {
     IProperty<SOURCE, T> property = findProperty(pPropertyDescription);
     if (property == null)
@@ -96,44 +94,28 @@ public class PropertyPit<S extends IPropertyPitProvider<S>> implements IProperty
   }
 
   @Nonnull
-  public List<IProperty> getProperties()
+  public List<IProperty<S, ?>> getProperties()
   {
-    List<IProperty> properties = new ArrayList<IProperty>();
+    List<IProperty<S, ?>> properties = new ArrayList<IProperty<S, ?>>();
     for (Node childNode : node.getChildren())
       properties.add(childNode.getProperty());
     return properties;
   }
 
-  public final synchronized void addPropertyEventListener(final IPropertyEventListener pListener)
+  @Override
+  public Iterator<IProperty<S, ?>> iterator()
   {
-    node.getHierarchy().addNodeListener(new NodeListener()
-    {
-      @Override
-      public void valueChanged(Node pNode, Object pOldValue, Object pNewValue)
-      {
-        if (node.equals(pNode) || node.equals(pNode.getParent()))
-          pListener.propertyChange(pNode.getProperty(), pOldValue, pNewValue);
-      }
-
-      @Override
-      public void nodeAdded(Node pParent, IPropertyDescription pPropertyDescription)
-      {
-        if (node.equals(pParent))
-          pListener.propertyAdded(pPropertyDescription);
-      }
-
-      @Override
-      public void nodeRemoved(Node pParent, IPropertyDescription pPropertyDescription)
-      {
-        if (node.equals(pParent))
-          pListener.propertyRemoved(pPropertyDescription);
-      }
-    });
+    return getProperties().iterator();
   }
 
-  public final synchronized void removePropertyEventListener(IPropertyEventListener pListener)
+  public final void addPropertyEventListener(final IPropertyEventListener pListener)
   {
-    throw new NotImplementedException();
+    node.addPropertyEventListener(pListener);
+  }
+
+  public final void removePropertyEventListener(IPropertyEventListener pListener)
+  {
+    node.removePropertyEventListener(pListener);
   }
 
   public PropertyPit<S> getPit()
