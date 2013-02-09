@@ -15,7 +15,9 @@ import java.awt.*;
 public class TProperty extends AbstractPPP<TProperty> implements ITest, IComponent
 {
 
+  @IntVerifier(minValue = 0)
   public static final IPropertyDescription<TProperty, Integer> X = PD.create(TProperty.class);
+  @IntVerifier(minValue = 0)
   public static final IPropertyDescription<TProperty, Integer> Y = PD.create(TProperty.class);
   public static final IPropertyDescription<TProperty, Dimension> FF = PD.create(TProperty.class);
 

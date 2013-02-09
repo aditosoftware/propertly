@@ -14,33 +14,28 @@ import java.util.Set;
  *         Date: 29.01.13
  *         Time: 23:13
  */
-public class Node
+public class Node extends AbstractNode
 {
 
-  private final Hierarchy hierarchy;
-  private final Node parent;
-  private HierarchyProperty property;
-
   private Object value;
-  private List<Node> children;
+  private List<AbstractNode> children;
   private List<IPropertyEventListener> listeners;
 
 
-  protected Node(@Nonnull Hierarchy pHierarchy, @Nullable Node pParent, @Nonnull IPropertyDescription pPropertyDescription)
+  protected Node(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull IPropertyDescription pPropertyDescription)
   {
-    hierarchy = pHierarchy;
-    parent = pParent;
-    property = new HierarchyProperty(this, pPropertyDescription);
+    super(pHierarchy, pParent, pPropertyDescription);
   }
 
-  protected Object setValue(Object pValue)
+  @Override
+  public Object setValue(Object pValue)
   {
     if ((value == pValue) || (value != null && value.equals(pValue)))
       return value; // nothing changes with equal values.
 
     if (pValue != null)
     {
-      Class type = property.getType();
+      Class type = getProperty().getType();
       if (!type.isAssignableFrom(pValue.getClass()))
         throw new IllegalArgumentException("'" + pValue + "' can't be set for field with type '" + type + "'.");
     }
@@ -48,11 +43,12 @@ public class Node
     IPropertyPitProvider pppProvider = null;
     if (pValue instanceof IPropertyPitProvider)
       pppProvider = (IPropertyPitProvider) pValue;
-    if (pppProvider != null && pppProvider.getPit().getNode() != null && hierarchy.equals(pppProvider.getPit().getNode().hierarchy))
+    if (pppProvider != null && pppProvider.getPit().getNode() != null &&
+        getHierarchy().equals(pppProvider.getPit().getNode().getHierarchy()))
       throw new IllegalStateException("can't set PPP from my own hierarchy.");
     if (oldValue instanceof IPropertyPitProvider)
     {
-      for (Node child : children)
+      for (AbstractNode child : children)
         child.setValue(null);
       ((IPropertyPitProvider) oldValue).getPit().setNode(null);
     }
@@ -69,23 +65,23 @@ public class Node
       }
       value = pppCopy;
       pppCopy.getPit().setNode(this);
-      Node node = pppProvider.getPit().getNode();
+      AbstractNode node = pppProvider.getPit().getNode();
 
       if (node == null)
       {
         Set<IPropertyDescription> descriptions = PPPIntrospector.get(pppProvider.getClass());
-        List<Node> nodes = new ArrayList<Node>(descriptions.size());
+        List<AbstractNode> nodes = new ArrayList<AbstractNode>(descriptions.size());
         for (IPropertyDescription description : descriptions)
-          nodes.add(new Node(hierarchy, this, description));
+          nodes.add(createChild(description));
         children = nodes;
       }
       else
       {
-        List<Node> childNodes = node.getChildren();
+        List<AbstractNode> childNodes = node.getChildren();
         assert childNodes != null;
-        List<Node> newNodes = new ArrayList<Node>(childNodes.size());
-        for (Node child : childNodes)
-          newNodes.add(new Node(hierarchy, this, child.getProperty().getDescription()));
+        List<AbstractNode> newNodes = new ArrayList<AbstractNode>(childNodes.size());
+        for (AbstractNode child : childNodes)
+          newNodes.add(createChild(child.getProperty().getDescription()));
         children = newNodes;
         for (int i = 0; i < childNodes.size(); i++)
           newNodes.get(i).setValue(childNodes.get(i));
@@ -96,69 +92,46 @@ public class Node
       value = pValue;
       children = null;
     }
-    _fireValueChange(oldValue, pValue);
+    fireValueChange(oldValue, pValue);
     return value;
   }
 
-  protected Object getValue()
+  @Override
+  public Object getValue()
   {
     return value;
   }
 
-  protected Hierarchy getHierarchy()
-  {
-    return hierarchy;
-  }
-
-  protected Node getParent()
-  {
-    return parent;
-  }
-
-  protected String getPath()
-  {
-    Node parentNode = getParent();
-    String name = getProperty().getName();
-    return parentNode == null ? name : parentNode.getPath() + "/" + name;
-  }
-
+  @Override
   @Nullable
-  protected List<Node> getChildren()
+  public List<AbstractNode> getChildren()
   {
     return children;
   }
 
-  protected IProperty getProperty()
+  protected AbstractNode createChild(IPropertyDescription pPropertyDescription)
   {
-    return property;
+    return new Node(getHierarchy(), this, pPropertyDescription);
   }
 
-  protected IPropertyDescription getPropertyDescription()
-  {
-    return property.getDescription();
-  }
-
-  protected boolean isLeaf()
-  {
-    return IPropertyPitProvider.class.isAssignableFrom(property.getType());
-  }
-
-  protected void addProperty(IPropertyDescription pPropertyDescription)
+  @Override
+  public void addProperty(IPropertyDescription pPropertyDescription)
   {
     if (!(value instanceof IMutablePropertyPitProvider))
-      throw new IllegalStateException("not mutable: " + property);
-    Node node = _find(pPropertyDescription.getName());
+      throw new IllegalStateException("not mutable: " + getProperty());
+    AbstractNode node = find(pPropertyDescription.getName());
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
-    children.add(new Node(hierarchy, this, pPropertyDescription));
-    _fireNodeAdded(pPropertyDescription);
+    children.add(createChild(pPropertyDescription));
+    fireNodeAdded(pPropertyDescription);
   }
 
-  protected boolean removeProperty(String pName)
+  @Override
+  public boolean removeProperty(String pName)
   {
     if (!(value instanceof IMutablePropertyPitProvider))
-      throw new IllegalStateException("not mutable: " + property);
-    Node node = _find(pName);
+      throw new IllegalStateException("not mutable: " + getProperty());
+    AbstractNode node = find(pName);
     if (node != null)
     {
       IProperty nProp = node.getProperty();
@@ -166,63 +139,11 @@ public class Node
       {
         IPropertyDescription descr = nProp.getDescription();
         children.remove(node);
-        _fireNodeRemoved(descr);
+        fireNodeRemoved(descr);
         return true;
       }
     }
     return false;
-  }
-
-  protected void addPropertyEventListener(IPropertyEventListener pListener)
-  {
-    if (listeners == null)
-      listeners = new ArrayList<IPropertyEventListener>();
-    listeners.add(pListener);
-  }
-
-  protected void removePropertyEventListener(IPropertyEventListener pListener)
-  {
-    if (listeners != null)
-      listeners.add(pListener);
-  }
-
-  private void _fireValueChange(Object pOldValue, Object pNewValue)
-  {
-    hierarchy.fireNodeChanged(getProperty(), pOldValue, pNewValue);
-    Node p = getParent();
-    if (p != null)
-    {
-      List<IPropertyEventListener> l = p.listeners;
-      if (l != null)
-        for (IPropertyEventListener eventListener : l)
-          eventListener.propertyChange(getProperty(), pOldValue, pNewValue);
-    }
-    property.fire(pOldValue, pNewValue);
-  }
-
-  private void _fireNodeAdded(IPropertyDescription pPropertyDescription)
-  {
-    hierarchy.firePropertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription);
-    if (listeners != null)
-      for (IPropertyEventListener listener : listeners)
-        listener.propertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription);
-  }
-
-  private void _fireNodeRemoved(IPropertyDescription pPropertyDescription)
-  {
-    hierarchy.firePropertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
-    if (listeners != null)
-      for (IPropertyEventListener listener : listeners)
-        listener.propertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
-  }
-
-  private Node _find(String pName)
-  {
-    if (children != null)
-      for (Node child : children)
-        if (pName.equals(child.getProperty().getName()))
-          return child;
-    return null;
   }
 
 }

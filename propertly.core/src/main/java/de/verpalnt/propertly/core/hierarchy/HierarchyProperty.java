@@ -3,6 +3,7 @@ package de.verpalnt.propertly.core.hierarchy;
 import de.verpalnt.propertly.core.api.IProperty;
 import de.verpalnt.propertly.core.api.IPropertyDescription;
 import de.verpalnt.propertly.core.api.IPropertyEventListener;
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -16,11 +17,11 @@ import java.util.List;
 class HierarchyProperty implements IProperty
 {
 
-  private Node node;
+  private AbstractNode node;
   private IPropertyDescription propertyDescription;
   private List<IPropertyEventListener> listeners;
 
-  HierarchyProperty(Node pNode, IPropertyDescription pPropertyDescription)
+  HierarchyProperty(AbstractNode pNode, IPropertyDescription pPropertyDescription)
   {
     node = pNode;
     propertyDescription = pPropertyDescription;
@@ -45,9 +46,16 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
-  public Class getParentType()
+  public IPropertyPitProvider getParent()
   {
-    return propertyDescription.getParentType();
+    AbstractNode parent = node.getParent();
+    return parent == null ? null : (IPropertyPitProvider) parent.getValue();
+  }
+
+  @Override
+  public Class getSourceType()
+  {
+    return propertyDescription.getSourceType();
   }
 
   @Override
@@ -88,6 +96,11 @@ class HierarchyProperty implements IProperty
     if (listeners != null)
       for (IPropertyEventListener listener : listeners)
         listener.propertyChange(this, pOldValue, pNewValue);
+  }
+
+  AbstractNode getNode()
+  {
+    return node;
   }
 
   @Override

@@ -18,16 +18,16 @@ import java.util.List;
 public class PropertyDescription<S extends IPropertyPitProvider, T> implements IPropertyDescription<S, T>
 {
 
-  private Class<S> parentType;
+  private Class<S> sourceType;
   private Class<T> type;
   private String name;
   private List<? extends Annotation> annotations;
 
 
-  private PropertyDescription(Class<S> pParentType, Class<T> pType, String pName,
+  private PropertyDescription(Class<S> pSourceType, Class<T> pType, String pName,
                               Iterable<? extends Annotation> pAnnotations)
   {
-    parentType = pParentType;
+    sourceType = pSourceType;
     type = pType;
     name = pName;
     if (pAnnotations == null)
@@ -49,9 +49,9 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
   }
 
   @Override
-  public Class<S> getParentType()
+  public Class<S> getSourceType()
   {
-    return parentType;
+    return sourceType;
   }
 
   @Override
@@ -71,9 +71,9 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
     return annotations;
   }
 
-  public void setParentType(Class<S> parentType)
+  public void setSourceType(Class<S> pSourceType)
   {
-    this.parentType = parentType;
+    this.sourceType = pSourceType;
   }
 
   void setType(Class<T> type)
@@ -92,10 +92,10 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
   }
 
   public static <S extends IPropertyPitProvider, T> IPropertyDescription<S, T> create(
-      @Nonnull Class<S> pParentType, @Nonnull Class<T> pType, @Nonnull String pName,
+      @Nonnull Class<S> pSourceType, @Nonnull Class<T> pType, @Nonnull String pName,
       @Nullable Iterable<? extends Annotation> pAnnotations)
   {
-    return new PropertyDescription<S, T>(pParentType, pType, pName, pAnnotations);
+    return new PropertyDescription<S, T>(pSourceType, pType, pName, pAnnotations);
   }
 
   @Override

@@ -14,6 +14,8 @@ public interface IProperty<S extends IPropertyPitProvider, T> extends IPropertyD
 
   T setValue(T pValue);
 
+  S getParent();
+
   void addPropertyEventListener(final IPropertyEventListener pListener);
 
   void removePropertyEventListener(IPropertyEventListener pListener);

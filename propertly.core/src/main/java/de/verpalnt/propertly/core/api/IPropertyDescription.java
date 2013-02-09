@@ -11,7 +11,7 @@ import java.util.List;
 public interface IPropertyDescription<S extends IPropertyPitProvider, T>
 {
 
-  Class<S> getParentType();
+  Class<S> getSourceType();
 
   Class<T> getType();
 

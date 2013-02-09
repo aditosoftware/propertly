@@ -8,6 +8,8 @@ import de.verpalnt.propertly.core.common.PropertyEventAdapter;
 import de.verpalnt.propertly.core.hierarchy.Hierarchy;
 import de.verpalnt.propertly.test.common.PropertyTestChildren;
 import de.verpalnt.propertly.test.common.TProperty;
+import de.verpalnt.propertly.test.common.VerifyingHierarchy;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.awt.*;
@@ -23,7 +25,7 @@ public class PropertyTest
   @Test
   public PropertyTest()
   {
-    Hierarchy<TProperty> hierarchy = new Hierarchy<TProperty>("root", new TProperty());
+    Hierarchy<TProperty> hierarchy = new VerifyingHierarchy<TProperty>(new Hierarchy<TProperty>("root", new TProperty()));
     hierarchy.addPropertyEventListener(new IPropertyEventListener()
     {
       @Override
@@ -79,6 +81,19 @@ public class PropertyTest
     System.out.println("tProperty parent=" + tProperty.getPit().getParent());
     for (IProperty property : tProperty.getPit())
       System.out.println(property);
+
+
+    Exception ex = null;
+    try
+    {
+      tProperty.setX(-1);
+    }
+    catch (Exception e)
+    {
+      ex = e;
+      System.out.println("failed properly: " + e.getMessage());
+    }
+    Assert.assertNotNull(ex);
   }
 
 }

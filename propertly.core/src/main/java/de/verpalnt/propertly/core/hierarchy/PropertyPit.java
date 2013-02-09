@@ -18,7 +18,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 {
 
   private S source;
-  private Node node;
+  private AbstractNode node;
 
 
   PropertyPit(S pSource)
@@ -40,7 +40,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   @Nullable
   public final IPropertyPitProvider getParent()
   {
-    Node parent = node.getParent();
+    AbstractNode parent = node.getParent();
     return parent == null ? null : (IPropertyPitProvider) parent.getProperty().getValue();
   }
 
@@ -48,9 +48,9 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   public final <SOURCE extends IPropertyPitProvider, T> IProperty<SOURCE, T> findProperty(
       IPropertyDescription<SOURCE, T> pPropertyDescription)
   {
-    List<Node> children = node.getChildren();
+    List<AbstractNode> children = node.getChildren();
     if (children != null)
-      for (Node childNode : children)
+      for (AbstractNode childNode : children)
       {
         IProperty property = childNode.getProperty();
         if (property.getDescription().equals(pPropertyDescription))
@@ -84,7 +84,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   public final Set<IPropertyDescription> getPropertyDescriptions()
   {
     Set<IPropertyDescription> set = new HashSet<IPropertyDescription>();
-    for (Node childNode : node.getChildren())
+    for (AbstractNode childNode : node.getChildren())
       set.add(childNode.getProperty().getDescription());
     return set;
   }
@@ -93,7 +93,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   public List<IProperty<S, ?>> getProperties()
   {
     List<IProperty<S, ?>> properties = new ArrayList<IProperty<S, ?>>();
-    for (Node childNode : node.getChildren())
+    for (AbstractNode childNode : node.getChildren())
       properties.add(childNode.getProperty());
     return properties;
   }
@@ -119,12 +119,12 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return this;
   }
 
-  void setNode(Node pNode)
+  void setNode(AbstractNode pNode)
   {
     node = pNode;
   }
 
-  Node getNode()
+  AbstractNode getNode()
   {
     return node;
   }

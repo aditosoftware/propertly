@@ -34,7 +34,7 @@ public class PPPIntrospector
           if (IPropertyDescription.class.isAssignableFrom(field.getType()))
           {
             IPropertyDescription<?, ?> propertyDescription = (IPropertyDescription) field.get(pPPPClass);
-            boolean isParentalType = propertyDescription.getParentType().isAssignableFrom(pPPPClass);
+            boolean isParentalType = propertyDescription.getSourceType().isAssignableFrom(pPPPClass);
             if (isParentalType)
               propertyDescriptions.add(propertyDescription);
             assert isParentalType;

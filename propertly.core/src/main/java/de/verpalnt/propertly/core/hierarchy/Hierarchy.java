@@ -18,25 +18,31 @@ import java.util.List;
 public class Hierarchy<T extends IPropertyPitProvider>
 {
 
-  private final Node node;
+  private final AbstractNode node;
   private final List<IPropertyEventListener> listeners;
 
-  private Hierarchy(String pName)
-  {
-    node = new Node(this, null, PropertyDescription.create(IPropertyPitProvider.class, IPropertyPitProvider.class,
-        pName, Collections.<Annotation>emptySet()));
-    listeners = new ArrayList<IPropertyEventListener>();
-  }
 
   public Hierarchy(String pName, T pPPP)
   {
-    this(pName);
+    this(pName, pPPP, null);
+  }
+
+  protected Hierarchy(String pName, T pPPP, Object pExtra)
+  {
+    node = createNode(pName, pExtra);
+    listeners = new ArrayList<IPropertyEventListener>();
     node.setValue(pPPP);
+  }
+
+  public IProperty<IPropertyPitProvider, T> getProperty()
+  {
+    //noinspection unchecked
+    return getNode().getProperty();
   }
 
   public T getValue()
   {
-    return (T) node.getValue();
+    return getProperty().getValue();
   }
 
   public void addPropertyEventListener(IPropertyEventListener pListener)
@@ -49,19 +55,30 @@ public class Hierarchy<T extends IPropertyPitProvider>
     listeners.remove(pListener);
   }
 
-  void fireNodeChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
+  protected AbstractNode getNode()
+  {
+    return node;
+  }
+
+  protected AbstractNode createNode(String pName, Object pExtra)
+  {
+    return new Node(this, null, PropertyDescription.create(IPropertyPitProvider.class, IPropertyPitProvider.class,
+        pName, Collections.<Annotation>emptySet()));
+  }
+
+  protected void fireNodeChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
   {
     for (IPropertyEventListener listener : listeners)
       listener.propertyChange(pProperty, pOldValue, pNewValue);
   }
 
-  void firePropertyAdded(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
+  protected void firePropertyAdded(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
   {
     for (IPropertyEventListener listener : listeners)
       listener.propertyAdded(pPropertyPitProvider, pDescription);
   }
 
-  void firePropertyRemoved(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
+  protected void firePropertyRemoved(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
   {
     for (IPropertyEventListener listener : listeners)
       listener.propertyRemoved(pPropertyPitProvider, pDescription);

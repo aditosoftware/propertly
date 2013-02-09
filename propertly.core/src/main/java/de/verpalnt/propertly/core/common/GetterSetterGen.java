@@ -27,7 +27,7 @@ public class GetterSetterGen
     String pit = pPitName == null || pPitName.isEmpty() ? "" : pPitName + ".";
     for (IPropertyDescription<?, ?> prop : pPitProvider.getPit().getPropertyDescriptions())
     {
-      System.out.println("public IProperty<" + prop.getParentType().getSimpleName() + ", " +
+      System.out.println("public IProperty<" + prop.getSourceType().getSimpleName() + ", " +
           prop.getType().getSimpleName() + "> getProperty" + capitalize(prop.getName()) +
           "(){return " + pit + "getProperty(" + prop.getName().toUpperCase() + ");}");
 
