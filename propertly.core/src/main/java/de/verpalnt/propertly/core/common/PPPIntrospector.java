@@ -14,7 +14,7 @@ import java.util.*;
 public class PPPIntrospector
 {
 
-  private static final Map<Class, Set<IPropertyDescription>> ALREADY_KNOWN = new HashMap<Class, Set<IPropertyDescription>>();
+  private static final Map<Class, Set<IPropertyDescription>> ALREADY_KNOWN = new LinkedHashMap<Class, Set<IPropertyDescription>>();
 
   private PPPIntrospector()
   {
@@ -25,7 +25,7 @@ public class PPPIntrospector
     Set<IPropertyDescription> propertyDescriptions = ALREADY_KNOWN.get(pPPPClass);
     if (propertyDescriptions == null)
     {
-      propertyDescriptions = new HashSet<IPropertyDescription>();
+      propertyDescriptions = new LinkedHashSet<IPropertyDescription>();
       for (Field field : _getAllFields(pPPPClass))
       {
         try

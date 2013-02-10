@@ -18,7 +18,7 @@ import java.util.*;
  */
 public class PD
 {
-  private static final Map<Class, List<Field>> FIELD_CACHE = new HashMap<Class, List<Field>>();
+  private static final Map<Class, List<Field>> FIELD_CACHE = new LinkedHashMap<Class, List<Field>>();
 
   private PD()
   {

@@ -83,7 +83,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 
   public final Set<IPropertyDescription> getPropertyDescriptions()
   {
-    Set<IPropertyDescription> set = new HashSet<IPropertyDescription>();
+    Set<IPropertyDescription> set = new LinkedHashSet<IPropertyDescription>();
     for (AbstractNode childNode : node.getChildren())
       set.add(childNode.getProperty().getDescription());
     return set;
