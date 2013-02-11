@@ -3,24 +3,33 @@ package de.verpalnt.propertly.test.guibuilder;
 import de.verpalnt.propertly.core.hierarchy.Hierarchy;
 import de.verpalnt.propertly.guibuilder.GuiBuilder;
 import de.verpalnt.propertly.test.common.TProperty;
-
-import javax.swing.*;
+import de.verpalnt.propertly.test.common.VerifyingHierarchy;
+import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * @author PaL
  *         Date: 27.01.13
  *         Time: 16:03
  */
-public class GuiBuilderTest
+public class GuiBuilderTest extends Application
 {
   public static void main(String[] args)
   {
-    JFrame frame = new JFrame();
-    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    TProperty tProperty = new Hierarchy<TProperty>("root", new TProperty()).getValue();
-    frame.getContentPane().add(new GuiBuilder(tProperty).build());
-    frame.pack();
-    frame.setVisible(true);
+    launch(args);
+  }
+
+
+  @Override
+  public void start(Stage pStage) throws Exception
+  {
+    Hierarchy<TProperty> hierarchy = new VerifyingHierarchy<TProperty>(new Hierarchy<TProperty>("root", new TProperty()));
+    Parent parent = new GuiBuilder(hierarchy.getValue()).build();
+    Scene appScene = new Scene(parent);
+    pStage.setScene(appScene);
+    pStage.show();
   }
 
 }
