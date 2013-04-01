@@ -12,6 +12,8 @@ public interface IPropertyEventListener<S extends IPropertyPitProvider, T>
 
   void propertyAdded(IPropertyPitProvider<S> pSource, IPropertyDescription<S, T> pPropertyDescription);
 
+  void propertyWillBeRemoved(IPropertyPitProvider<S> pSource, IPropertyDescription<S, T> pPropertyDescription);
+
   void propertyRemoved(IPropertyPitProvider<S> pSource, IPropertyDescription<S, T> pPropertyDescription);
 
 }

@@ -69,18 +69,28 @@ public class Hierarchy<T extends IPropertyPitProvider>
   protected void fireNodeChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
   {
     for (IPropertyEventListener listener : listeners)
+      //noinspection unchecked
       listener.propertyChange(pProperty, pOldValue, pNewValue);
   }
 
   protected void firePropertyAdded(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
   {
     for (IPropertyEventListener listener : listeners)
+      //noinspection unchecked
       listener.propertyAdded(pPropertyPitProvider, pDescription);
+  }
+
+  protected void firePropertyWillBeRemoved(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
+  {
+    for (IPropertyEventListener listener : listeners)
+      //noinspection unchecked
+      listener.propertyWillBeRemoved(pPropertyPitProvider, pDescription);
   }
 
   protected void firePropertyRemoved(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
   {
     for (IPropertyEventListener listener : listeners)
+      //noinspection unchecked
       listener.propertyRemoved(pPropertyPitProvider, pDescription);
   }
 

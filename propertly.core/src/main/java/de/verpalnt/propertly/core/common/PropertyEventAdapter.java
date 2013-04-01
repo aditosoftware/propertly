@@ -23,6 +23,11 @@ public abstract class PropertyEventAdapter<S extends IPropertyPitProvider, T> im
   }
 
   @Override
+  public void propertyWillBeRemoved(IPropertyPitProvider<S> pSource, IPropertyDescription<S, T> pPropertyDescription)
+  {
+  }
+
+  @Override
   public void propertyRemoved(IPropertyPitProvider<S> pSource, IPropertyDescription<S, T> pPropertyDescription)
   {
   }

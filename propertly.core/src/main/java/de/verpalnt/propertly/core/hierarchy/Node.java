@@ -36,6 +36,7 @@ public class Node extends AbstractNode
     if (pValue != null)
     {
       Class type = getProperty().getType();
+      //noinspection unchecked
       if (!type.isAssignableFrom(pValue.getClass()))
         throw new IllegalArgumentException("'" + pValue + "' can't be set for field with type '" + type + "'.");
     }
@@ -138,6 +139,7 @@ public class Node extends AbstractNode
       if (IMutablePropertyPitProvider.class.isAssignableFrom(nProp.getType()))
       {
         IPropertyDescription descr = nProp.getDescription();
+        fireNodeWillBeRemoved(descr);
         children.remove(node);
         fireNodeRemoved(descr);
         return true;

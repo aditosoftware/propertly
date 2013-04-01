@@ -88,6 +88,7 @@ public abstract class AbstractNode
       List<IPropertyEventListener> l = p.listeners;
       if (l != null)
         for (IPropertyEventListener eventListener : l)
+          //noinspection unchecked
           eventListener.propertyChange(getProperty(), pOldValue, pNewValue);
     }
     property.fire(pOldValue, pNewValue);
@@ -98,7 +99,17 @@ public abstract class AbstractNode
     getHierarchy().firePropertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription);
     if (listeners != null)
       for (IPropertyEventListener listener : listeners)
+        //noinspection unchecked
         listener.propertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription);
+  }
+
+  protected void fireNodeWillBeRemoved(IPropertyDescription pPropertyDescription)
+  {
+    getHierarchy().firePropertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
+    if (listeners != null)
+      for (IPropertyEventListener listener : listeners)
+        //noinspection unchecked
+        listener.propertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
   }
 
   protected void fireNodeRemoved(IPropertyDescription pPropertyDescription)
@@ -106,6 +117,7 @@ public abstract class AbstractNode
     getHierarchy().firePropertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
     if (listeners != null)
       for (IPropertyEventListener listener : listeners)
+        //noinspection unchecked
         listener.propertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
   }
 

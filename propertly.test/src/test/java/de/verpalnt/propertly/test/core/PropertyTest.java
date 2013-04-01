@@ -31,19 +31,25 @@ public class PropertyTest
       @Override
       public void propertyChange(IProperty pProperty, Object pOldValue, Object pNewValue)
       {
-        System.out.println("\tG: " + pOldValue + ", " + pNewValue + ", " + pProperty);
+        System.out.println("\tpropertyChange: " + pOldValue + ", " + pNewValue + ", " + pProperty);
       }
 
       @Override
       public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
       {
-        System.out.println("\tG: " + pSource + ", " + pPropertyDescription);
+        System.out.println("\tpropertyAdded: " + pSource + ", " + pPropertyDescription);
+      }
+
+      @Override
+      public void propertyWillBeRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
+      {
+        System.out.println("\tpropertyWillBeRemoved: " + pSource + ", " + pPropertyDescription);
       }
 
       @Override
       public void propertyRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
       {
-        System.out.println("\tG: " + pSource + ", " + pPropertyDescription);
+        System.out.println("\tpropertyRemoved: " + pSource + ", " + pPropertyDescription);
       }
     });
     TProperty tProperty = hierarchy.getValue();
