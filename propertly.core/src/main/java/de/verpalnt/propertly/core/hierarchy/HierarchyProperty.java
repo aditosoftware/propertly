@@ -4,6 +4,7 @@ import de.verpalnt.propertly.core.api.IProperty;
 import de.verpalnt.propertly.core.api.IPropertyDescription;
 import de.verpalnt.propertly.core.api.IPropertyEventListener;
 import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.common.PropertlyUtility;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ class HierarchyProperty implements IProperty
   @Override
   public IPropertyPitProvider getParent()
   {
-    AbstractNode parent = node.getParent();
+    INode parent = node.getParent();
     return parent == null ? null : (IPropertyPitProvider) parent.getValue();
   }
 
@@ -106,7 +107,7 @@ class HierarchyProperty implements IProperty
   @Override
   public String toString()
   {
-    return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode()) + "{" + propertyDescription + ", value=" + getValue() + '}';
+    return PropertlyUtility.asString(this, propertyDescription.toString(), "value=" + getValue());
   }
 
 }

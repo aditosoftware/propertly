@@ -9,8 +9,8 @@ import de.verpalnt.propertly.core.hierarchy.Hierarchy;
 import de.verpalnt.propertly.test.common.PropertyTestChildren;
 import de.verpalnt.propertly.test.common.TProperty;
 import de.verpalnt.propertly.test.common.VerifyingHierarchy;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.awt.*;
 
@@ -22,8 +22,9 @@ import java.awt.*;
 public class PropertyTest
 {
 
+
   @Test
-  public PropertyTest()
+  public void simpleTest()
   {
     Hierarchy<TProperty> hierarchy = new VerifyingHierarchy<TProperty>(new Hierarchy<TProperty>("root", new TProperty()));
     hierarchy.addPropertyEventListener(new IPropertyEventListener()

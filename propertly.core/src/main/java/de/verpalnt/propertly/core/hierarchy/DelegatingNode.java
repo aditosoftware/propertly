@@ -17,11 +17,12 @@ import java.util.Map;
  */
 public class DelegatingNode extends AbstractNode
 {
-  private final ISupplier<AbstractNode> delegateProvider;
-  private Map<IPropertyPitProvider, IPropertyPitProvider> pitprovider;
+  private final ISupplier<INode> delegateProvider;
+  private Map<IPropertyPitProvider, IPropertyPitProvider> pitProvider;
 
-  public DelegatingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull IPropertyDescription pPropertyDescription,
-                        @Nonnull ISupplier<AbstractNode> pDelegateSupplier)
+  public DelegatingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
+                        @Nonnull IPropertyDescription pPropertyDescription,
+                        @Nonnull ISupplier<INode> pDelegateSupplier)
   {
     super(pHierarchy, pParent, pPropertyDescription);
     delegateProvider = pDelegateSupplier;
@@ -48,14 +49,14 @@ public class DelegatingNode extends AbstractNode
       IPropertyPitProvider ppp = (IPropertyPitProvider) o;
       if (!this.equals(ppp.getPit().getNode()))
       {
-        IPropertyPitProvider currentPit = pitprovider == null ? null : pitprovider.get(ppp);
+        IPropertyPitProvider currentPit = pitProvider == null ? null : pitProvider.get(ppp);
         if (currentPit != null)
           return currentPit;
         try
         {
           IPropertyPitProvider ownPitProvider = ppp.getClass().newInstance();
           ownPitProvider.getPit().setNode(this);
-          pitprovider = Collections.singletonMap(ppp, ownPitProvider);
+          pitProvider = Collections.singletonMap(ppp, ownPitProvider);
           return ownPitProvider;
         }
         catch (Exception e)
@@ -69,8 +70,9 @@ public class DelegatingNode extends AbstractNode
 
   @Nullable
   @Override
-  public List<AbstractNode> getChildren()
+  public List<INode> getChildren()
   {
+    //noinspection unchecked
     return getHierarchy().delegatingGetChildren(delegateProvider.get(), this);
   }
 

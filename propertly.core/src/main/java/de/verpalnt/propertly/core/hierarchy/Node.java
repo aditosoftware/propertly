@@ -18,7 +18,7 @@ public class Node extends AbstractNode
 {
 
   private Object value;
-  private List<AbstractNode> children;
+  private List<INode> children;
   private List<IPropertyEventListener> listeners;
 
 
@@ -49,7 +49,7 @@ public class Node extends AbstractNode
       throw new IllegalStateException("can't set PPP from my own hierarchy.");
     if (oldValue instanceof IPropertyPitProvider)
     {
-      for (AbstractNode child : children)
+      for (INode child : children)
         child.setValue(null);
       ((IPropertyPitProvider) oldValue).getPit().setNode(null);
     }
@@ -66,22 +66,22 @@ public class Node extends AbstractNode
       }
       value = pppCopy;
       pppCopy.getPit().setNode(this);
-      AbstractNode node = pppProvider.getPit().getNode();
+      INode node = pppProvider.getPit().getNode();
 
       if (node == null)
       {
         Set<IPropertyDescription> descriptions = PPPIntrospector.get(pppProvider.getClass());
-        List<AbstractNode> nodes = new ArrayList<AbstractNode>(descriptions.size());
+        List<INode> nodes = new ArrayList<INode>(descriptions.size());
         for (IPropertyDescription description : descriptions)
           nodes.add(createChild(description));
         children = nodes;
       }
       else
       {
-        List<AbstractNode> childNodes = node.getChildren();
+        List<INode> childNodes = node.getChildren();
         assert childNodes != null;
-        List<AbstractNode> newNodes = new ArrayList<AbstractNode>(childNodes.size());
-        for (AbstractNode child : childNodes)
+        List<INode> newNodes = new ArrayList<INode>(childNodes.size());
+        for (INode child : childNodes)
           newNodes.add(createChild(child.getProperty().getDescription()));
         children = newNodes;
         for (int i = 0; i < childNodes.size(); i++)
@@ -105,12 +105,12 @@ public class Node extends AbstractNode
 
   @Override
   @Nullable
-  public List<AbstractNode> getChildren()
+  public List<INode> getChildren()
   {
     return children;
   }
 
-  protected AbstractNode createChild(IPropertyDescription pPropertyDescription)
+  protected INode createChild(IPropertyDescription pPropertyDescription)
   {
     return new Node(getHierarchy(), this, pPropertyDescription);
   }
@@ -120,7 +120,7 @@ public class Node extends AbstractNode
   {
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
-    AbstractNode node = find(pPropertyDescription.getName());
+    INode node = find(pPropertyDescription.getName());
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
     children.add(createChild(pPropertyDescription));
@@ -132,7 +132,7 @@ public class Node extends AbstractNode
   {
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
-    AbstractNode node = find(pName);
+    INode node = find(pName);
     if (node != null)
     {
       IProperty nProp = node.getProperty();

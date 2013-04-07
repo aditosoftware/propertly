@@ -18,7 +18,7 @@ import java.util.List;
 public class Hierarchy<T extends IPropertyPitProvider>
 {
 
-  private final AbstractNode node;
+  private final INode node;
   private final List<IPropertyEventListener> listeners;
 
 
@@ -55,12 +55,12 @@ public class Hierarchy<T extends IPropertyPitProvider>
     listeners.remove(pListener);
   }
 
-  protected AbstractNode getNode()
+  protected INode getNode()
   {
     return node;
   }
 
-  protected AbstractNode createNode(String pName, Object pExtra)
+  protected INode createNode(String pName, Object pExtra)
   {
     return new Node(this, null, PropertyDescription.create(IPropertyPitProvider.class, IPropertyPitProvider.class,
         pName, Collections.<Annotation>emptySet()));

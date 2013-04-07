@@ -4,6 +4,7 @@ import de.verpalnt.propertly.core.api.IProperty;
 import de.verpalnt.propertly.core.api.IPropertyDescription;
 import de.verpalnt.propertly.core.api.IPropertyEventListener;
 import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.common.PropertlyUtility;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,12 +16,12 @@ import java.util.List;
  *         Date: 09.02.13
  *         Time: 19:36
  */
-public abstract class AbstractNode
+public abstract class AbstractNode implements INode
 {
 
   private final Hierarchy hierarchy;
   private final AbstractNode parent;
-  private HierarchyProperty property;
+  private final HierarchyProperty property;
 
   private List<IPropertyEventListener> listeners;
 
@@ -33,39 +34,33 @@ public abstract class AbstractNode
     property = new HierarchyProperty(this, pPropertyDescription);
   }
 
-  public abstract Object setValue(Object pValue);
-
-  public abstract Object getValue();
-
-  @Nullable
-  public abstract List<AbstractNode> getChildren();
-
-  public abstract void addProperty(IPropertyDescription pPropertyDescription);
-
-  public abstract boolean removeProperty(String pName);
-
+  @Override
   public Hierarchy getHierarchy()
   {
     return hierarchy;
   }
 
+  @Override
   public AbstractNode getParent()
   {
     return parent;
   }
 
+  @Override
   public String getPath()
   {
-    AbstractNode parentNode = getParent();
+    INode parentNode = getParent();
     String name = getProperty().getName();
     return parentNode == null ? name : parentNode.getPath() + "/" + name;
   }
 
+  @Override
   public IProperty getProperty()
   {
     return property;
   }
 
+  @Override
   public void addPropertyEventListener(IPropertyEventListener pListener)
   {
     if (listeners == null)
@@ -73,6 +68,7 @@ public abstract class AbstractNode
     listeners.add(pListener);
   }
 
+  @Override
   public void removePropertyEventListener(IPropertyEventListener pListener)
   {
     if (listeners != null)
@@ -121,14 +117,20 @@ public abstract class AbstractNode
         listener.propertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
   }
 
-  protected AbstractNode find(String pName)
+  protected INode find(String pName)
   {
-    List<AbstractNode> cs = getChildren();
+    List<INode> cs = getChildren();
     if (cs != null)
-      for (AbstractNode child : cs)
+      for (INode child : cs)
         if (pName.equals(child.getProperty().getName()))
           return child;
     return null;
+  }
+
+  @Override
+  public String toString()
+  {
+    return PropertlyUtility.asString(this, "path=" + getPath(), "value=" + getProperty().getValue());
   }
 
 }
