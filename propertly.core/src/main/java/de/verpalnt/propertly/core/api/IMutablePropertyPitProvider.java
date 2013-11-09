@@ -1,7 +1,5 @@
 package de.verpalnt.propertly.core.api;
 
-import de.verpalnt.propertly.core.hierarchy.MutablePropertyPit;
-
 /**
  * @author PaL
  *         Date: 31.01.13
@@ -11,6 +9,6 @@ public interface IMutablePropertyPitProvider<S extends IMutablePropertyPitProvid
 {
 
   @Override
-  MutablePropertyPit<S, T> getPit();
+  IMutablePropertyPit<S, T> getPit();
 
 }

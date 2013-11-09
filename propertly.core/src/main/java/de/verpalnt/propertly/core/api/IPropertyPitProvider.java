@@ -1,7 +1,5 @@
 package de.verpalnt.propertly.core.api;
 
-import de.verpalnt.propertly.core.hierarchy.PropertyPit;
-
 /**
  * @author PaL
  *         Date: 14.10.12
@@ -10,6 +8,6 @@ import de.verpalnt.propertly.core.hierarchy.PropertyPit;
 public interface IPropertyPitProvider<S extends IPropertyPitProvider>
 {
 
-  PropertyPit<S> getPit();
+  IPropertyPit<S> getPit();
 
 }

@@ -1,6 +1,6 @@
-package de.verpalnt.propertly.core.api;
+package de.verpalnt.propertly.core.api.base;
 
-import de.verpalnt.propertly.core.hierarchy.PropertyPit;
+import de.verpalnt.propertly.core.api.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,13 +15,16 @@ import java.util.Set;
  */
 public abstract class AbstractPPP<S extends IPropertyPitProvider> implements IPropertyPitProvider, Iterable<IProperty<S, ?>>
 {
+  private final IPropertyPit<S> pit;
 
-  @SuppressWarnings("unchecked")
-  private final PropertyPit<S> pit = PropertyPit.create((S) this);
-
+  protected AbstractPPP(IPropertyPitFactory pFactory)
+  {
+    //noinspection unchecked
+    pit = pFactory.create((S) this);
+  }
 
   @Override
-  public final PropertyPit<S> getPit()
+  public final IPropertyPit<S> getPit()
   {
     return pit;
   }

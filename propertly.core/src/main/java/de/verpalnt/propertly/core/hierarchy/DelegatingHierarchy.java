@@ -39,7 +39,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       @Override
       public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
       {
-        IProperty prop = _findDelegatingProperty(pSource.getPit().getNode().getProperty());
+        IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
         if (prop != null)
         {
           AbstractNode node = ((HierarchyProperty) prop).getNode();
@@ -50,7 +50,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       @Override
       public void propertyWillBeRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
       {
-        IProperty prop = _findDelegatingProperty(pSource.getPit().getNode().getProperty());
+        IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
         if (prop != null)
         {
           AbstractNode node = ((HierarchyProperty) prop).getNode();
@@ -61,7 +61,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       @Override
       public void propertyRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
       {
-        IProperty prop = _findDelegatingProperty(pSource.getPit().getNode().getProperty());
+        IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
         if (prop != null)
         {
           AbstractNode node = ((HierarchyProperty) prop).getNode();

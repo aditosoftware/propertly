@@ -1,6 +1,6 @@
-package de.verpalnt.propertly.core.api;
+package de.verpalnt.propertly.core.api.base;
 
-import de.verpalnt.propertly.core.hierarchy.MutablePropertyPit;
+import de.verpalnt.propertly.core.api.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,17 +17,17 @@ import java.util.Set;
 public abstract class AbstractMutablePPP<S extends IMutablePropertyPitProvider, T> implements IMutablePropertyPitProvider, Iterable<IProperty<S, ?>>
 {
 
-  private final MutablePropertyPit<S, T> pit;
+  private final IMutablePropertyPit<S, T> pit;
 
 
-  protected AbstractMutablePPP(Class<T> pAllowedChildType)
+  protected AbstractMutablePPP(IMutablePropertyPitFactory pFactory, Class<T> pAllowedChildType)
   {
     //noinspection unchecked
-    pit = MutablePropertyPit.create((S) this, pAllowedChildType);
+    pit = pFactory.create((S) this, pAllowedChildType);
   }
 
   @Override
-  public final MutablePropertyPit<S, T> getPit()
+  public final IMutablePropertyPit<S, T> getPit()
   {
     return pit;
   }

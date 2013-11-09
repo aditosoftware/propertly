@@ -47,7 +47,7 @@ public class DelegatingNode extends AbstractNode
     if (o instanceof IPropertyPitProvider)
     {
       IPropertyPitProvider ppp = (IPropertyPitProvider) o;
-      if (!this.equals(ppp.getPit().getNode()))
+      if (!this.equals(HierarchyHelper.getNode(ppp)))
       {
         IPropertyPitProvider currentPit = pitProvider == null ? null : pitProvider.get(ppp);
         if (currentPit != null)
@@ -55,7 +55,7 @@ public class DelegatingNode extends AbstractNode
         try
         {
           IPropertyPitProvider ownPitProvider = ppp.getClass().newInstance();
-          ownPitProvider.getPit().setNode(this);
+          HierarchyHelper.setNode(ownPitProvider, this);
           pitProvider = Collections.singletonMap(ppp, ownPitProvider);
           return ownPitProvider;
         }

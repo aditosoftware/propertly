@@ -2,8 +2,8 @@ package de.verpalnt.propertly.core.common;
 
 
 import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyPit;
 import de.verpalnt.propertly.core.api.IPropertyPitProvider;
-import de.verpalnt.propertly.core.hierarchy.PropertyPit;
 
 /**
  * @author PaL
@@ -17,7 +17,7 @@ public class GetterSetterGen
   {
   }
 
-  public static void run(PropertyPit<?> pPit)
+  public static void run(IPropertyPit<?> pPit)
   {
     run(pPit, null);
   }

@@ -1,9 +1,6 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyEventListener;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,7 +11,7 @@ import java.util.*;
  *         Date: 03.10.11
  *         Time: 22:02
  */
-public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPitProvider<S>, Iterable<IProperty<S, ?>>
+public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit<S>
 {
 
   private S source;
@@ -31,12 +28,14 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return new PropertyPit<S>(pCreateFor);
   }
 
+  @Override
   @Nonnull
   public S getSource()
   {
     return source;
   }
 
+  @Override
   @Nullable
   public final IPropertyPitProvider getParent()
   {
@@ -44,6 +43,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return parent == null ? null : (IPropertyPitProvider) parent.getProperty().getValue();
   }
 
+  @Override
   @Nullable
   public final <SOURCE extends IPropertyPitProvider, T> IProperty<SOURCE, T> findProperty(
       IPropertyDescription<SOURCE, T> pPropertyDescription)
@@ -59,6 +59,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return null;
   }
 
+  @Override
   @Nonnull
   public final <SOURCE extends IPropertyPitProvider, T> IProperty<SOURCE, T> getProperty(
       IPropertyDescription<SOURCE, T> pPropertyDescription)
@@ -69,18 +70,21 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return property;
   }
 
+  @Override
   @Nullable
   public final <T> T getValue(IPropertyDescription<? super S, T> pPropertyDescription)
   {
     return getProperty(pPropertyDescription).getValue();
   }
 
+  @Override
   @Nullable
   public final <T> T setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue)
   {
     return getProperty(pPropertyDescription).setValue(pValue);
   }
 
+  @Override
   public final Set<IPropertyDescription> getPropertyDescriptions()
   {
     Set<IPropertyDescription> set = new LinkedHashSet<IPropertyDescription>();
@@ -89,6 +93,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return set;
   }
 
+  @Override
   @Nonnull
   public List<IProperty<S, ?>> getProperties()
   {
@@ -104,17 +109,19 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return getProperties().iterator();
   }
 
+  @Override
   public final void addPropertyEventListener(final IPropertyEventListener pListener)
   {
     node.addPropertyEventListener(pListener);
   }
 
+  @Override
   public final void removePropertyEventListener(IPropertyEventListener pListener)
   {
     node.removePropertyEventListener(pListener);
   }
 
-  public PropertyPit<S> getPit()
+  public IPropertyPit<S> getPit()
   {
     return this;
   }
