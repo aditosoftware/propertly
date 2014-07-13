@@ -25,6 +25,10 @@ public interface INode
 
   boolean removeProperty(String pName);
 
+  void addProperty(int pIndex, IPropertyDescription pPropertyDescription);
+
+  void removeProperty(int pIndex);
+
   Hierarchy getHierarchy();
 
   INode getParent();

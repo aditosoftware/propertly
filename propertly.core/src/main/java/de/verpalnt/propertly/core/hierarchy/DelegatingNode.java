@@ -58,8 +58,7 @@ public class DelegatingNode extends AbstractNode
           HierarchyHelper.setNode(ownPitProvider, this);
           pitProvider = Collections.singletonMap(ppp, ownPitProvider);
           return ownPitProvider;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
           throw new RuntimeException(e);
         }
@@ -88,4 +87,15 @@ public class DelegatingNode extends AbstractNode
     return getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pName);
   }
 
+  @Override
+  public void addProperty(int pIndex, IPropertyDescription pPropertyDescription)
+  {
+    getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pIndex);
+  }
+
+  @Override
+  public void removeProperty(int pIndex)
+  {
+    getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pIndex);
+  }
 }

@@ -3,7 +3,10 @@ package de.verpalnt.propertly.test.common;
 import de.verpalnt.propertly.core.api.IPropertyDescription;
 import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 import de.verpalnt.propertly.core.common.ISupplier;
-import de.verpalnt.propertly.core.hierarchy.*;
+import de.verpalnt.propertly.core.hierarchy.DelegatingHierarchy;
+import de.verpalnt.propertly.core.hierarchy.DelegatingNode;
+import de.verpalnt.propertly.core.hierarchy.Hierarchy;
+import de.verpalnt.propertly.core.hierarchy.INode;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -74,4 +77,15 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
     return pDelegateNode.removeProperty(pName);
   }
 
+  @Override
+  public void delegatingAddProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pIndex, IPropertyDescription pPropertyDescription)
+  {
+    pDelegateNode.addProperty(pIndex, pPropertyDescription);
+  }
+
+  @Override
+  public void delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pindex)
+  {
+    pDelegateNode.removeProperty(pindex);
+  }
 }

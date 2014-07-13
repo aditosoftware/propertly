@@ -1,6 +1,9 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.*;
+import de.verpalnt.propertly.core.api.IMutablePropertyPitProvider;
+import de.verpalnt.propertly.core.api.IProperty;
+import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 import de.verpalnt.propertly.core.common.PPPIntrospector;
 
 import javax.annotation.Nonnull;
@@ -19,7 +22,6 @@ public class Node extends AbstractNode
 
   private Object value;
   private List<INode> children;
-  private List<IPropertyEventListener> listeners;
 
 
   protected Node(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull IPropertyDescription pPropertyDescription)
@@ -59,8 +61,7 @@ public class Node extends AbstractNode
       try
       {
         pppCopy = pppProvider.getClass().newInstance();
-      }
-      catch (Exception e)
+      } catch (Exception e)
       {
         throw new RuntimeException("can't instantiate: " + pppProvider);
       }
@@ -144,6 +145,38 @@ public class Node extends AbstractNode
       }
     }
     return false;
+  }
+
+  @Override
+  public void addProperty(int pIndex, IPropertyDescription pPropertyDescription)
+  {
+    if (!(value instanceof IMutablePropertyPitProvider))
+      throw new IllegalStateException("not mutable: " + getProperty());
+    INode node = find(pPropertyDescription.getName());
+    if (node != null)
+      throw new IllegalStateException("name already exists: " + pPropertyDescription);
+    children.add(pIndex, createChild(pPropertyDescription));
+    fireNodeAdded(pPropertyDescription);
+  }
+
+  @Override
+  public void removeProperty(int pIndex)
+  {
+    if (!(value instanceof IMutablePropertyPitProvider))
+      throw new IllegalStateException("not mutable: " + getProperty());
+    if (children != null && pIndex >= 0 && pIndex < children.size())
+    {
+      INode node = children.get(pIndex);
+      IProperty nProp = node.getProperty();
+      if (IMutablePropertyPitProvider.class.isAssignableFrom(nProp.getType()))
+      {
+        IPropertyDescription descr = nProp.getDescription();
+        fireNodeWillBeRemoved(descr);
+        children.remove(pIndex);
+        fireNodeRemoved(descr);
+      }
+    }
+    throw new IndexOutOfBoundsException("index '" + pIndex + "' >= size '" + (children == null ? 0 : children.size()) + "'.");
   }
 
 }

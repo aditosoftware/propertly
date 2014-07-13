@@ -133,4 +133,8 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
 
   public abstract boolean delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName);
 
+  public abstract void delegatingAddProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pIndex, IPropertyDescription pPropertyDescription);
+
+  public abstract void delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pindex);
+
 }
