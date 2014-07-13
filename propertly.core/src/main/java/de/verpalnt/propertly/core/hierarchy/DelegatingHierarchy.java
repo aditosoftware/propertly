@@ -4,6 +4,7 @@ import de.verpalnt.propertly.core.api.IProperty;
 import de.verpalnt.propertly.core.api.IPropertyDescription;
 import de.verpalnt.propertly.core.api.IPropertyEventListener;
 import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.common.IFunction;
 import de.verpalnt.propertly.core.common.ISupplier;
 
 import javax.annotation.Nullable;
@@ -17,10 +18,26 @@ import java.util.List;
 public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extends Hierarchy<T>
 {
 
-  protected DelegatingHierarchy(Hierarchy<T> pHierarchy)
+  protected DelegatingHierarchy(final Hierarchy<T> pSourceHierarchy)
   {
-    super(pHierarchy.getProperty().getName(), pHierarchy.getValue(), pHierarchy);
-    pHierarchy.addPropertyEventListener(new IPropertyEventListener()
+    super(new IFunction<Hierarchy, INode>()
+    {
+      @Override
+      public INode run(Hierarchy pHierarchy)
+      {
+        final INode sourceNode = pSourceHierarchy.getNode();
+        return new DelegatingNode((DelegatingHierarchy) pHierarchy, null, sourceNode.getProperty(), new ISupplier<INode>()
+        {
+          @Override
+          public INode get()
+          {
+            return sourceNode;
+          }
+        });
+      }
+    }, pSourceHierarchy.getValue());
+
+    pSourceHierarchy.addPropertyEventListener(new IPropertyEventListener()
     {
       @Override
       public void propertyChange(IProperty pProperty, Object pOldValue, Object pNewValue)
@@ -103,21 +120,6 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       }
     }
     return null;
-  }
-
-  @Override
-  protected final INode createNode(String pName, Object pExtra)
-  {
-    Hierarchy<T> sourceHierarchy = (Hierarchy<T>) pExtra;
-    final INode sourceNode = sourceHierarchy.getNode();
-    return new DelegatingNode(this, null, sourceNode.getProperty(), new ISupplier<INode>()
-    {
-      @Override
-      public INode get()
-      {
-        return sourceNode;
-      }
-    });
   }
 
 

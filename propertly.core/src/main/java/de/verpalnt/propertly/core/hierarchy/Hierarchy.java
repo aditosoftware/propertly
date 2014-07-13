@@ -4,6 +4,7 @@ import de.verpalnt.propertly.core.api.IProperty;
 import de.verpalnt.propertly.core.api.IPropertyDescription;
 import de.verpalnt.propertly.core.api.IPropertyEventListener;
 import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.common.IFunction;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -22,14 +23,23 @@ public class Hierarchy<T extends IPropertyPitProvider>
   private final List<IPropertyEventListener> listeners;
 
 
-  public Hierarchy(String pName, T pPPP)
+  public Hierarchy(final String pName, T pPPP)
   {
-    this(pName, pPPP, null);
+    this(new IFunction<Hierarchy, INode>()
+    {
+      @Override
+      public INode run(Hierarchy pHierarchy)
+      {
+        return new Node(pHierarchy, null, PropertyDescription.create(IPropertyPitProvider.class,
+            IPropertyPitProvider.class, pName, Collections.<Annotation>emptySet()));
+      }
+    }, pPPP);
+
   }
 
-  protected Hierarchy(String pName, T pPPP, Object pExtra)
+  protected Hierarchy(IFunction<Hierarchy, INode> pNodeSupplier, T pPPP)
   {
-    node = createNode(pName, pExtra);
+    node = pNodeSupplier.run(this);
     listeners = new ArrayList<IPropertyEventListener>();
     node.setValue(pPPP);
   }
@@ -58,12 +68,6 @@ public class Hierarchy<T extends IPropertyPitProvider>
   protected INode getNode()
   {
     return node;
-  }
-
-  protected INode createNode(String pName, Object pExtra)
-  {
-    return new Node(this, null, PropertyDescription.create(IPropertyPitProvider.class, IPropertyPitProvider.class,
-        pName, Collections.<Annotation>emptySet()));
   }
 
   protected void fireNodeChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
