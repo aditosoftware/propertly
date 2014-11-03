@@ -1,14 +1,9 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyEventListener;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.common.PropertlyUtility;
 
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author PaL
@@ -54,12 +49,6 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
-  public Class getSourceType()
-  {
-    return propertyDescription.getSourceType();
-  }
-
-  @Override
   public Class getType()
   {
     return propertyDescription.getType();
@@ -69,12 +58,6 @@ class HierarchyProperty implements IProperty
   public String getName()
   {
     return propertyDescription.getName();
-  }
-
-  @Override
-  public List<? extends Annotation> getAnnotations()
-  {
-    return propertyDescription.getAnnotations();
   }
 
   @Override

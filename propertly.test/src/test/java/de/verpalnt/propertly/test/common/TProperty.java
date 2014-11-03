@@ -1,7 +1,6 @@
 package de.verpalnt.propertly.test.common;
 
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.api.base.AbstractPPP;
 import de.verpalnt.propertly.core.common.PD;
 import de.verpalnt.propertly.core.hierarchy.HierarchyPitFactory;
@@ -13,7 +12,7 @@ import java.awt.*;
  *         Date: 26.11.12
  *         Time: 21:39
  */
-public class TProperty extends AbstractPPP<TProperty> implements ITest, IComponent
+public class TProperty extends AbstractPPP<TProperty> implements ITest<TProperty>, IComponent<TProperty>
 {
 
   @IntVerifier(minValue = 0)
@@ -72,7 +71,7 @@ public class TProperty extends AbstractPPP<TProperty> implements ITest, ICompone
     setValue(FF, pFF);
   }
 
-  public IProperty<ITest, PropertyTestChildren> getPropertyCHILD()
+  public IProperty<TProperty, PropertyTestChildren> getPropertyCHILD()
   {
     return getProperty(CHILD);
   }

@@ -5,16 +5,20 @@ package de.verpalnt.propertly.core.api;
  *         Date: 29.09.11
  *         Time: 21:42
  */
-public interface IProperty<S extends IPropertyPitProvider, T> extends IPropertyDescription<S, T>
+public interface IProperty<S extends IPropertyPitProvider, T>
 {
 
-  IPropertyDescription<S, T> getDescription();
+  IPropertyDescription<? super S, T> getDescription();
 
   T getValue();
 
   T setValue(T pValue);
 
   S getParent();
+
+  Class<T> getType();
+
+  String getName();
 
   void addPropertyEventListener(final IPropertyEventListener pListener);
 

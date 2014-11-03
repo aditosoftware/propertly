@@ -1,9 +1,7 @@
 package de.verpalnt.propertly.core.api;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * Created by PaL on 09.11.13.
@@ -15,15 +13,13 @@ public interface IPropertyPit<S extends IPropertyPitProvider> extends IPropertyP
   S getSource();
 
   @Nullable
-  IPropertyPitProvider getParent();
+  IPropertyPitProvider<?> getParent();
 
   @Nullable
-  <SOURCE extends IPropertyPitProvider, T> IProperty<SOURCE, T> findProperty(
-      IPropertyDescription<SOURCE, T> pPropertyDescription);
+  <T> IProperty<S, T> findProperty(IPropertyDescription<? super S, T> pPropertyDescription);
 
   @Nonnull
-  <SOURCE extends IPropertyPitProvider, T> IProperty<SOURCE, T> getProperty(
-      IPropertyDescription<SOURCE, T> pPropertyDescription);
+  <T> IProperty<S, T> getProperty(IPropertyDescription<? super S, T> pPropertyDescription);
 
   @Nullable
   <T> T getValue(IPropertyDescription<? super S, T> pPropertyDescription);

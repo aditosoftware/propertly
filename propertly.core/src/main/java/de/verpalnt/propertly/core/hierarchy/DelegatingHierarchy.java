@@ -26,7 +26,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       public INode run(Hierarchy pHierarchy)
       {
         final INode sourceNode = pSourceHierarchy.getNode();
-        return new DelegatingNode((DelegatingHierarchy) pHierarchy, null, sourceNode.getProperty(), new ISupplier<INode>()
+        return new DelegatingNode((DelegatingHierarchy) pHierarchy, null, sourceNode.getProperty().getDescription(), new ISupplier<INode>()
         {
           @Override
           public INode get()
@@ -113,7 +113,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       List<INode> children = delegatingNode.getChildren();
       if (children != null)
       {
-        String searchedNodeName = pNode.getProperty().getName();
+        String searchedNodeName = pNode.getProperty() .getName();
         for (INode node : children)
           if (searchedNodeName.equals(node.getProperty().getName()))
             return node;

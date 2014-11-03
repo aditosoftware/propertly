@@ -1,16 +1,10 @@
 package de.verpalnt.propertly.test.core;
 
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyEventListener;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.common.PropertyEventAdapter;
 import de.verpalnt.propertly.core.hierarchy.Hierarchy;
-import de.verpalnt.propertly.test.common.PropertyTestChildren;
-import de.verpalnt.propertly.test.common.TProperty;
-import de.verpalnt.propertly.test.common.VerifyingHierarchy;
-import org.junit.Assert;
-import org.junit.Test;
+import de.verpalnt.propertly.test.common.*;
+import org.junit.*;
 
 import java.awt.*;
 

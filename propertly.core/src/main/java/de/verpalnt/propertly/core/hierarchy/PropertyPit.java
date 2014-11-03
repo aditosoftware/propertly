@@ -2,8 +2,7 @@ package de.verpalnt.propertly.core.hierarchy;
 
 import de.verpalnt.propertly.core.api.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.util.*;
 
 /**
@@ -37,16 +36,15 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 
   @Override
   @Nullable
-  public final IPropertyPitProvider getParent()
+  public final IPropertyPitProvider<?> getParent()
   {
     INode parent = node.getParent();
     return parent == null ? null : (IPropertyPitProvider) parent.getProperty().getValue();
   }
 
-  @Override
   @Nullable
-  public final <SOURCE extends IPropertyPitProvider, T> IProperty<SOURCE, T> findProperty(
-      IPropertyDescription<SOURCE, T> pPropertyDescription)
+  @Override
+  public <T> IProperty<S, T> findProperty(IPropertyDescription<? super S, T> pPropertyDescription)
   {
     List<INode> children = node.getChildren();
     if (children != null)
@@ -54,20 +52,21 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
       {
         IProperty property = childNode.getProperty();
         if (property.getDescription().equals(pPropertyDescription))
+          //noinspection unchecked
           return property;
       }
     return null;
   }
 
-  @Override
   @Nonnull
-  public final <SOURCE extends IPropertyPitProvider, T> IProperty<SOURCE, T> getProperty(
-      IPropertyDescription<SOURCE, T> pPropertyDescription)
+  @Override
+  public <T> IProperty<S, T> getProperty(IPropertyDescription<? super S, T> pPropertyDescription)
   {
-    IProperty<SOURCE, T> property = findProperty(pPropertyDescription);
+    IProperty<?, T> property = findProperty(pPropertyDescription);
     if (property == null)
       throw new RuntimeException("Property for " + pPropertyDescription + " doesn't exist at " + this + ".");
-    return property;
+    //noinspection unchecked
+    return (IProperty<S, T>) property;
   }
 
   @Override

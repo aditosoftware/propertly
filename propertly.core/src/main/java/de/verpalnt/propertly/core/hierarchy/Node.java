@@ -63,7 +63,7 @@ public class Node extends AbstractNode
         pppCopy = pppProvider.getClass().newInstance();
       } catch (Exception e)
       {
-        throw new RuntimeException("can't instantiate: " + pppProvider);
+        throw new RuntimeException("can't instantiate: " + pppProvider, e);
       }
       value = pppCopy;
       HierarchyHelper.setNode(pppCopy, this);

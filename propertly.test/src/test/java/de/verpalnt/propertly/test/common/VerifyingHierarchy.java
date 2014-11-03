@@ -20,7 +20,6 @@ import java.util.List;
 public class VerifyingHierarchy<T extends IPropertyPitProvider> extends DelegatingHierarchy<T>
 {
 
-
   public VerifyingHierarchy(Hierarchy<T> pHierarchy)
   {
     super(pHierarchy);
@@ -29,7 +28,7 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
   @Override
   public Object delegatingSetValue(INode pDelegateNode, DelegatingNode pDelegatingNode, Object pValue)
   {
-    List<? extends Annotation> annotations = pDelegatingNode.getProperty().getAnnotations();
+    List<? extends Annotation> annotations = pDelegatingNode.getProperty().getDescription().getAnnotations();
     for (Annotation annotation : annotations)
     {
       if (annotation.annotationType().isAssignableFrom(IntVerifier.class) && pValue instanceof Integer)
