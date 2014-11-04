@@ -1,14 +1,10 @@
 package de.verpalnt.propertly.core.common;
 
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.hierarchy.PropertyDescription;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -50,7 +46,7 @@ public class PD
             if (types.length == 2)
             {
               if (!((Class<?>) types[0]).isAssignableFrom(pSource))
-                return null;
+                throw new RuntimeException("invalid type: " + types[0]);
               type = ((Class) types[1]);
             }
             String name = field.getName();
@@ -62,11 +58,11 @@ public class PD
       }
       catch (IllegalAccessException e)
       {
-        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        throw new RuntimeException(e);
       }
       iterator.remove();
     }
 
-    return null;
+    throw new RuntimeException("couldn't find field at " + pSource);
   }
 }
