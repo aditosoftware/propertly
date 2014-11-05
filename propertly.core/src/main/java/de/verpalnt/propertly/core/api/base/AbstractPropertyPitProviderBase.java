@@ -19,7 +19,7 @@ abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider>
   }
 
   @Nullable
-  <T> IProperty<S, T> findProperty(IPropertyDescription<? super S, T> pPropertyDescription)
+  public <T> IProperty<S, T> findProperty(IPropertyDescription<?, T> pPropertyDescription)
   {
     return getPit().findProperty(pPropertyDescription);
   }

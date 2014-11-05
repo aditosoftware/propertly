@@ -16,7 +16,7 @@ public interface IPropertyPit<S extends IPropertyPitProvider> extends IPropertyP
   IPropertyPitProvider<?> getParent();
 
   @Nullable
-  <T> IProperty<S, T> findProperty(IPropertyDescription<? super S, T> pPropertyDescription);
+  <T> IProperty<S, T> findProperty(IPropertyDescription<?, T> pPropertyDescription);
 
   @Nonnull
   <T> IProperty<S, T> getProperty(IPropertyDescription<? super S, T> pPropertyDescription);

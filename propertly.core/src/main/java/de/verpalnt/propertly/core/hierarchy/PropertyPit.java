@@ -44,7 +44,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 
   @Nullable
   @Override
-  public <T> IProperty<S, T> findProperty(IPropertyDescription<? super S, T> pPropertyDescription)
+  public <T> IProperty<S, T> findProperty(IPropertyDescription<?, T> pPropertyDescription)
   {
     List<INode> children = node.getChildren();
     if (children != null)
