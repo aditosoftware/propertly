@@ -38,7 +38,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   @Nullable
   public final IPropertyPitProvider<?> getParent()
   {
-    INode parent = node.getParent();
+    INode parent = getNode().getParent();
     return parent == null ? null : (IPropertyPitProvider) parent.getProperty().getValue();
   }
 
@@ -46,7 +46,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   @Override
   public <T> IProperty<S, T> findProperty(IPropertyDescription<?, T> pPropertyDescription)
   {
-    List<INode> children = node.getChildren();
+    List<INode> children = getNode().getChildren();
     if (children != null)
       for (INode childNode : children)
       {
@@ -87,7 +87,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   public final Set<IPropertyDescription> getPropertyDescriptions()
   {
     Set<IPropertyDescription> set = new LinkedHashSet<IPropertyDescription>();
-    for (INode childNode : node.getChildren())
+    for (INode childNode : getNode().getChildren())
       set.add(childNode.getProperty().getDescription());
     return set;
   }
@@ -97,7 +97,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   public List<IProperty<S, ?>> getProperties()
   {
     List<IProperty<S, ?>> properties = new ArrayList<IProperty<S, ?>>();
-    for (INode childNode : node.getChildren())
+    for (INode childNode : getNode().getChildren())
       properties.add(childNode.getProperty());
     return properties;
   }
@@ -111,13 +111,13 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   @Override
   public final void addPropertyEventListener(final IPropertyEventListener pListener)
   {
-    node.addPropertyEventListener(pListener);
+    getNode().addPropertyEventListener(pListener);
   }
 
   @Override
   public final void removePropertyEventListener(IPropertyEventListener pListener)
   {
-    node.removePropertyEventListener(pListener);
+    getNode().removePropertyEventListener(pListener);
   }
 
   public IPropertyPit<S> getPit()
@@ -130,8 +130,11 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     node = pNode;
   }
 
+  @Nonnull
   INode getNode()
   {
+    if (node == null)
+      throw new RuntimeException(this + " for " + source + " has not been initialized, yet.");
     return node;
   }
 }
