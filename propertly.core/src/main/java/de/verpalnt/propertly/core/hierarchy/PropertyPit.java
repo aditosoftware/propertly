@@ -87,8 +87,10 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   public final Set<IPropertyDescription> getPropertyDescriptions()
   {
     Set<IPropertyDescription> set = new LinkedHashSet<IPropertyDescription>();
-    for (INode childNode : getNode().getChildren())
-      set.add(childNode.getProperty().getDescription());
+    List<INode> children = getNode().getChildren();
+    if (children != null)
+      for (INode childNode : children)
+        set.add(childNode.getProperty().getDescription());
     return set;
   }
 
@@ -97,8 +99,10 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   public List<IProperty<S, ?>> getProperties()
   {
     List<IProperty<S, ?>> properties = new ArrayList<IProperty<S, ?>>();
-    for (INode childNode : getNode().getChildren())
-      properties.add(childNode.getProperty());
+    List<INode> children = getNode().getChildren();
+    if (children != null)
+      for (INode childNode : children)
+        properties.add(childNode.getProperty());
     return properties;
   }
 
@@ -136,5 +140,10 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     if (node == null)
       throw new RuntimeException(this + " for " + source + " has not been initialized, yet.");
     return node;
+  }
+
+  boolean hasNode()
+  {
+    return node != null;
   }
 }

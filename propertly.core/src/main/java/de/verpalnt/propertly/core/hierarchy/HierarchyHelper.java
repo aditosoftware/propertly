@@ -1,10 +1,11 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IPropertyPit;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
+
+import javax.annotation.Nonnull;
 
 /**
- * Created by PaL on 09.11.13.
+ * @author PaL, 09.11.13
  */
 class HierarchyHelper
 {
@@ -13,19 +14,28 @@ class HierarchyHelper
   {
   }
 
-  static INode getNode(IPropertyPitProvider pPropertyPitProvider)
+  static boolean hasNode(@Nonnull IPropertyPitProvider pPropertyPitProvider)
   {
-    final IPropertyPit pit = pPropertyPitProvider.getPit();
-    if (pit instanceof PropertyPit)
-      return ((PropertyPit) pit).getNode();
-    throw new IllegalStateException("only 'PropertyPit' is supported at hierarchy.");
+    return _getPropertyPit(pPropertyPitProvider).hasNode();
   }
 
-  static void setNode(IPropertyPitProvider pPropertyPitProvider, INode pNode)
+  @Nonnull
+  static INode getNode(@Nonnull IPropertyPitProvider pPropertyPitProvider)
+  {
+    return _getPropertyPit(pPropertyPitProvider).getNode();
+  }
+
+  static void setNode(@Nonnull IPropertyPitProvider pPropertyPitProvider, INode pNode)
+  {
+    _getPropertyPit(pPropertyPitProvider).setNode(pNode);
+  }
+
+  @Nonnull
+  private static PropertyPit _getPropertyPit(@Nonnull IPropertyPitProvider pPropertyPitProvider)
   {
     final IPropertyPit pit = pPropertyPitProvider.getPit();
     if (pit instanceof PropertyPit)
-      ((PropertyPit) pit).setNode(pNode);
+      return (PropertyPit) pit;
     else
       throw new IllegalStateException("only 'PropertyPit' is supported at hierarchy.");
   }

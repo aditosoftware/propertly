@@ -1,16 +1,10 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IMutablePropertyPitProvider;
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.common.PPPIntrospector;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * @author PaL
@@ -46,7 +40,7 @@ public class Node extends AbstractNode
     IPropertyPitProvider pppProvider = null;
     if (pValue instanceof IPropertyPitProvider)
       pppProvider = (IPropertyPitProvider) pValue;
-    if (pppProvider != null && HierarchyHelper.getNode(pppProvider) != null &&
+    if (pppProvider != null && HierarchyHelper.hasNode(pppProvider) &&
         getHierarchy().equals(HierarchyHelper.getNode(pppProvider).getHierarchy()))
       throw new IllegalStateException("can't set PPP from my own hierarchy.");
     if (oldValue instanceof IPropertyPitProvider)
@@ -61,23 +55,17 @@ public class Node extends AbstractNode
       try
       {
         pppCopy = pppProvider.getClass().newInstance();
-      } catch (Exception e)
+      }
+      catch (Exception e)
       {
         throw new RuntimeException("can't instantiate: " + pppProvider, e);
       }
       value = pppCopy;
       HierarchyHelper.setNode(pppCopy, this);
-      INode node = HierarchyHelper.getNode(pppProvider);
 
-      if (node == null)
+      if (HierarchyHelper.hasNode(pppProvider))
       {
-        Set<IPropertyDescription> descriptions = PPPIntrospector.get(pppProvider.getClass());
-        List<INode> nodes = new ArrayList<INode>(descriptions.size());
-        for (IPropertyDescription description : descriptions)
-          nodes.add(createChild(description));
-        children = nodes;
-      } else
-      {
+        INode node = HierarchyHelper.getNode(pppProvider);
         List<INode> childNodes = node.getChildren();
         assert childNodes != null;
         List<INode> newNodes = new ArrayList<INode>(childNodes.size());
@@ -87,7 +75,16 @@ public class Node extends AbstractNode
         for (int i = 0; i < childNodes.size(); i++)
           newNodes.get(i).setValue(childNodes.get(i));
       }
-    } else
+      else
+      {
+        Set<IPropertyDescription> descriptions = PPPIntrospector.get(pppProvider.getClass());
+        List<INode> nodes = new ArrayList<INode>(descriptions.size());
+        for (IPropertyDescription description : descriptions)
+          nodes.add(createChild(description));
+        children = nodes;
+      }
+    }
+    else
     {
       value = pValue;
       children = null;
