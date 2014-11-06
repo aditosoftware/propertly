@@ -22,7 +22,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     source = pSource;
   }
 
-  public static <S extends IPropertyPitProvider<S>> PropertyPit<S> create(S pCreateFor)
+  public static <S extends IPropertyPitProvider> PropertyPit<S> create(S pCreateFor)
   {
     return new PropertyPit<S>(pCreateFor);
   }

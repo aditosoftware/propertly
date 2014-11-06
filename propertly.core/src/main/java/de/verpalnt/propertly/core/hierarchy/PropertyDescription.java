@@ -1,14 +1,10 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author PaL
@@ -91,6 +87,7 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
     this.annotations = annotations;
   }
 
+  @Nonnull
   public static <S extends IPropertyPitProvider, T> IPropertyDescription<S, T> create(
       @Nonnull Class<S> pSourceType, @Nonnull Class<T> pType, @Nonnull String pName,
       @Nullable Iterable<? extends Annotation> pAnnotations)

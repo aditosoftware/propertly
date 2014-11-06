@@ -1,6 +1,7 @@
 package de.verpalnt.propertly.core.api.base;
 
 import de.verpalnt.propertly.core.api.*;
+import de.verpalnt.propertly.core.hierarchy.HierarchyPitFactory;
 
 /**
  * @author PaL
@@ -11,6 +12,11 @@ public abstract class AbstractMutablePPP<S extends IMutablePropertyPitProvider, 
     extends AbstractMutablePropertyPitProviderBase<S, T>
 {
   private final IMutablePropertyPit<S, T> pit;
+
+  public AbstractMutablePPP(Class<T> pAllowedChildType)
+  {
+    this(HierarchyPitFactory.getInstance(), pAllowedChildType);
+  }
 
   protected AbstractMutablePPP(IMutablePropertyPitFactory pFactory, Class<T> pAllowedChildType)
   {

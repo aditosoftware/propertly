@@ -1,7 +1,6 @@
 package de.verpalnt.propertly.core.api.base;
 
-import de.verpalnt.propertly.core.api.IIndexedMutablePropertyPit;
-import de.verpalnt.propertly.core.api.IIndexedMutablePropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 
 /**
  * @author PaL

@@ -3,7 +3,6 @@ package de.verpalnt.propertly.test.common;
 import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.api.base.AbstractPPP;
 import de.verpalnt.propertly.core.common.PD;
-import de.verpalnt.propertly.core.hierarchy.HierarchyPitFactory;
 
 import java.awt.*;
 
@@ -21,10 +20,6 @@ public class TProperty extends AbstractPPP<TProperty> implements ITest<TProperty
   public static final IPropertyDescription<TProperty, Integer> Y = PD.create(TProperty.class);
   public static final IPropertyDescription<TProperty, Dimension> FF = PD.create(TProperty.class);
 
-  public TProperty()
-  {
-    super(HierarchyPitFactory.getInstance());
-  }
 
   public IProperty<TProperty, Integer> getPropertyX()
   {

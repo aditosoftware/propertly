@@ -2,7 +2,6 @@ package de.verpalnt.propertly.test.common;
 
 
 import de.verpalnt.propertly.core.api.base.AbstractMutablePPP;
-import de.verpalnt.propertly.core.hierarchy.HierarchyPitFactory;
 
 import java.awt.*;
 
@@ -15,6 +14,6 @@ public class PropertyTestChildren extends AbstractMutablePPP<PropertyTestChildre
 {
   public PropertyTestChildren()
   {
-    super(HierarchyPitFactory.getInstance(), Color.class);
+    super(Color.class);
   }
 }

@@ -1,6 +1,7 @@
 package de.verpalnt.propertly.core.api.base;
 
 import de.verpalnt.propertly.core.api.*;
+import de.verpalnt.propertly.core.hierarchy.HierarchyPitFactory;
 
 import javax.annotation.Nonnull;
 
@@ -16,6 +17,10 @@ public abstract class AbstractIndexedMutablePPP<S extends IIndexedMutablePropert
 
   private final IIndexedMutablePropertyPit<S, T> pit;
 
+  public AbstractIndexedMutablePPP(Class<T> pAllowedChildType)
+  {
+    this(HierarchyPitFactory.getInstance(), pAllowedChildType);
+  }
 
   protected AbstractIndexedMutablePPP(IIndexedMutablePropertyPitFactory pFactory, Class<T> pAllowedChildType)
   {

@@ -1,16 +1,12 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IMutablePropertyPit;
-import de.verpalnt.propertly.core.api.IMutablePropertyPitProvider;
-import de.verpalnt.propertly.core.api.IPropertyPit;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
-import de.verpalnt.propertly.core.api.base.IMutablePropertyPitFactory;
-import de.verpalnt.propertly.core.api.base.IPropertyPitFactory;
+import de.verpalnt.propertly.core.api.*;
+import de.verpalnt.propertly.core.api.base.*;
 
 /**
  * Created by PaL on 09.11.13.
  */
-public class HierarchyPitFactory implements IPropertyPitFactory, IMutablePropertyPitFactory
+public class HierarchyPitFactory implements IPropertyPitFactory, IMutablePropertyPitFactory, IIndexedMutablePropertyPitFactory
 {
 
   private static final HierarchyPitFactory INSTANCE = new HierarchyPitFactory();
@@ -22,6 +18,12 @@ public class HierarchyPitFactory implements IPropertyPitFactory, IMutablePropert
   public static HierarchyPitFactory getInstance()
   {
     return INSTANCE;
+  }
+
+  @Override
+  public <S extends IIndexedMutablePropertyPitProvider, T> IIndexedMutablePropertyPit<S, T> create(S pPropertyPitProvider, Class<T> pAllowedChildType)
+  {
+    return IndexedMutablePropertyPit.create(pPropertyPitProvider, pAllowedChildType);
   }
 
   @Override

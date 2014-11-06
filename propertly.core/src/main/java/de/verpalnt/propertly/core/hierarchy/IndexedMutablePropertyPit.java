@@ -1,9 +1,6 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IIndexedMutablePropertyPit;
-import de.verpalnt.propertly.core.api.IIndexedMutablePropertyPitProvider;
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.*;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -17,9 +14,14 @@ public class IndexedMutablePropertyPit<S extends IIndexedMutablePropertyPitProvi
 {
 
 
-  public IndexedMutablePropertyPit(S pSource, Class<T> pAllowedChildType)
+  IndexedMutablePropertyPit(S pSource, Class<T> pAllowedChildType)
   {
     super(pSource, pAllowedChildType);
+  }
+
+  public static <S extends IIndexedMutablePropertyPitProvider<S, T>, T> IndexedMutablePropertyPit<S, T> create(S pCreateFor, Class<T> pAllowedChildType)
+  {
+    return new IndexedMutablePropertyPit<S, T>(pCreateFor, pAllowedChildType);
   }
 
   @Override
