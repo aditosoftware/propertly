@@ -12,6 +12,8 @@ import de.verpalnt.propertly.core.common.PD;
 public interface IComponent<T extends IComponent> extends IPropertyPitProvider<T>
 {
 
+  IPropertyDescription<IComponent, Integer> X = PD.create(IComponent.class);
+  IPropertyDescription<IComponent, Integer> Y = PD.create(IComponent.class);
   IPropertyDescription<IComponent, Integer> WIDTH = PD.create(IComponent.class);
   IPropertyDescription<IComponent, Integer> HEIGHT = PD.create(IComponent.class);
 
