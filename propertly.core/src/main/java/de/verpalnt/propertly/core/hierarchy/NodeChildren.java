@@ -28,7 +28,7 @@ public class NodeChildren
   public void add(INode pNode)
   {
     INode existingNode = childrenMap.put(new NodeChildKey(pNode.getProperty().getDescription()), pNode);
-    if (existingNode != null)
+    if (existingNode == null)
       childrenList.add(pNode);
   }
 
