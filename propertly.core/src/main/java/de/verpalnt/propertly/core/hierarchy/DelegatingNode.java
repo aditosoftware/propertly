@@ -28,6 +28,7 @@ public class DelegatingNode extends AbstractNode
     delegateProvider = pDelegateSupplier;
   }
 
+  @Nonnull
   @Override
   public final DelegatingHierarchy getHierarchy()
   {
@@ -75,20 +76,27 @@ public class DelegatingNode extends AbstractNode
     return getHierarchy().delegatingGetChildren(delegateProvider.get(), this);
   }
 
+  @Nullable
   @Override
-  public void addProperty(IPropertyDescription pPropertyDescription)
+  public INode findNode(@Nonnull IPropertyDescription pPropertyDescription)
+  {
+    return getHierarchy().findDelegatingChild(delegateProvider.get(), this, pPropertyDescription);
+  }
+
+  @Override
+  public void addProperty(@Nonnull IPropertyDescription pPropertyDescription)
   {
     getHierarchy().delegatingAddProperty(delegateProvider.get(), this, pPropertyDescription);
   }
 
   @Override
-  public boolean removeProperty(String pName)
+  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription)
   {
-    return getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pName);
+    return getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pPropertyDescription);
   }
 
   @Override
-  public void addProperty(int pIndex, IPropertyDescription pPropertyDescription)
+  public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription)
   {
     getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pIndex);
   }

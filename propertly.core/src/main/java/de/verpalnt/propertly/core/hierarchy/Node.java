@@ -15,12 +15,13 @@ public class Node extends AbstractNode
 {
 
   private Object value;
-  private List<INode> children;
+  private NodeChildren children;
 
 
   protected Node(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull IPropertyDescription pPropertyDescription)
   {
     super(pHierarchy, pParent, pPropertyDescription);
+    children = new NodeChildren();
   }
 
   @Override
@@ -45,7 +46,7 @@ public class Node extends AbstractNode
       throw new IllegalStateException("can't set PPP from my own hierarchy.");
     if (oldValue instanceof IPropertyPitProvider)
     {
-      for (INode child : children)
+      for (INode child : children.asList())
         child.setValue(null);
       HierarchyHelper.setNode((IPropertyPitProvider) oldValue, null);
     }
@@ -68,20 +69,21 @@ public class Node extends AbstractNode
         INode node = HierarchyHelper.getNode(pppProvider);
         List<INode> childNodes = node.getChildren();
         assert childNodes != null;
-        List<INode> newNodes = new ArrayList<INode>(childNodes.size());
-        for (INode child : childNodes)
-          newNodes.add(createChild(child.getProperty().getDescription()));
-        children = newNodes;
-        for (int i = 0; i < childNodes.size(); i++)
-          newNodes.get(i).setValue(childNodes.get(i));
+        children.clear();
+        for (INode remoteChild : childNodes)
+        {
+          IPropertyDescription description = remoteChild.getProperty().getDescription();
+          INode newChild = createChild(description);
+          children.add(newChild);
+          newChild.setValue(remoteChild);
+        }
       }
       else
       {
         Set<IPropertyDescription> descriptions = PPPIntrospector.get(pppProvider.getClass());
-        List<INode> nodes = new ArrayList<INode>(descriptions.size());
+        children.clear();
         for (IPropertyDescription description : descriptions)
-          nodes.add(createChild(description));
-        children = nodes;
+          children.add(createChild(description));
       }
     }
     else
@@ -99,11 +101,18 @@ public class Node extends AbstractNode
     return value;
   }
 
-  @Override
   @Nullable
+  @Override
   public List<INode> getChildren()
   {
-    return children;
+    return children.asList();
+  }
+
+  @Nullable
+  @Override
+  public INode findNode(@Nonnull IPropertyDescription pPropertyDescription)
+  {
+    return children == null ? null : children.find(pPropertyDescription);
   }
 
   protected INode createChild(IPropertyDescription pPropertyDescription)
@@ -112,11 +121,11 @@ public class Node extends AbstractNode
   }
 
   @Override
-  public void addProperty(IPropertyDescription pPropertyDescription)
+  public void addProperty(@Nonnull IPropertyDescription pPropertyDescription)
   {
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
-    INode node = find(pPropertyDescription.getName());
+    INode node = findNode(pPropertyDescription);
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
     children.add(createChild(pPropertyDescription));
@@ -124,32 +133,28 @@ public class Node extends AbstractNode
   }
 
   @Override
-  public boolean removeProperty(String pName)
+  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription)
   {
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
-    INode node = find(pName);
+    INode node = findNode(pPropertyDescription);
     if (node != null)
     {
-      IProperty nProp = node.getProperty();
-      if (IMutablePropertyPitProvider.class.isAssignableFrom(nProp.getType()))
-      {
-        IPropertyDescription descr = nProp.getDescription();
-        fireNodeWillBeRemoved(descr);
-        children.remove(node);
-        fireNodeRemoved(descr);
-        return true;
-      }
+      IPropertyDescription description = node.getProperty().getDescription();
+      fireNodeWillBeRemoved(description);
+      children.remove(node);
+      fireNodeRemoved(description);
+      return true;
     }
     return false;
   }
 
   @Override
-  public void addProperty(int pIndex, IPropertyDescription pPropertyDescription)
+  public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription)
   {
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
-    INode node = find(pPropertyDescription.getName());
+    INode node = findNode(pPropertyDescription);
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
     children.add(pIndex, createChild(pPropertyDescription));
@@ -159,21 +164,12 @@ public class Node extends AbstractNode
   @Override
   public void removeProperty(int pIndex)
   {
-    if (!(value instanceof IMutablePropertyPitProvider))
+    if (!(value instanceof IMutablePropertyPitProvider) || children == null)
       throw new IllegalStateException("not mutable: " + getProperty());
-    if (children != null && pIndex >= 0 && pIndex < children.size())
-    {
-      INode node = children.get(pIndex);
-      IProperty nProp = node.getProperty();
-      if (IMutablePropertyPitProvider.class.isAssignableFrom(nProp.getType()))
-      {
-        IPropertyDescription descr = nProp.getDescription();
-        fireNodeWillBeRemoved(descr);
-        children.remove(pIndex);
-        fireNodeRemoved(descr);
-      }
-    }
-    throw new IndexOutOfBoundsException("index '" + pIndex + "' >= size '" + (children == null ? 0 : children.size()) + "'.");
+    IPropertyDescription description = children.get(pIndex).getProperty().getDescription();
+    fireNodeWillBeRemoved(description);
+    children.remove(pIndex);
+    fireNodeRemoved(description);
   }
 
 }

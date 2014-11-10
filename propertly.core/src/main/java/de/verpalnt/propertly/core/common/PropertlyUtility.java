@@ -15,6 +15,18 @@ public class PropertlyUtility
   {
   }
 
+  public static <T> ISupplier<T> getFixedSupplier(final T pInstance)
+  {
+    return new ISupplier<T>()
+    {
+      @Override
+      public T get()
+      {
+        return pInstance;
+      }
+    };
+  }
+
   public static String asString(@Nonnull Object pObj, String... pDetails)
   {
     StringBuilder strBuilder = new StringBuilder()

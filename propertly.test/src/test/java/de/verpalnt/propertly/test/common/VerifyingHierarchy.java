@@ -1,16 +1,11 @@
 package de.verpalnt.propertly.test.common;
 
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
-import de.verpalnt.propertly.core.common.ISupplier;
-import de.verpalnt.propertly.core.hierarchy.DelegatingHierarchy;
-import de.verpalnt.propertly.core.hierarchy.DelegatingNode;
-import de.verpalnt.propertly.core.hierarchy.Hierarchy;
-import de.verpalnt.propertly.core.hierarchy.INode;
+import de.verpalnt.propertly.core.api.*;
+import de.verpalnt.propertly.core.common.PropertlyUtility;
+import de.verpalnt.propertly.core.hierarchy.*;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author PaL
@@ -52,16 +47,24 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
   public List<INode> delegatingGetChildren(INode pDelegateNode, DelegatingNode pDelegatingNode)
   {
     List<INode> children = new ArrayList<INode>();
-    for (final INode node : pDelegateNode.getChildren())
-      children.add(new DelegatingNode(this, pDelegatingNode, node.getProperty().getDescription(), new ISupplier<INode>()
-      {
-        @Override
-        public INode get()
-        {
-          return node;
-        }
-      }));
+    List<INode> delegateChildren = pDelegateNode.getChildren();
+    if (delegateChildren != null)
+    {
+      for (final INode delegateChildNode : delegateChildren)
+        children.add(new DelegatingNode(this, pDelegatingNode, delegateChildNode.getProperty().getDescription(),
+                                        PropertlyUtility.getFixedSupplier(delegateChildNode)));
+    }
     return children;
+  }
+
+  @Override
+  public INode findDelegatingChild(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription)
+  {
+    INode delegateChildNode = pDelegateNode.findNode(pPropertyDescription);
+    if (delegateChildNode == null)
+      return null;
+    return new DelegatingNode(this, pDelegatingNode, delegateChildNode.getProperty().getDescription(),
+                              PropertlyUtility.getFixedSupplier(delegateChildNode));
   }
 
   @Override
@@ -71,9 +74,9 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
   }
 
   @Override
-  public boolean delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName)
+  public boolean delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription)
   {
-    return pDelegateNode.removeProperty(pName);
+    return pDelegateNode.removeProperty(pPropertyDescription);
   }
 
   @Override

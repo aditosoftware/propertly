@@ -1,11 +1,7 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyEventListener;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
-import de.verpalnt.propertly.core.common.IFunction;
-import de.verpalnt.propertly.core.common.ISupplier;
+import de.verpalnt.propertly.core.api.*;
+import de.verpalnt.propertly.core.common.*;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -18,24 +14,9 @@ import java.util.List;
 public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extends Hierarchy<T>
 {
 
-  protected DelegatingHierarchy(final Hierarchy<T> pSourceHierarchy)
+  protected DelegatingHierarchy(Hierarchy<T> pSourceHierarchy)
   {
-    super(new IFunction<Hierarchy, INode>()
-    {
-      @Override
-      public INode run(Hierarchy pHierarchy)
-      {
-        final INode sourceNode = pSourceHierarchy.getNode();
-        return new DelegatingNode((DelegatingHierarchy) pHierarchy, null, sourceNode.getProperty().getDescription(), new ISupplier<INode>()
-        {
-          @Override
-          public INode get()
-          {
-            return sourceNode;
-          }
-        });
-      }
-    }, pSourceHierarchy.getValue());
+    super(new _INodeFunction(pSourceHierarchy), pSourceHierarchy.getValue());
 
     pSourceHierarchy.addPropertyEventListener(new IPropertyEventListener()
     {
@@ -108,18 +89,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       return getNode();
 
     INode delegatingNode = _findDelegatingNode(parent);
-    if (delegatingNode != null)
-    {
-      List<INode> children = delegatingNode.getChildren();
-      if (children != null)
-      {
-        String searchedNodeName = pNode.getProperty() .getName();
-        for (INode node : children)
-          if (searchedNodeName.equals(node.getProperty().getName()))
-            return node;
-      }
-    }
-    return null;
+    return delegatingNode != null ? delegatingNode.findNode(pNode.getProperty().getDescription()) : null;
   }
 
 
@@ -129,12 +99,36 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
 
   public abstract List<INode> delegatingGetChildren(INode pDelegateNode, DelegatingNode pDelegatingNode);
 
+  public abstract INode findDelegatingChild(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription);
+
   public abstract void delegatingAddProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription);
 
-  public abstract boolean delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName);
+  public abstract boolean delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription);
 
   public abstract void delegatingAddProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pIndex, IPropertyDescription pPropertyDescription);
 
-  public abstract void delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pindex);
+  public abstract void delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pIndex);
+
+
+  /**
+   * IFunction implementation
+   */
+  private static class _INodeFunction implements IFunction<Hierarchy, INode>
+  {
+    Hierarchy sourceHierarchy;
+
+    _INodeFunction(Hierarchy pSourceHierarchy)
+    {
+      sourceHierarchy = pSourceHierarchy;
+    }
+
+    @Override
+    public INode run(Hierarchy pHierarchy)
+    {
+      INode sourceNode = sourceHierarchy.getNode();
+      return new DelegatingNode((DelegatingHierarchy) pHierarchy, null, sourceNode.getProperty().getDescription(),
+                                PropertlyUtility.getFixedSupplier(sourceNode));
+    }
+  }
 
 }

@@ -1,15 +1,10 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyEventListener;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.common.PropertlyUtility;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * @author PaL
@@ -34,6 +29,7 @@ public abstract class AbstractNode implements INode
     property = new HierarchyProperty(this, pPropertyDescription);
   }
 
+  @Nonnull
   @Override
   public Hierarchy getHierarchy()
   {
@@ -46,6 +42,7 @@ public abstract class AbstractNode implements INode
     return parent;
   }
 
+  @Nonnull
   @Override
   public String getPath()
   {
@@ -54,6 +51,7 @@ public abstract class AbstractNode implements INode
     return parentNode == null ? name : parentNode.getPath() + "/" + name;
   }
 
+  @Nonnull
   @Override
   public IProperty getProperty()
   {
@@ -61,7 +59,7 @@ public abstract class AbstractNode implements INode
   }
 
   @Override
-  public void addPropertyEventListener(IPropertyEventListener pListener)
+  public void addPropertyEventListener(@Nonnull IPropertyEventListener pListener)
   {
     if (listeners == null)
       listeners = new ArrayList<IPropertyEventListener>();
@@ -69,7 +67,7 @@ public abstract class AbstractNode implements INode
   }
 
   @Override
-  public void removePropertyEventListener(IPropertyEventListener pListener)
+  public void removePropertyEventListener(@Nonnull IPropertyEventListener pListener)
   {
     if (listeners != null)
       listeners.add(pListener);
@@ -115,16 +113,6 @@ public abstract class AbstractNode implements INode
       for (IPropertyEventListener listener : listeners)
         //noinspection unchecked
         listener.propertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
-  }
-
-  protected INode find(String pName)
-  {
-    List<INode> cs = getChildren();
-    if (cs != null)
-      for (INode child : cs)
-        if (pName.equals(child.getProperty().getName()))
-          return child;
-    return null;
   }
 
   @Override

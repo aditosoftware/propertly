@@ -46,16 +46,9 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   @Override
   public <T> IProperty<S, T> findProperty(IPropertyDescription<?, T> pPropertyDescription)
   {
-    List<INode> children = getNode().getChildren();
-    if (children != null)
-      for (INode childNode : children)
-      {
-        IProperty property = childNode.getProperty();
-        if (property.getDescription().equals(pPropertyDescription))
-          //noinspection unchecked
-          return property;
-      }
-    return null;
+    INode childNode = node.findNode(pPropertyDescription);
+    //noinspection unchecked
+    return childNode == null ? null : childNode.getProperty();
   }
 
   @Nonnull

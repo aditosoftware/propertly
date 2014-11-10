@@ -1,11 +1,9 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyEventListener;
+import de.verpalnt.propertly.core.api.*;
 
-import javax.annotation.Nullable;
-import java.util.List;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * @author PaL
@@ -14,30 +12,41 @@ import java.util.List;
  */
 public interface INode
 {
-  Object setValue(Object pValue);
+  @Nonnull
+  Hierarchy getHierarchy();
 
-  Object getValue();
+  @Nullable
+  INode getParent();
 
   @Nullable
   List<INode> getChildren();
 
-  void addProperty(IPropertyDescription pPropertyDescription);
+  @Nullable
+  INode findNode(@Nonnull IPropertyDescription pPropertyDescription);
 
-  boolean removeProperty(String pName);
+  @Nullable
+  Object getValue();
 
-  void addProperty(int pIndex, IPropertyDescription pPropertyDescription);
+  @Nullable
+  Object setValue(@Nullable Object pValue);
+
+  @Nonnull
+  String getPath();
+
+  @Nonnull
+  IProperty getProperty();
+
+  void addProperty(@Nonnull IPropertyDescription pPropertyDescription);
+
+  boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription);
+
+  void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription);
 
   void removeProperty(int pIndex);
 
-  Hierarchy getHierarchy();
+  void addPropertyEventListener(@Nonnull IPropertyEventListener pListener);
 
-  INode getParent();
+  void removePropertyEventListener(@Nonnull IPropertyEventListener pListener);
 
-  String getPath();
 
-  IProperty getProperty();
-
-  void addPropertyEventListener(IPropertyEventListener pListener);
-
-  void removePropertyEventListener(IPropertyEventListener pListener);
 }
