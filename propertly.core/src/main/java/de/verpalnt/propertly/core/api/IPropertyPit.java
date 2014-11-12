@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * @author PaL, 09.11.13
  */
-public interface IPropertyPit<S extends IPropertyPitProvider, T> extends IPropertyPitProvider<S, T>, Iterable<IProperty<S, ? extends T>>
+public interface IPropertyPit<S extends IPropertyPitProvider, T> extends IPropertyPitProvider<S, T>, Iterable<IProperty<S, T>>
 {
 
   @Nonnull
@@ -31,10 +31,10 @@ public interface IPropertyPit<S extends IPropertyPitProvider, T> extends IProper
   <E extends T> E setValue(IPropertyDescription<? super S, E> pPropertyDescription, E pValue);
 
   @Nonnull
-  Set<IPropertyDescription<S, ? extends T>> getPropertyDescriptions();
+  Set<IPropertyDescription<S, T>> getPropertyDescriptions();
 
   @Nonnull
-  List<IProperty<S, ? extends T>> getProperties();
+  List<IProperty<S, T>> getProperties();
 
   @Nonnull
   List<? extends T> getValues();

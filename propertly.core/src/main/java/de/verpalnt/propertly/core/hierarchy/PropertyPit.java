@@ -85,9 +85,9 @@ public class PropertyPit<S extends IPropertyPitProvider, T> implements IProperty
 
   @Nonnull
   @Override
-  public final Set<IPropertyDescription<S, ? extends T>> getPropertyDescriptions()
+  public final Set<IPropertyDescription<S, T>> getPropertyDescriptions()
   {
-    Set<IPropertyDescription<S, ? extends T>> set = new LinkedHashSet<IPropertyDescription<S, ? extends T>>();
+    Set<IPropertyDescription<S, T>> set = new LinkedHashSet<IPropertyDescription<S, T>>();
     List<INode> children = getNode().getChildren();
     if (children != null)
       for (INode childNode : children)
@@ -97,9 +97,9 @@ public class PropertyPit<S extends IPropertyPitProvider, T> implements IProperty
 
   @Override
   @Nonnull
-  public List<IProperty<S, ? extends T>> getProperties()
+  public List<IProperty<S, T>> getProperties()
   {
-    List<IProperty<S, ? extends T>> properties = new ArrayList<IProperty<S, ? extends T>>();
+    List<IProperty<S, T>> properties = new ArrayList<IProperty<S, T>>();
     List<INode> children = getNode().getChildren();
     if (children != null)
       for (INode childNode : children)
@@ -120,7 +120,7 @@ public class PropertyPit<S extends IPropertyPitProvider, T> implements IProperty
   }
 
   @Override
-  public Iterator<IProperty<S, ? extends T>> iterator()
+  public Iterator<IProperty<S, T>> iterator()
   {
     return getProperties().iterator();
   }

@@ -9,7 +9,7 @@ import java.util.*;
  * @author j.boesl, 30.10.14
  */
 abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider, T>
-    implements IPropertyPitProvider<S, T>, Iterable<IProperty<S, ? extends T>>
+    implements IPropertyPitProvider<S, T>, Iterable<IProperty<S, T>>
 {
 
   @Nullable
@@ -42,13 +42,13 @@ abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider, T
     return getPit().setValue(pPropertyDescription, pValue);
   }
 
-  public Set<IPropertyDescription<S, ? extends T>> getPropertyDescriptions()
+  public Set<IPropertyDescription<S, T>> getPropertyDescriptions()
   {
     return getPit().getPropertyDescriptions();
   }
 
   @Nonnull
-  public List<IProperty<S, ? extends T>> getProperties()
+  public List<IProperty<S, T>> getProperties()
   {
     return getPit().getProperties();
   }
@@ -60,7 +60,7 @@ abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider, T
   }
 
   @Override
-  public Iterator<IProperty<S, ? extends T>> iterator()
+  public Iterator<IProperty<S, T>> iterator()
   {
     return getPit().iterator();
   }
