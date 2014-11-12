@@ -4,6 +4,7 @@ import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.hierarchy.HierarchyPitFactory;
 
 import javax.annotation.Nonnull;
+import java.util.Comparator;
 
 /**
  * @author PaL
@@ -54,6 +55,11 @@ public abstract class AbstractIndexedMutablePPP<S extends IIndexedMutablePropert
   public IProperty<S, T> addProperty(int pIndex, IPropertyDescription<S, T> pPropertyDescription)
   {
     return pit.addProperty(pIndex, pPropertyDescription);
+  }
+
+  public void reorder(Comparator<T> pComparator)
+  {
+    pit.reorder(pComparator);
   }
 
 }

@@ -6,9 +6,7 @@ import de.verpalnt.propertly.core.common.ISupplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author PaL
@@ -105,5 +103,11 @@ public class DelegatingNode extends AbstractNode
   public void removeProperty(int pIndex)
   {
     getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pIndex);
+  }
+
+  @Override
+  public void reorder(Comparator<Object> pComparator)
+  {
+    getHierarchy().delegatingReorder(delegateProvider.get(), this, pComparator);
   }
 }

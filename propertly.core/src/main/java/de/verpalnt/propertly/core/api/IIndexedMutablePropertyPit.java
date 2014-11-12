@@ -1,6 +1,7 @@
 package de.verpalnt.propertly.core.api;
 
 import javax.annotation.Nonnull;
+import java.util.Comparator;
 
 /**
  * @author PaL
@@ -19,5 +20,7 @@ public interface IIndexedMutablePropertyPit<S extends IIndexedMutablePropertyPit
   IProperty<S, T> addProperty(int pIndex, IPropertyDescription<S, T> pPropertyDescription);
 
   void removeProperty(int pIndex);
+
+  void reorder(Comparator<T> pComparator);
 
 }

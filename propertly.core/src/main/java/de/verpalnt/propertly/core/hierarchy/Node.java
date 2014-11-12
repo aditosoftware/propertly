@@ -172,4 +172,9 @@ public class Node extends AbstractNode
     fireNodeRemoved(description);
   }
 
+  @Override
+  public void reorder(Comparator pComparator)
+  {
+    children.reorder(pComparator);
+  }
 }

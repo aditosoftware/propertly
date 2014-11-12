@@ -3,7 +3,7 @@ package de.verpalnt.propertly.core.hierarchy;
 import de.verpalnt.propertly.core.api.*;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author PaL
@@ -53,5 +53,11 @@ public class IndexedMutablePropertyPit<S extends IIndexedMutablePropertyPitProvi
   public void removeProperty(int pIndex)
   {
     getNode().removeProperty(pIndex);
+  }
+
+  @Override
+  public void reorder(Comparator<T> pComparator)
+  {
+    getNode().reorder((Comparator<Object>) pComparator);
   }
 }

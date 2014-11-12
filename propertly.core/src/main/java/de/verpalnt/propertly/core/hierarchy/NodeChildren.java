@@ -56,6 +56,18 @@ public class NodeChildren
     childrenMap.remove(new NodeChildKey(removedNode.getProperty().getDescription()));
   }
 
+  public void reorder(final Comparator pComparator)
+  {
+    Collections.sort(childrenList, new Comparator<INode>()
+    {
+      @Override
+      public int compare(INode o1, INode o2)
+      {
+        return pComparator.compare(o1.getValue(), o2.getValue());
+      }
+    });
+  }
+
   public List<INode> asList()
   {
     return Collections.unmodifiableList(childrenList);

@@ -4,7 +4,7 @@ import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.common.*;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author PaL
@@ -108,6 +108,8 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
   public abstract void delegatingAddProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pIndex, IPropertyDescription pPropertyDescription);
 
   public abstract void delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pIndex);
+
+  public abstract void delegatingReorder(INode pDelegateNode, DelegatingNode pDelegatingNode, Comparator pComparator);
 
 
   /**

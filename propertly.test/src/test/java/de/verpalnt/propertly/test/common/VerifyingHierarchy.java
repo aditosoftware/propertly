@@ -90,4 +90,10 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
   {
     pDelegateNode.removeProperty(pindex);
   }
+
+  @Override
+  public void delegatingReorder(INode pDelegateNode, DelegatingNode pDelegatingNode, Comparator pComparator)
+  {
+    pDelegateNode.reorder(pComparator);
+  }
 }
