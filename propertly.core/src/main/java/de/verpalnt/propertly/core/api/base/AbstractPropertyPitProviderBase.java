@@ -53,6 +53,12 @@ abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider, T
     return getPit().getProperties();
   }
 
+  @Nonnull
+  public List<? extends T> getValues()
+  {
+    return getPit().getValues();
+  }
+
   @Override
   public Iterator<IProperty<S, ? extends T>> iterator()
   {

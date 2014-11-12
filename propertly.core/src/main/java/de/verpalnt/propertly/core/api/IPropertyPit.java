@@ -36,6 +36,9 @@ public interface IPropertyPit<S extends IPropertyPitProvider, T> extends IProper
   @Nonnull
   List<IProperty<S, ? extends T>> getProperties();
 
+  @Nonnull
+  List<? extends T> getValues();
+
   void addPropertyEventListener(IPropertyEventListener pListener);
 
   void removePropertyEventListener(IPropertyEventListener pListener);

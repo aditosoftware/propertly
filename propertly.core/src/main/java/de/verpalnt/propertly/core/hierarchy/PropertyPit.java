@@ -107,6 +107,18 @@ public class PropertyPit<S extends IPropertyPitProvider, T> implements IProperty
     return properties;
   }
 
+  @Nonnull
+  @Override
+  public List<? extends T> getValues()
+  {
+    List<T> values = new ArrayList<T>();
+    List<INode> children = getNode().getChildren();
+    if (children != null)
+      for (INode childNode : children)
+        values.add((T) childNode.getValue());
+    return values;
+  }
+
   @Override
   public Iterator<IProperty<S, ? extends T>> iterator()
   {
