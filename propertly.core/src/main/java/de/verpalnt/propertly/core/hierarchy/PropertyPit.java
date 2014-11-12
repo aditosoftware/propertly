@@ -42,11 +42,18 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     return parent == null ? null : (IPropertyPitProvider) parent.getProperty().getValue();
   }
 
+  @Nonnull
+  @Override
+  public IProperty<?, S> getOwnProperty()
+  {
+    return getNode().getProperty();
+  }
+
   @Nullable
   @Override
   public <T> IProperty<S, T> findProperty(IPropertyDescription<?, T> pPropertyDescription)
   {
-    INode childNode = node.findNode(pPropertyDescription);
+    INode childNode = getNode().findNode(pPropertyDescription);
     //noinspection unchecked
     return childNode == null ? null : childNode.getProperty();
   }

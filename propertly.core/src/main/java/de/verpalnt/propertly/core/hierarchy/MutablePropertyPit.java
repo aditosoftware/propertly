@@ -4,6 +4,7 @@ import de.verpalnt.propertly.core.api.*;
 
 import javax.annotation.*;
 import java.lang.annotation.Annotation;
+import java.util.UUID;
 
 /**
  * @author PaL
@@ -33,18 +34,34 @@ public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extend
     return this;
   }
 
-  @Override
   @Nonnull
-  public IProperty<S, T> addProperty(IPropertyDescription<S, T> pPropertyDescription)
+  @Override
+  public <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue)
+  {
+    return addProperty(UUID.randomUUID().toString(), pValue);
+  }
+
+  @Nonnull
+  @Override
+  public <E extends T> IProperty<S, E> addProperty(@Nonnull String pName, @Nonnull E pValue)
+  {
+    IPropertyDescription<S, E> description = PropertyDescription.create((Class<S>) getClass(), (Class<E>) pValue.getClass(), pName, null);
+    IProperty<S, E> property = addProperty(description);
+    property.setValue(pValue);
+    return property;
+  }
+
+  @Nonnull
+  @Override
+  public <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription)
   {
     getNode().addProperty(pPropertyDescription);
     return getProperty(pPropertyDescription);
   }
 
-  @Override
   @Nonnull
-  public IProperty<S, T> addProperty(@Nonnull Class<T> pType, @Nonnull String pName,
-                                     @Nullable Iterable<? extends Annotation> pAnnotations)
+  @Override
+  public <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName, @Nullable Iterable<? extends Annotation> pAnnotations)
   {
     return addProperty(PropertyDescription.create((Class<S>) getSource().getClass(), pType, pName, pAnnotations));
   }

@@ -27,13 +27,26 @@ public abstract class AbstractMutablePropertyPitProviderBase<S extends IMutableP
   }
 
   @Nonnull
-  public IProperty<S, T> addProperty(IPropertyDescription<S, T> pPropertyDescription)
+  public <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue)
+  {
+    return getPit().addProperty(pValue);
+  }
+
+  @Nonnull
+  public <E extends T> IProperty<S, E> addProperty(@Nonnull String pName, @Nonnull E pValue)
+  {
+    return getPit().addProperty(pName, pValue);
+  }
+
+  @Nonnull
+  public <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription)
   {
     return getPit().addProperty(pPropertyDescription);
   }
 
   @Nonnull
-  public IProperty<S, T> addProperty(@Nonnull Class<T> pType, @Nonnull String pName, @Nullable Iterable<? extends Annotation> pAnnotations)
+  public <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName,
+                                                   @Nullable Iterable<? extends Annotation> pAnnotations)
   {
     return getPit().addProperty(pType, pName, pAnnotations);
   }

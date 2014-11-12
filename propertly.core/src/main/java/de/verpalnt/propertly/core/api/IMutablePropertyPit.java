@@ -1,20 +1,26 @@
 package de.verpalnt.propertly.core.api;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+import javax.annotation.*;
 import java.lang.annotation.Annotation;
 
 /**
- * Created by PaL on 09.11.13.
+ * @author PaL, 09.11.13
  */
 public interface IMutablePropertyPit<S extends IMutablePropertyPitProvider, T> extends IPropertyPit<S>, IMutablePropertyPitProvider<S, T>
 {
   @Nonnull
-  IProperty<S, T> addProperty(IPropertyDescription<S, T> pPropertyDescription);
+  <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue);
 
   @Nonnull
-  IProperty<S, T> addProperty(@Nonnull Class<T> pType, @Nonnull String pName,
-                              @Nullable Iterable<? extends Annotation> pAnnotations);
+  <E extends T> IProperty<S, E> addProperty(@Nonnull String pName, @Nonnull E pValue);
+
+  @Nonnull
+  <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription);
+
+  @Nonnull
+  <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName,
+                                            @Nullable Iterable<? extends Annotation> pAnnotations);
 
   boolean removeProperty(IPropertyDescription<S, T> pPropertyDescription);
 

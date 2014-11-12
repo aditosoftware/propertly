@@ -4,7 +4,7 @@ import javax.annotation.*;
 import java.util.*;
 
 /**
- * Created by PaL on 09.11.13.
+ * @author PaL, 09.11.13
  */
 public interface IPropertyPit<S extends IPropertyPitProvider> extends IPropertyPitProvider<S>, Iterable<IProperty<S, ?>>
 {
@@ -14,6 +14,8 @@ public interface IPropertyPit<S extends IPropertyPitProvider> extends IPropertyP
 
   @Nullable
   IPropertyPitProvider<?> getParent();
+
+  @Nonnull IProperty<?, S> getOwnProperty();
 
   @Nullable
   <T> IProperty<S, T> findProperty(IPropertyDescription<?, T> pPropertyDescription);
