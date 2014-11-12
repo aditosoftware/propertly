@@ -67,9 +67,15 @@ public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extend
   }
 
   @Override
-  public boolean removeProperty(IPropertyDescription<S, T> pPropertyDescription)
+  public boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription)
   {
     return getNode().removeProperty(pPropertyDescription);
+  }
+
+  @Override
+  public boolean removeProperty(@Nonnull IProperty<S, T> pProperty)
+  {
+    return getNode().removeProperty(pProperty.getDescription());
   }
 
   @Override

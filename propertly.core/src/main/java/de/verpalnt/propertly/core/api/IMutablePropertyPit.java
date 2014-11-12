@@ -23,7 +23,9 @@ public interface IMutablePropertyPit<S extends IMutablePropertyPitProvider, T>
   <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName,
                                             @Nullable Iterable<? extends Annotation> pAnnotations);
 
-  boolean removeProperty(IPropertyDescription<S, T> pPropertyDescription);
+  boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription);
+
+  boolean removeProperty(@Nonnull IProperty<S, T> pProperty);
 
   Class<T> getChildType();
 }

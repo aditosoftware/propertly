@@ -21,10 +21,6 @@ public abstract class AbstractMutablePropertyPitProviderBase<S extends IMutableP
     return getPit().getChildType();
   }
 
-  public boolean removeProperty(IPropertyDescription<S, T> pPropertyDescription)
-  {
-    return getPit().removeProperty(pPropertyDescription);
-  }
 
   @Nonnull
   public <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue)
@@ -49,5 +45,15 @@ public abstract class AbstractMutablePropertyPitProviderBase<S extends IMutableP
                                                    @Nullable Iterable<? extends Annotation> pAnnotations)
   {
     return getPit().addProperty(pType, pName, pAnnotations);
+  }
+
+  public boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription)
+  {
+    return getPit().removeProperty(pPropertyDescription);
+  }
+
+  public boolean removeProperty(@Nonnull IProperty<S, T> pProperty)
+  {
+    return getPit().removeProperty(pProperty);
   }
 }
