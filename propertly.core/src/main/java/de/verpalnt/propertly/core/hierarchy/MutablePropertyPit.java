@@ -11,7 +11,7 @@ import java.util.UUID;
  *         Date: 18.11.12
  *         Time: 21:51
  */
-public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extends PropertyPit<S> implements IMutablePropertyPit<S, T>
+public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extends PropertyPit<S, T> implements IMutablePropertyPit<S, T>
 {
 
   private Class<T> allowedChildType;

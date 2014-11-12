@@ -10,7 +10,7 @@ import java.util.*;
  *         Date: 03.10.11
  *         Time: 22:02
  */
-public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit<S>
+public class PropertyPit<S extends IPropertyPitProvider, T> implements IPropertyPit<S, T>
 {
 
   private S source;
@@ -22,9 +22,9 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     source = pSource;
   }
 
-  public static <S extends IPropertyPitProvider> PropertyPit<S> create(S pCreateFor)
+  public static <S extends IPropertyPitProvider> PropertyPit<S, Object> create(S pCreateFor)
   {
-    return new PropertyPit<S>(pCreateFor);
+    return new PropertyPit<S, Object>(pCreateFor);
   }
 
   @Override
@@ -36,7 +36,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 
   @Override
   @Nullable
-  public final IPropertyPitProvider<?> getParent()
+  public final IPropertyPitProvider<?, ?> getParent()
   {
     INode parent = getNode().getParent();
     return parent == null ? null : (IPropertyPitProvider) parent.getProperty().getValue();
@@ -51,7 +51,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 
   @Nullable
   @Override
-  public <T> IProperty<S, T> findProperty(IPropertyDescription<?, T> pPropertyDescription)
+  public <E> IProperty<S, E> findProperty(IPropertyDescription<?, E> pPropertyDescription)
   {
     INode childNode = getNode().findNode(pPropertyDescription);
     //noinspection unchecked
@@ -60,33 +60,34 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 
   @Nonnull
   @Override
-  public <T> IProperty<S, T> getProperty(IPropertyDescription<? super S, T> pPropertyDescription)
+  public <E extends T> IProperty<S, E> getProperty(IPropertyDescription<? super S, E> pPropertyDescription)
   {
-    IProperty<?, T> property = findProperty(pPropertyDescription);
+    IProperty<?, E> property = findProperty(pPropertyDescription);
     if (property == null)
       throw new RuntimeException("Property for " + pPropertyDescription + " doesn't exist at " + this + ".");
     //noinspection unchecked
-    return (IProperty<S, T>) property;
+    return (IProperty<S, E>) property;
   }
 
   @Override
   @Nullable
-  public final <T> T getValue(IPropertyDescription<? super S, T> pPropertyDescription)
+  public final <E extends T> E getValue(IPropertyDescription<? super S, E> pPropertyDescription)
   {
     return getProperty(pPropertyDescription).getValue();
   }
 
   @Override
   @Nullable
-  public final <T> T setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue)
+  public final <E extends T> E setValue(IPropertyDescription<? super S, E> pPropertyDescription, E pValue)
   {
     return getProperty(pPropertyDescription).setValue(pValue);
   }
 
+  @Nonnull
   @Override
-  public final Set<IPropertyDescription> getPropertyDescriptions()
+  public final Set<IPropertyDescription<S, ? extends T>> getPropertyDescriptions()
   {
-    Set<IPropertyDescription> set = new LinkedHashSet<IPropertyDescription>();
+    Set<IPropertyDescription<S, ? extends T>> set = new LinkedHashSet<IPropertyDescription<S, ? extends T>>();
     List<INode> children = getNode().getChildren();
     if (children != null)
       for (INode childNode : children)
@@ -96,9 +97,9 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
 
   @Override
   @Nonnull
-  public List<IProperty<S, ?>> getProperties()
+  public List<IProperty<S, ? extends T>> getProperties()
   {
-    List<IProperty<S, ?>> properties = new ArrayList<IProperty<S, ?>>();
+    List<IProperty<S, ? extends T>> properties = new ArrayList<IProperty<S, ? extends T>>();
     List<INode> children = getNode().getChildren();
     if (children != null)
       for (INode childNode : children)
@@ -107,7 +108,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
   }
 
   @Override
-  public Iterator<IProperty<S, ?>> iterator()
+  public Iterator<IProperty<S, ? extends T>> iterator()
   {
     return getProperties().iterator();
   }
@@ -124,7 +125,7 @@ public class PropertyPit<S extends IPropertyPitProvider> implements IPropertyPit
     getNode().removePropertyEventListener(pListener);
   }
 
-  public IPropertyPit<S> getPit()
+  public IPropertyPit<S, T> getPit()
   {
     return this;
   }

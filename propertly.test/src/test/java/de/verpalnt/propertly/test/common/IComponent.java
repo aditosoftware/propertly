@@ -9,7 +9,7 @@ import de.verpalnt.propertly.core.common.PD;
  *         Date: 14.11.12
  *         Time: 00:55
  */
-public interface IComponent<T extends IComponent> extends IPropertyPitProvider<T>
+public interface IComponent<T extends IComponent> extends IPropertyPitProvider<T, Object>
 {
 
   IPropertyDescription<IComponent, Integer> X = PD.create(IComponent.class);

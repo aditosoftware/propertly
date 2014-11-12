@@ -4,7 +4,7 @@ import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.api.base.*;
 
 /**
- * Created by PaL on 09.11.13.
+ * @author PaL, 09.11.13
  */
 public class HierarchyPitFactory implements IPropertyPitFactory, IMutablePropertyPitFactory, IIndexedMutablePropertyPitFactory
 {
@@ -33,7 +33,7 @@ public class HierarchyPitFactory implements IPropertyPitFactory, IMutablePropert
   }
 
   @Override
-  public <S extends IPropertyPitProvider> IPropertyPit<S> create(S pPropertyPitProvider)
+  public <S extends IPropertyPitProvider> IPropertyPit<S, Object> create(S pPropertyPitProvider)
   {
     return PropertyPit.create(pPropertyPitProvider);
   }

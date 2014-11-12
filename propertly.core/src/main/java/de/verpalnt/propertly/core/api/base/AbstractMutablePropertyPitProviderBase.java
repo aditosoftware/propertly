@@ -9,7 +9,7 @@ import java.lang.annotation.Annotation;
  * @author j.boesl, 30.10.14
  */
 public abstract class AbstractMutablePropertyPitProviderBase<S extends IMutablePropertyPitProvider, T>
-    extends AbstractPropertyPitProviderBase<S>
+    extends AbstractPropertyPitProviderBase<S, T>
     implements IMutablePropertyPitProvider<S, T>
 {
 

@@ -10,10 +10,10 @@ public interface IPropertyEventListener<S extends IPropertyPitProvider, T>
 
   void propertyChange(IProperty<S, T> pProperty, T pOldValue, T pNewValue);
 
-  void propertyAdded(IPropertyPitProvider<S> pSource, IPropertyDescription<S, T> pPropertyDescription);
+  void propertyAdded(IPropertyPitProvider<S, T> pSource, IPropertyDescription<S, T> pPropertyDescription);
 
-  void propertyWillBeRemoved(IPropertyPitProvider<S> pSource, IPropertyDescription<S, T> pPropertyDescription);
+  void propertyWillBeRemoved(IPropertyPitProvider<S, T> pSource, IPropertyDescription<S, T> pPropertyDescription);
 
-  void propertyRemoved(IPropertyPitProvider<S> pSource, IPropertyDescription<S, T> pPropertyDescription);
+  void propertyRemoved(IPropertyPitProvider<S, T> pSource, IPropertyDescription<S, T> pPropertyDescription);
 
 }

@@ -8,8 +8,8 @@ import java.util.*;
 /**
  * @author j.boesl, 30.10.14
  */
-abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider>
-    implements IPropertyPitProvider<S>, Iterable<IProperty<S, ?>>
+abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider, T>
+    implements IPropertyPitProvider<S, T>, Iterable<IProperty<S, ? extends T>>
 {
 
   @Nullable
@@ -19,42 +19,42 @@ abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider>
   }
 
   @Nullable
-  public <T> IProperty<S, T> findProperty(IPropertyDescription<?, T> pPropertyDescription)
+  public <E extends T> IProperty<S, E> findProperty(IPropertyDescription<?, E> pPropertyDescription)
   {
     return getPit().findProperty(pPropertyDescription);
   }
 
   @Nonnull
-  public <T> IProperty<S, T> getProperty(IPropertyDescription<? super S, T> pPropertyDescription)
+  public <E extends T> IProperty<S, E> getProperty(IPropertyDescription<? super S, E> pPropertyDescription)
   {
     return getPit().getProperty(pPropertyDescription);
   }
 
   @Nullable
-  public <T> T getValue(IPropertyDescription<? super S, T> pPropertyDescription)
+  public <E extends T> E getValue(IPropertyDescription<? super S, E> pPropertyDescription)
   {
     return getPit().getValue(pPropertyDescription);
   }
 
   @Nullable
-  public <T> T setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue)
+  public <E extends T> E setValue(IPropertyDescription<? super S, E> pPropertyDescription, E pValue)
   {
     return getPit().setValue(pPropertyDescription, pValue);
   }
 
-  public Set<IPropertyDescription> getPropertyDescriptions()
+  public Set<IPropertyDescription<S, ? extends T>> getPropertyDescriptions()
   {
     return getPit().getPropertyDescriptions();
   }
 
   @Nonnull
-  public List<IProperty<S, ?>> getProperties()
+  public List<IProperty<S, ? extends T>> getProperties()
   {
     return getPit().getProperties();
   }
 
   @Override
-  public Iterator<IProperty<S, ?>> iterator()
+  public Iterator<IProperty<S, ? extends T>> iterator()
   {
     return getPit().iterator();
   }

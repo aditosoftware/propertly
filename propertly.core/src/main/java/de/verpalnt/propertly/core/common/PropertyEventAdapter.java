@@ -1,9 +1,6 @@
 package de.verpalnt.propertly.core.common;
 
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyEventListener;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 
 /**
  * @author PaL
@@ -18,17 +15,17 @@ public abstract class PropertyEventAdapter<S extends IPropertyPitProvider, T> im
   }
 
   @Override
-  public void propertyAdded(IPropertyPitProvider<S> pSource, IPropertyDescription<S, T> pPropertyDescription)
+  public void propertyAdded(IPropertyPitProvider<S, T> pSource, IPropertyDescription<S, T> pPropertyDescription)
   {
   }
 
   @Override
-  public void propertyWillBeRemoved(IPropertyPitProvider<S> pSource, IPropertyDescription<S, T> pPropertyDescription)
+  public void propertyWillBeRemoved(IPropertyPitProvider<S, T> pSource, IPropertyDescription<S, T> pPropertyDescription)
   {
   }
 
   @Override
-  public void propertyRemoved(IPropertyPitProvider<S> pSource, IPropertyDescription<S, T> pPropertyDescription)
+  public void propertyRemoved(IPropertyPitProvider<S, T> pSource, IPropertyDescription<S, T> pPropertyDescription)
   {
   }
 }

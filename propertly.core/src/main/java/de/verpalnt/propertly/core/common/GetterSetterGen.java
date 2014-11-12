@@ -17,12 +17,12 @@ public class GetterSetterGen
   {
   }
 
-  public static void run(IPropertyPit<?> pPit)
+  public static void run(IPropertyPit<?, ?> pPit)
   {
     run(pPit, null);
   }
 
-  public static void run(IPropertyPitProvider<?> pPitProvider, String pPitName)
+  public static void run(IPropertyPitProvider<?, ?> pPitProvider, String pPitName)
   {
     String pit = pPitName == null || pPitName.isEmpty() ? "" : pPitName + ".";
     for (IPropertyDescription<?, ?> prop : pPitProvider.getPit().getPropertyDescriptions())

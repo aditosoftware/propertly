@@ -7,7 +7,8 @@ import java.lang.annotation.Annotation;
 /**
  * @author PaL, 09.11.13
  */
-public interface IMutablePropertyPit<S extends IMutablePropertyPitProvider, T> extends IPropertyPit<S>, IMutablePropertyPitProvider<S, T>
+public interface IMutablePropertyPit<S extends IMutablePropertyPitProvider, T>
+    extends IPropertyPit<S, T>, IMutablePropertyPitProvider<S, T>
 {
   @Nonnull
   <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue);

@@ -6,33 +6,35 @@ import java.util.*;
 /**
  * @author PaL, 09.11.13
  */
-public interface IPropertyPit<S extends IPropertyPitProvider> extends IPropertyPitProvider<S>, Iterable<IProperty<S, ?>>
+public interface IPropertyPit<S extends IPropertyPitProvider, T> extends IPropertyPitProvider<S, T>, Iterable<IProperty<S, ? extends T>>
 {
 
   @Nonnull
   S getSource();
 
   @Nullable
-  IPropertyPitProvider<?> getParent();
-
-  @Nonnull IProperty<?, S> getOwnProperty();
-
-  @Nullable
-  <T> IProperty<S, T> findProperty(IPropertyDescription<?, T> pPropertyDescription);
+  IPropertyPitProvider<?, ?> getParent();
 
   @Nonnull
-  <T> IProperty<S, T> getProperty(IPropertyDescription<? super S, T> pPropertyDescription);
+  IProperty<?, S> getOwnProperty();
 
   @Nullable
-  <T> T getValue(IPropertyDescription<? super S, T> pPropertyDescription);
-
-  @Nullable
-  <T> T setValue(IPropertyDescription<? super S, T> pPropertyDescription, T pValue);
-
-  Set<IPropertyDescription> getPropertyDescriptions();
+  <E> IProperty<S, E> findProperty(IPropertyDescription<?, E> pPropertyDescription);
 
   @Nonnull
-  List<IProperty<S, ?>> getProperties();
+  <E extends T> IProperty<S, E> getProperty(IPropertyDescription<? super S, E> pPropertyDescription);
+
+  @Nullable
+  <E extends T> E getValue(IPropertyDescription<? super S, E> pPropertyDescription);
+
+  @Nullable
+  <E extends T> E setValue(IPropertyDescription<? super S, E> pPropertyDescription, E pValue);
+
+  @Nonnull
+  Set<IPropertyDescription<S, ? extends T>> getPropertyDescriptions();
+
+  @Nonnull
+  List<IProperty<S, ? extends T>> getProperties();
 
   void addPropertyEventListener(IPropertyEventListener pListener);
 

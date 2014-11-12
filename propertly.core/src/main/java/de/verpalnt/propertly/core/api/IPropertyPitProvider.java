@@ -5,9 +5,9 @@ package de.verpalnt.propertly.core.api;
  *         Date: 14.10.12
  *         Time: 14:52
  */
-public interface IPropertyPitProvider<S extends IPropertyPitProvider>
+public interface IPropertyPitProvider<S extends IPropertyPitProvider, T>
 {
 
-  IPropertyPit<S> getPit();
+  IPropertyPit<S, T> getPit();
 
 }
