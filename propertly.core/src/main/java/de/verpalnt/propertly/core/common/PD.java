@@ -2,6 +2,7 @@ package de.verpalnt.propertly.core.common;
 
 import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.hierarchy.PropertyDescription;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -36,23 +37,31 @@ public class PD
       try
       {
         int modifiers = field.getModifiers();
-        if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers) && field.get(null) == null)
+        if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers))
         {
-          if (IPropertyDescription.class.isAssignableFrom(field.getType()))
+          if (!Modifier.isPublic(modifiers))
+            field.setAccessible(true);
+          if (field.get(null) == null) // not yet initialized
           {
-            iterator.remove();
-            Class type = Object.class;
-            Type[] types = ((ParameterizedType) field.getGenericType()).getActualTypeArguments();
-            if (types.length == 2)
+            if (IPropertyDescription.class.isAssignableFrom(field.getType()))
             {
-              if (!((Class<?>) types[0]).isAssignableFrom(pSource))
-                throw new RuntimeException("invalid type: " + types[0]);
-              type = ((Class) types[1]);
+              iterator.remove();
+              Class type = Object.class;
+              Type[] types = ((ParameterizedType) field.getGenericType()).getActualTypeArguments();
+              if (types.length == 2)
+              {
+                if (!((Class<?>) types[0]).isAssignableFrom(pSource))
+                  throw new RuntimeException("invalid type: " + types[0]);
+                if (types[1] instanceof Class)
+                  type = ((Class) types[1]);
+                else if (types[1] instanceof ParameterizedType)
+                  type = ((ParameterizedType)types[1]).getRawType().getClass();
+              }
+              String name = field.getName();
+              List<Annotation> annotations = Arrays.asList(field.getDeclaredAnnotations());
+              //noinspection unchecked
+              return (IPropertyDescription<S, T>) PropertyDescription.create(pSource, type, name, annotations);
             }
-            String name = field.getName();
-            List<Annotation> annotations = Arrays.asList(field.getDeclaredAnnotations());
-            //noinspection unchecked
-            return (IPropertyDescription<S, T>) PropertyDescription.create(pSource, type, name, annotations);
           }
         }
       }

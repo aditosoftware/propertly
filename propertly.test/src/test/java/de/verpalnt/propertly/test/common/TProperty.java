@@ -5,6 +5,7 @@ import de.verpalnt.propertly.core.api.base.AbstractPPP;
 import de.verpalnt.propertly.core.common.PD;
 
 import java.awt.*;
+import java.util.Map;
 
 /**
  * @author PaL
@@ -18,7 +19,11 @@ public class TProperty extends AbstractPPP<TProperty> implements ITest<TProperty
   public static final IPropertyDescription<TProperty, Integer> X = PD.create(TProperty.class);
   @IntVerifier(minValue = 0)
   public static final IPropertyDescription<TProperty, Integer> Y = PD.create(TProperty.class);
+
   public static final IPropertyDescription<TProperty, Dimension> FF = PD.create(TProperty.class);
+
+  public static final IPropertyDescription<TProperty, Map<String, String>> MAP = PD.create(TProperty.class);
+
 
 
   public IProperty<TProperty, Integer> getPropertyX()
