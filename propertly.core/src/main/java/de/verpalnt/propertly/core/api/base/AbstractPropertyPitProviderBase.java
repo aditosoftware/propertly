@@ -54,7 +54,7 @@ abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider, T
   }
 
   @Nonnull
-  public List<? extends T> getValues()
+  public List<T> getValues()
   {
     return getPit().getValues();
   }

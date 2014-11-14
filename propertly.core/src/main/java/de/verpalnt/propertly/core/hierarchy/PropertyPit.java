@@ -109,7 +109,7 @@ public class PropertyPit<S extends IPropertyPitProvider, T> implements IProperty
 
   @Nonnull
   @Override
-  public List<? extends T> getValues()
+  public List<T> getValues()
   {
     List<T> values = new ArrayList<T>();
     List<INode> children = getNode().getChildren();
