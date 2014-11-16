@@ -3,6 +3,7 @@ package de.verpalnt.propertly.core.hierarchy;
 import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.common.PropertlyUtility;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -58,6 +59,12 @@ class HierarchyProperty implements IProperty
   public String getName()
   {
     return propertyDescription.getName();
+  }
+
+  @Override
+  public void rename(@Nonnull String pName) throws PropertlyRenameException
+  {
+    throw new PropertlyRenameException(this, pName);
   }
 
   @Override

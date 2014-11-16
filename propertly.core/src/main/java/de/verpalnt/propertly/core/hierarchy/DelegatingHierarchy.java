@@ -111,6 +111,8 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
 
   public abstract void delegatingReorder(INode pDelegateNode, DelegatingNode pDelegatingNode, Comparator pComparator);
 
+  public abstract void rename(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName);
+
 
   /**
    * IFunction implementation

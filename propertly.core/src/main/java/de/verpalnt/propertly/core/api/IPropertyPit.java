@@ -12,6 +12,8 @@ public interface IPropertyPit<S extends IPropertyPitProvider, T> extends IProper
   @Nonnull
   S getSource();
 
+  boolean isValid();
+
   @Nullable
   IPropertyPitProvider<?, ?> getParent();
 

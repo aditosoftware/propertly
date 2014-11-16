@@ -137,12 +137,15 @@ public class Node extends AbstractNode
   {
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
-    INode node = findNode(pPropertyDescription);
-    if (node != null)
+    INode childNode = findNode(pPropertyDescription);
+    if (childNode != null)
     {
-      IPropertyDescription description = node.getProperty().getDescription();
+      IProperty property = childNode.getProperty();
+      if (!(property instanceof DynamicHierarchyProperty))
+        throw new IllegalStateException("can't remove: " + getProperty());
+      IPropertyDescription description = property.getDescription();
       fireNodeWillBeRemoved(description);
-      children.remove(node);
+      children.remove(childNode);
       fireNodeRemoved(description);
       return true;
     }
@@ -166,7 +169,10 @@ public class Node extends AbstractNode
   {
     if (!(value instanceof IMutablePropertyPitProvider) || children == null)
       throw new IllegalStateException("not mutable: " + getProperty());
-    IPropertyDescription description = children.get(pIndex).getProperty().getDescription();
+    IProperty property = children.get(pIndex).getProperty();
+    if (!(property instanceof DynamicHierarchyProperty))
+      throw new IllegalStateException("can't remove: " + getProperty());
+    IPropertyDescription description = property.getDescription();
     fireNodeWillBeRemoved(description);
     children.remove(pIndex);
     fireNodeRemoved(description);
@@ -177,4 +183,17 @@ public class Node extends AbstractNode
   {
     children.reorder(pComparator);
   }
+
+  @Override
+  public void rename(String pName)
+  {
+    IProperty property = getProperty();
+    if (!(property instanceof DynamicHierarchyProperty))
+      throw new IllegalStateException("can't rename: " + property);
+    Node parent = (Node) getParent();
+    if (parent != null)
+      parent.children.rename(property.getDescription(), pName);
+    ((PropertyDescription) property.getDescription()).setName(pName);
+  }
+
 }

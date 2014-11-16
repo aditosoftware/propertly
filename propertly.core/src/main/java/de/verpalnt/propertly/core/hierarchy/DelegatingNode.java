@@ -1,11 +1,9 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.common.ISupplier;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.util.*;
 
 /**
@@ -57,7 +55,8 @@ public class DelegatingNode extends AbstractNode
           HierarchyHelper.setNode(ownPitProvider, this);
           pitProvider = Collections.singletonMap(ppp, ownPitProvider);
           return ownPitProvider;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
           throw new RuntimeException(e);
         }
@@ -109,5 +108,11 @@ public class DelegatingNode extends AbstractNode
   public void reorder(Comparator<Object> pComparator)
   {
     getHierarchy().delegatingReorder(delegateProvider.get(), this, pComparator);
+  }
+
+  @Override
+  public void rename(String pName)
+  {
+    getHierarchy().rename(delegateProvider.get(), this, pName);
   }
 }

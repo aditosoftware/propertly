@@ -35,6 +35,12 @@ public class PropertyPit<S extends IPropertyPitProvider, T> implements IProperty
   }
 
   @Override
+  public boolean isValid()
+  {
+    return node != null;
+  }
+
+  @Override
   @Nullable
   public final IPropertyPitProvider<?, ?> getParent()
   {
@@ -150,13 +156,9 @@ public class PropertyPit<S extends IPropertyPitProvider, T> implements IProperty
   @Nonnull
   INode getNode()
   {
-    if (node == null)
-      throw new RuntimeException(this + " for " + source + " has not been initialized, yet.");
-    return node;
+    if (isValid())
+      return node;
+    throw new RuntimeException("'" + this + "' for " + source + " has not been initialized, yet.");
   }
 
-  boolean hasNode()
-  {
-    return node != null;
-  }
 }

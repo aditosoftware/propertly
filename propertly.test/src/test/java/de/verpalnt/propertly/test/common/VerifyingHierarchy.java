@@ -96,4 +96,10 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
   {
     pDelegateNode.reorder(pComparator);
   }
+
+  @Override
+  public void rename(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName)
+  {
+    pDelegateNode.rename(pName);
+  }
 }

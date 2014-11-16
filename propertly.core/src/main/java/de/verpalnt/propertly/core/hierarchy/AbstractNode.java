@@ -26,7 +26,10 @@ public abstract class AbstractNode implements INode
   {
     hierarchy = pHierarchy;
     parent = pParent;
-    property = new HierarchyProperty(this, pPropertyDescription);
+    if (parent == null || parent.getValue() instanceof IMutablePropertyPit)
+      property = new DynamicHierarchyProperty(this, pPropertyDescription);
+    else
+      property = new HierarchyProperty(this, pPropertyDescription);
   }
 
   @Nonnull

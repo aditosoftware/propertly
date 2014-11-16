@@ -36,6 +36,8 @@ public interface INode
   @Nonnull
   IProperty getProperty();
 
+  void rename(String pName);
+
   void addProperty(@Nonnull IPropertyDescription pPropertyDescription);
 
   boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription);

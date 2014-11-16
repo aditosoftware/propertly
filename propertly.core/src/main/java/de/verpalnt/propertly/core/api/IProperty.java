@@ -1,5 +1,9 @@
 package de.verpalnt.propertly.core.api;
 
+import de.verpalnt.propertly.core.hierarchy.PropertlyRenameException;
+
+import javax.annotation.Nonnull;
+
 /**
  * @author PaL
  *         Date: 29.09.11
@@ -20,7 +24,9 @@ public interface IProperty<S extends IPropertyPitProvider, T>
 
   String getName();
 
-  void addPropertyEventListener(final IPropertyEventListener pListener);
+  void rename(@Nonnull String pName) throws PropertlyRenameException;
+
+  void addPropertyEventListener(IPropertyEventListener pListener);
 
   void removePropertyEventListener(IPropertyEventListener pListener);
 

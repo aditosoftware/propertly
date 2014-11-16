@@ -1,6 +1,6 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IPropertyDescription;
+import de.verpalnt.propertly.core.api.*;
 
 import java.util.*;
 
@@ -10,12 +10,12 @@ import java.util.*;
 public class NodeChildren
 {
 
-  private Map<NodeChildKey, INode> childrenMap;
+  private Map<String, INode> childrenMap;
   private List<INode> childrenList;
 
   public NodeChildren()
   {
-    childrenMap = new HashMap<NodeChildKey, INode>();
+    childrenMap = new HashMap<String, INode>();
     childrenList = new ArrayList<INode>();
   }
 
@@ -27,24 +27,25 @@ public class NodeChildren
 
   public void add(INode pNode)
   {
-    INode existingNode = childrenMap.put(new NodeChildKey(pNode.getProperty().getDescription()), pNode);
+    INode existingNode = childrenMap.put(pNode.getProperty().getName(), pNode);
     if (existingNode == null)
       childrenList.add(pNode);
   }
 
   public void add(int pIndex, INode pNode)
   {
-    NodeChildKey nodeChildKey = new NodeChildKey(pNode.getProperty().getDescription());
-    if (!childrenMap.containsKey(nodeChildKey))
+    String name = pNode.getProperty().getName();
+    if (!childrenMap.containsKey(name))
     {
       childrenList.add(pIndex, pNode);
-      childrenMap.put(nodeChildKey, pNode);
+      childrenMap.put(name, pNode);
     }
   }
 
   public boolean remove(INode pNode)
   {
-    boolean wasRemoved = childrenMap.remove(new NodeChildKey(pNode.getProperty().getDescription())) != null;
+    IProperty property = pNode.getProperty();
+    boolean wasRemoved = childrenMap.remove(property.getName()) != null;
     if (wasRemoved)
       childrenList.remove(pNode);
     return wasRemoved;
@@ -53,7 +54,16 @@ public class NodeChildren
   public void remove(int pIndex)
   {
     INode removedNode = childrenList.remove(pIndex);
-    childrenMap.remove(new NodeChildKey(removedNode.getProperty().getDescription()));
+    childrenMap.remove(removedNode.getProperty().getName());
+  }
+
+  public void rename(IPropertyDescription pPropertyDescription, String pName)
+  {
+    if (childrenMap.containsKey(pName))
+      throw new RuntimeException("property with name '" + pName + "' already exists.");
+    INode node = childrenMap.remove(pPropertyDescription.getName());
+    assert node != null;
+    childrenMap.put(pName, node);
   }
 
   public void reorder(final Comparator pComparator)
@@ -73,9 +83,12 @@ public class NodeChildren
     return Collections.unmodifiableList(childrenList);
   }
 
-  public INode find(IPropertyDescription pPropertyDescription)
+  public INode find(IPropertyDescription<?, ?> pPropertyDescription)
   {
-    return childrenMap.get(new NodeChildKey(pPropertyDescription));
+    INode node = childrenMap.get(pPropertyDescription.getName());
+    if (node == null)
+      return null;
+    return pPropertyDescription.getType().isAssignableFrom(node.getProperty().getType()) ? node : null;
   }
 
   public INode get(int pIndex)
