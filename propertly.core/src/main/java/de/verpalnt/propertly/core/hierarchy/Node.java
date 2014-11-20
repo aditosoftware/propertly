@@ -75,7 +75,7 @@ public class Node extends AbstractNode
           IPropertyDescription description = remoteChild.getProperty().getDescription();
           INode newChild = createChild(description);
           children.add(newChild);
-          newChild.setValue(remoteChild);
+          newChild.setValue(remoteChild.getValue());
         }
       }
       else

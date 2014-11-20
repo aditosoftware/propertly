@@ -38,6 +38,12 @@ public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extend
   @Override
   public <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue)
   {
+    if (pValue instanceof IPropertyPitProvider)
+    {
+      IPropertyPit pit = ((IPropertyPitProvider) pValue).getPit();
+      if (pit.isValid())
+        return addProperty(pit.getOwnProperty().getName(), pValue);
+    }
     return addProperty(UUID.randomUUID().toString(), pValue);
   }
 
