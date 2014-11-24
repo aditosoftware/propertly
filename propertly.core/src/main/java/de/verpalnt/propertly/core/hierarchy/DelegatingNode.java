@@ -1,7 +1,7 @@
 package de.verpalnt.propertly.core.hierarchy;
 
 import de.verpalnt.propertly.core.api.*;
-import de.verpalnt.propertly.core.common.ISupplier;
+import de.verpalnt.propertly.core.common.*;
 
 import javax.annotation.*;
 import java.util.*;
@@ -49,17 +49,10 @@ public class DelegatingNode extends AbstractNode
         IPropertyPitProvider currentPit = pitProvider == null ? null : pitProvider.get(ppp);
         if (currentPit != null)
           return currentPit;
-        try
-        {
-          IPropertyPitProvider ownPitProvider = ppp.getClass().newInstance();
-          HierarchyHelper.setNode(ownPitProvider, this);
-          pitProvider = Collections.singletonMap(ppp, ownPitProvider);
-          return ownPitProvider;
-        }
-        catch (Exception e)
-        {
-          throw new RuntimeException(e);
-        }
+        IPropertyPitProvider ownPitProvider = PropertlyUtility.create(ppp);
+        HierarchyHelper.setNode(ownPitProvider, this);
+        pitProvider = Collections.singletonMap(ppp, ownPitProvider);
+        return ownPitProvider;
       }
     }
     return o;

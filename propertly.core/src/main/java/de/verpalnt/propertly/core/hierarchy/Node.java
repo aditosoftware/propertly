@@ -1,7 +1,7 @@
 package de.verpalnt.propertly.core.hierarchy;
 
 import de.verpalnt.propertly.core.api.*;
-import de.verpalnt.propertly.core.common.PPPIntrospector;
+import de.verpalnt.propertly.core.common.*;
 
 import javax.annotation.*;
 import java.util.*;
@@ -15,13 +15,13 @@ public class Node extends AbstractNode
 {
 
   private Object value;
+  @Nullable
   private NodeChildren children;
 
 
   protected Node(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull IPropertyDescription pPropertyDescription)
   {
     super(pHierarchy, pParent, pPropertyDescription);
-    children = new NodeChildren();
   }
 
   @Override
@@ -46,21 +46,16 @@ public class Node extends AbstractNode
       throw new IllegalStateException("can't set PPP from my own hierarchy.");
     if (oldValue instanceof IPropertyPitProvider)
     {
-      for (INode child : children.asList())
-        child.setValue(null);
+      if (children != null)
+      {
+        for (INode child : children.asList())
+          child.setValue(null);
+      }
       HierarchyHelper.setNode((IPropertyPitProvider) oldValue, null);
     }
     if (pppProvider != null)
     {
-      IPropertyPitProvider pppCopy;
-      try
-      {
-        pppCopy = pppProvider.getClass().newInstance();
-      }
-      catch (Exception e)
-      {
-        throw new RuntimeException("can't instantiate: " + pppProvider, e);
-      }
+      IPropertyPitProvider pppCopy = PropertlyUtility.create(pppProvider);
       value = pppCopy;
       HierarchyHelper.setNode(pppCopy, this);
 
@@ -69,7 +64,10 @@ public class Node extends AbstractNode
         INode node = HierarchyHelper.getNode(pppProvider);
         List<INode> childNodes = node.getChildren();
         assert childNodes != null;
-        children.clear();
+        if (children == null)
+          children = new NodeChildren();
+        else
+          children.clear();
         for (INode remoteChild : childNodes)
         {
           IPropertyDescription description = remoteChild.getProperty().getDescription();
@@ -81,7 +79,10 @@ public class Node extends AbstractNode
       else
       {
         Set<IPropertyDescription> descriptions = PPPIntrospector.get(pppProvider.getClass());
-        children.clear();
+        if (children == null)
+          children = new NodeChildren();
+        else
+          children.clear();
         for (IPropertyDescription description : descriptions)
           children.add(createChild(description));
       }
@@ -105,7 +106,7 @@ public class Node extends AbstractNode
   @Override
   public List<INode> getChildren()
   {
-    return children.asList();
+    return children == null ? null : children.asList();
   }
 
   @Nullable
@@ -128,6 +129,8 @@ public class Node extends AbstractNode
     INode node = findNode(pPropertyDescription);
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
+    if (children == null)
+      children = new NodeChildren();
     children.add(createChild(pPropertyDescription));
     fireNodeAdded(pPropertyDescription);
   }
@@ -145,6 +148,7 @@ public class Node extends AbstractNode
         throw new IllegalStateException("can't remove: " + getProperty());
       IPropertyDescription description = property.getDescription();
       fireNodeWillBeRemoved(description);
+      assert children != null;
       children.remove(childNode);
       fireNodeRemoved(description);
       return true;
@@ -160,6 +164,8 @@ public class Node extends AbstractNode
     INode node = findNode(pPropertyDescription);
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
+    if (children == null)
+      children = new NodeChildren();
     children.add(pIndex, createChild(pPropertyDescription));
     fireNodeAdded(pPropertyDescription);
   }
@@ -181,7 +187,8 @@ public class Node extends AbstractNode
   @Override
   public void reorder(Comparator pComparator)
   {
-    children.reorder(pComparator);
+    if (children != null)
+      children.reorder(pComparator);
   }
 
   @Override
@@ -192,7 +199,10 @@ public class Node extends AbstractNode
       throw new IllegalStateException("can't rename: " + property);
     Node parent = (Node) getParent();
     if (parent != null)
+    {
+      assert parent.children != null;
       parent.children.rename(property.getDescription(), pName);
+    }
     ((PropertyDescription) property.getDescription()).setName(pName);
   }
 
