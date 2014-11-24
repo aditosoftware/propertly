@@ -1,6 +1,8 @@
 package de.verpalnt.propertly.core.common;
 
 
+import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -25,6 +27,29 @@ public class PropertlyUtility
         return pInstance;
       }
     };
+  }
+
+  public static <T extends IPropertyPitProvider> T create(@Nonnull T pPropertyPitProvider)
+  {
+    if (pPropertyPitProvider instanceof IReconstructor)
+      //noinspection unchecked
+      return ((IReconstructor<T>) pPropertyPitProvider).create();
+
+    //noinspection unchecked
+    Class<T> cls = (Class<T>) pPropertyPitProvider.getClass();
+    return create(cls);
+  }
+
+  public static <T extends IPropertyPitProvider> T create(@Nonnull Class<T> pClass)
+  {
+    try
+    {
+      return pClass.newInstance();
+    }
+    catch (Exception e)
+    {
+      throw new RuntimeException("can't instantiate: " + pClass, e);
+    }
   }
 
   public static String asString(@Nonnull Object pObj, String... pDetails)
