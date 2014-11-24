@@ -2,7 +2,6 @@ package de.verpalnt.propertly.core.common;
 
 import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.hierarchy.PropertyDescription;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -55,7 +54,7 @@ public class PD
                 if (types[1] instanceof Class)
                   type = ((Class) types[1]);
                 else if (types[1] instanceof ParameterizedType)
-                  type = ((ParameterizedType)types[1]).getRawType().getClass();
+                  type = (Class) ((ParameterizedType) types[1]).getRawType();
               }
               String name = field.getName();
               List<Annotation> annotations = Arrays.asList(field.getDeclaredAnnotations());
