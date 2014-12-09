@@ -88,7 +88,9 @@ public class NodeChildren
     INode node = childrenMap.get(pPropertyDescription.getName());
     if (node == null)
       return null;
-    return pPropertyDescription.getType().isAssignableFrom(node.getProperty().getType()) ? node : null;
+    boolean fittingTypeAndSourceType = pPropertyDescription.getType().isAssignableFrom(node.getProperty().getType()) &&
+        pPropertyDescription.getSourceType().isAssignableFrom(node.getProperty().getDescription().getSourceType());
+    return fittingTypeAndSourceType ? node : null;
   }
 
   public INode get(int pIndex)
