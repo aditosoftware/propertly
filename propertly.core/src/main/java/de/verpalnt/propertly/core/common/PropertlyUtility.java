@@ -4,6 +4,8 @@ package de.verpalnt.propertly.core.common;
 import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 
 import javax.annotation.Nonnull;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 /**
  * @author PaL
@@ -70,6 +72,18 @@ public class PropertlyUtility
       strBuilder.append('{').append(detailsBuilder).append('}');
     }
     return strBuilder.toString();
+  }
+
+  public static <T extends Annotation> List<T> findAnnotations(IAnnotationProvider pAnnotationProvider, Class<T> pCls)
+  {
+    List<T> annotations = new ArrayList<T>();
+    for (Annotation annotation : pAnnotationProvider.getAnnotations())
+    {
+      if (pCls.isAssignableFrom(annotation.getClass()))
+        //noinspection unchecked
+        annotations.add((T) annotation);
+    }
+    return annotations;
   }
 
 }

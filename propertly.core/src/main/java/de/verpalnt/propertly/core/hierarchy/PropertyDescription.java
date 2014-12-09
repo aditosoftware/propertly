@@ -62,6 +62,7 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
     return name;
   }
 
+  @Nonnull
   public List<? extends Annotation> getAnnotations()
   {
     return annotations;
