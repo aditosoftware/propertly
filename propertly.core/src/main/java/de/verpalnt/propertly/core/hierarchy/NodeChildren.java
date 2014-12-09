@@ -73,7 +73,7 @@ public class NodeChildren
       @Override
       public int compare(INode o1, INode o2)
       {
-        return pComparator.compare(o1.getValue(), o2.getValue());
+        return pComparator.compare(o1.getProperty(), o2.getProperty());
       }
     });
   }

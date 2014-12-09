@@ -56,8 +56,8 @@ public class IndexedMutablePropertyPit<S extends IIndexedMutablePropertyPitProvi
   }
 
   @Override
-  public void reorder(Comparator<T> pComparator)
+  public void reorder(Comparator<IProperty<S, T>> pComparator)
   {
-    getNode().reorder((Comparator<Object>) pComparator);
+    getNode().reorder(pComparator);
   }
 }

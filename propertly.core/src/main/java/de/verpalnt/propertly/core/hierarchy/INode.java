@@ -46,7 +46,7 @@ public interface INode
 
   void removeProperty(int pIndex);
 
-  void reorder(Comparator<Object> pComparator);
+  void reorder(Comparator pComparator);
 
   void addPropertyEventListener(@Nonnull IPropertyEventListener pListener);
 

@@ -21,6 +21,6 @@ public interface IIndexedMutablePropertyPit<S extends IIndexedMutablePropertyPit
 
   void removeProperty(int pIndex);
 
-  void reorder(Comparator<T> pComparator);
+  void reorder(Comparator<IProperty<S, T>> pComparator);
 
 }

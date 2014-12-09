@@ -57,7 +57,7 @@ public abstract class AbstractIndexedMutablePPP<S extends IIndexedMutablePropert
     return pit.addProperty(pIndex, pPropertyDescription);
   }
 
-  public void reorder(Comparator<T> pComparator)
+  public void reorder(Comparator<IProperty<S, T>> pComparator)
   {
     pit.reorder(pComparator);
   }

@@ -98,7 +98,7 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public void reorder(Comparator<Object> pComparator)
+  public void reorder(Comparator pComparator)
   {
     getHierarchy().delegatingReorder(delegateProvider.get(), this, pComparator);
   }

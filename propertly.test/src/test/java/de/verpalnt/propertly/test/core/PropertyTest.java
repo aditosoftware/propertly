@@ -2,11 +2,12 @@ package de.verpalnt.propertly.test.core;
 
 import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.common.PropertyEventAdapter;
-import de.verpalnt.propertly.core.hierarchy.Hierarchy;
+import de.verpalnt.propertly.core.hierarchy.*;
 import de.verpalnt.propertly.test.common.*;
 import org.junit.*;
 
 import java.awt.*;
+import java.util.Comparator;
 
 /**
  * @author PaL
