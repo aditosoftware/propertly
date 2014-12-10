@@ -25,6 +25,12 @@ public class IndexedMutablePropertyPit<S extends IIndexedMutablePropertyPitProvi
   }
 
   @Override
+  public IIndexedMutablePropertyPit<S, T> getPit()
+  {
+    return this;
+  }
+
+  @Override
   public int getSize()
   {
     List<INode> children = getNode().getChildren();

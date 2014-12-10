@@ -12,6 +12,23 @@ abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider, T
     implements IPropertyPitProvider<S, T>, Iterable<IProperty<S, T>>
 {
 
+  @Nonnull
+  public S getSource()
+  {
+    return getPit().getSource();
+  }
+
+  public boolean isValid()
+  {
+    return getPit().isValid();
+  }
+
+  @Nonnull
+  public IProperty<?, S> getOwnProperty()
+  {
+    return getPit().getOwnProperty();
+  }
+
   @Nullable
   public IPropertyPitProvider getParent()
   {
@@ -42,6 +59,7 @@ abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider, T
     return getPit().setValue(pPropertyDescription, pValue);
   }
 
+  @Nonnull
   public Set<IPropertyDescription<S, T>> getPropertyDescriptions()
   {
     return getPit().getPropertyDescriptions();

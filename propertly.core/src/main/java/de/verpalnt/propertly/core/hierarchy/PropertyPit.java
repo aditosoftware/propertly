@@ -57,7 +57,7 @@ public class PropertyPit<S extends IPropertyPitProvider, T> implements IProperty
 
   @Nullable
   @Override
-  public <E> IProperty<S, E> findProperty(IPropertyDescription<?, E> pPropertyDescription)
+  public <E extends T> IProperty<S, E> findProperty(IPropertyDescription<?, E> pPropertyDescription)
   {
     INode childNode = getNode().findNode(pPropertyDescription);
     //noinspection unchecked

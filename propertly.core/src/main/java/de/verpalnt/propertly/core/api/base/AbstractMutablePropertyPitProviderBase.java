@@ -12,15 +12,10 @@ public abstract class AbstractMutablePropertyPitProviderBase<S extends IMutableP
     extends AbstractPropertyPitProviderBase<S, T>
     implements IMutablePropertyPitProvider<S, T>
 {
-
-  @Override
-  public abstract IMutablePropertyPit<S, T> getPit();
-
   public Class<T> getChildType()
   {
     return getPit().getChildType();
   }
-
 
   @Nonnull
   public <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue)
