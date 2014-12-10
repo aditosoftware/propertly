@@ -68,24 +68,9 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
     return annotations;
   }
 
-  public void setSourceType(Class<S> pSourceType)
-  {
-    this.sourceType = pSourceType;
-  }
-
-  void setType(Class<T> type)
-  {
-    this.type = type;
-  }
-
   void setName(String name)
   {
     this.name = name;
-  }
-
-  void setAnnotations(List<? extends Annotation> annotations)
-  {
-    this.annotations = annotations;
   }
 
   @Nonnull
@@ -94,6 +79,44 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
       @Nullable Iterable<? extends Annotation> pAnnotations)
   {
     return new PropertyDescription<S, T>(pSourceType, pType, pName, pAnnotations);
+  }
+
+  @Nonnull
+  public static <S extends IPropertyPitProvider, T> IPropertyDescription<S, T> create(
+      @Nonnull Class<S> pSourceType, @Nonnull Class<T> pType, @Nonnull String pName)
+  {
+    return new PropertyDescription<S, T>(pSourceType, pType, pName, null);
+  }
+
+  @Nonnull
+  public static <S extends IPropertyPitProvider, T> IPropertyDescription<S, T> create(
+      @Nonnull IPropertyDescription<S, T> pPropertyDescription)
+  {
+    return new PropertyDescription<S, T>(pPropertyDescription.getSourceType(), pPropertyDescription.getType(),
+                                         pPropertyDescription.getName(), pPropertyDescription.getAnnotations());
+  }
+
+  @Override
+  public boolean equals(Object o)
+  {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    PropertyDescription that = (PropertyDescription) o;
+    return annotations.equals(that.annotations) &&
+        name.equals(that.name) &&
+        sourceType.equals(that.sourceType) &&
+        type.equals(that.type);
+  }
+
+  @Override
+  public int hashCode()
+  {
+    int result = sourceType.hashCode();
+    result = 31 * result + type.hashCode();
+    result = 31 * result + name.hashCode();
+    result = 31 * result + annotations.hashCode();
+    return result;
   }
 
   @Override

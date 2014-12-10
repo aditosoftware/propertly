@@ -1,15 +1,9 @@
 package de.verpalnt.propertly.core.hierarchy;
 
-import de.verpalnt.propertly.core.api.IProperty;
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyEventListener;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.common.IFunction;
 
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author PaL
@@ -30,8 +24,8 @@ public class Hierarchy<T extends IPropertyPitProvider>
       @Override
       public INode run(Hierarchy pHierarchy)
       {
-        return new Node(pHierarchy, null, PropertyDescription.create(IPropertyPitProvider.class,
-            IPropertyPitProvider.class, pName, Collections.<Annotation>emptySet()));
+        return new Node(pHierarchy, null, PropertyDescription.create(
+            IPropertyPitProvider.class, IPropertyPitProvider.class, pName));
       }
     }, pPPP);
 

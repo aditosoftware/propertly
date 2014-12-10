@@ -118,7 +118,7 @@ public class Node extends AbstractNode
 
   protected INode createChild(IPropertyDescription pPropertyDescription)
   {
-    return new Node(getHierarchy(), this, pPropertyDescription);
+    return new Node(getHierarchy(), this, PropertyDescription.create(pPropertyDescription));
   }
 
   @Override
@@ -131,8 +131,9 @@ public class Node extends AbstractNode
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
     if (children == null)
       children = new NodeChildren();
-    children.add(createChild(pPropertyDescription));
-    fireNodeAdded(pPropertyDescription);
+    INode child = createChild(pPropertyDescription);
+    children.add(child);
+    fireNodeAdded(child.getProperty().getDescription());
   }
 
   @Override
@@ -166,8 +167,9 @@ public class Node extends AbstractNode
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
     if (children == null)
       children = new NodeChildren();
-    children.add(pIndex, createChild(pPropertyDescription));
-    fireNodeAdded(pPropertyDescription);
+    INode child = createChild(pPropertyDescription);
+    children.add(pIndex, child);
+    fireNodeAdded(child.getProperty().getDescription());
   }
 
   @Override
