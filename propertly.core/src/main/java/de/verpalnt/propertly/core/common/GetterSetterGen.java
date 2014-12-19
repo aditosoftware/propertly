@@ -1,9 +1,7 @@
 package de.verpalnt.propertly.core.common;
 
 
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyPit;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 
 /**
  * @author PaL
@@ -17,12 +15,12 @@ public class GetterSetterGen
   {
   }
 
-  public static void run(IPropertyPit<?, ?> pPit)
+  public static void run(IPropertyPit<?, ?, ?> pPit)
   {
     run(pPit, null);
   }
 
-  public static void run(IPropertyPitProvider<?, ?> pPitProvider, String pPitName)
+  public static void run(IPropertyPitProvider<?, ?, ?> pPitProvider, String pPitName)
   {
     String pit = pPitName == null || pPitName.isEmpty() ? "" : pPitName + ".";
     for (IPropertyDescription<?, ?> prop : pPitProvider.getPit().getPropertyDescriptions())

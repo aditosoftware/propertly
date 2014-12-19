@@ -10,7 +10,7 @@ import java.awt.*;
  *         Date: 18.11.12
  *         Time: 23:43
  */
-public class PropertyTestChildren extends AbstractMutablePPP<PropertyTestChildren, Color>
+public class PropertyTestChildren extends AbstractMutablePPP<ITest, PropertyTestChildren, Color>
 {
   public PropertyTestChildren()
   {

@@ -9,7 +9,7 @@ import de.verpalnt.propertly.core.common.PD;
  *         Date: 14.11.12
  *         Time: 00:41
  */
-public interface ITest<T extends ITest> extends IPropertyPitProvider<T, Object>
+public interface ITest<S extends ITest<S>> extends IPropertyPitProvider<IPropertyPitProvider, S, Object>
 {
 
   IPropertyDescription<ITest, PropertyTestChildren> CHILD = PD.create(ITest.class);

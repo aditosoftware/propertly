@@ -1,7 +1,6 @@
 package de.verpalnt.propertly.test.common;
 
-import de.verpalnt.propertly.core.api.IPropertyDescription;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 import de.verpalnt.propertly.core.common.PD;
 
 /**
@@ -9,7 +8,7 @@ import de.verpalnt.propertly.core.common.PD;
  *         Date: 14.11.12
  *         Time: 00:55
  */
-public interface IComponent<T extends IComponent> extends IPropertyPitProvider<T, Object>
+public interface IComponent<P extends IPropertyPitProvider, S extends IComponent<P, S>> extends IPropertyPitProvider<P, S, Object>
 {
 
   IPropertyDescription<IComponent, Integer> X = PD.create(IComponent.class);

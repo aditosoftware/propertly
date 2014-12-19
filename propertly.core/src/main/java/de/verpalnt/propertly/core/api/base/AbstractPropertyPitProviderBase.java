@@ -8,8 +8,8 @@ import java.util.*;
 /**
  * @author j.boesl, 30.10.14
  */
-abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider, T>
-    implements IPropertyPitProvider<S, T>, Iterable<IProperty<S, T>>
+abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
+    implements IPropertyPitProvider<P, S, T>, Iterable<IProperty<S, T>>
 {
 
   @Nonnull
@@ -24,13 +24,13 @@ abstract class AbstractPropertyPitProviderBase<S extends IPropertyPitProvider, T
   }
 
   @Nonnull
-  public IProperty<?, S> getOwnProperty()
+  public IProperty<P, S> getOwnProperty()
   {
     return getPit().getOwnProperty();
   }
 
   @Nullable
-  public IPropertyPitProvider getParent()
+  public P getParent()
   {
     return getPit().getParent();
   }

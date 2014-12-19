@@ -11,7 +11,9 @@ import java.util.UUID;
  *         Date: 18.11.12
  *         Time: 21:51
  */
-public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extends PropertyPit<S, T> implements IMutablePropertyPit<S, T>
+public class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePropertyPitProvider<P, S, T>, T>
+    extends PropertyPit<P, S, T>
+    implements IMutablePropertyPit<P, S, T>
 {
 
   private Class<T> allowedChildType;
@@ -23,13 +25,14 @@ public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extend
     allowedChildType = pAllowedChildType;
   }
 
-  public static <S extends IMutablePropertyPitProvider<S, T>, T> MutablePropertyPit<S, T> create(S pCreateFor, Class<T> pAllowedChildType)
+  public static <P extends IPropertyPitProvider, S extends IMutablePropertyPitProvider<P, S, T>, T>
+  MutablePropertyPit<P, S, T> create(S pCreateFor, Class<T> pAllowedChildType)
   {
-    return new MutablePropertyPit<S, T>(pCreateFor, pAllowedChildType);
+    return new MutablePropertyPit<P, S, T>(pCreateFor, pAllowedChildType);
   }
 
   @Override
-  public IMutablePropertyPit<S, T> getPit()
+  public IMutablePropertyPit<P, S, T> getPit()
   {
     return this;
   }
@@ -51,7 +54,7 @@ public class MutablePropertyPit<S extends IMutablePropertyPitProvider, T> extend
   @Override
   public <E extends T> IProperty<S, E> addProperty(@Nonnull String pName, @Nonnull E pValue)
   {
-    IPropertyDescription<S, E> description = PropertyDescription.create((Class<S>) getClass(), (Class<E>) pValue.getClass(), pName, null);
+    IPropertyDescription<S, E> description = PropertyDescription.create((Class) getClass(), pValue.getClass(), pName);
     IProperty<S, E> property = addProperty(description);
     property.setValue(pValue);
     return property;

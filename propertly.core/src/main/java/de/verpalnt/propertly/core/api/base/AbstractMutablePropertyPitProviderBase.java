@@ -8,9 +8,10 @@ import java.lang.annotation.Annotation;
 /**
  * @author j.boesl, 30.10.14
  */
-public abstract class AbstractMutablePropertyPitProviderBase<S extends IMutablePropertyPitProvider, T>
-    extends AbstractPropertyPitProviderBase<S, T>
-    implements IMutablePropertyPitProvider<S, T>
+public abstract class AbstractMutablePropertyPitProviderBase
+    <P extends IPropertyPitProvider, S extends IMutablePropertyPitProvider<P, S, T>, T>
+    extends AbstractPropertyPitProviderBase<P, S, T>
+    implements IMutablePropertyPitProvider<P, S, T>
 {
   public Class<T> getChildType()
   {

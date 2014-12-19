@@ -11,12 +11,13 @@ import java.util.Comparator;
  *         Date: 13.07.14
  *         Time. 22:30
  */
-public abstract class AbstractIndexedMutablePPP<S extends IIndexedMutablePropertyPitProvider, T>
-    extends AbstractMutablePropertyPitProviderBase<S, T>
-    implements IIndexedMutablePropertyPitProvider<S, T>
+public abstract class AbstractIndexedMutablePPP
+    <P extends IPropertyPitProvider, S extends IIndexedMutablePropertyPitProvider<P, S, T>, T>
+    extends AbstractMutablePropertyPitProviderBase<P, S, T>
+    implements IIndexedMutablePropertyPitProvider<P, S, T>
 {
 
-  private final IIndexedMutablePropertyPit<S, T> pit;
+  private final IIndexedMutablePropertyPit<P, S, T> pit;
 
   public AbstractIndexedMutablePPP(Class<T> pAllowedChildType)
   {
@@ -30,7 +31,7 @@ public abstract class AbstractIndexedMutablePPP<S extends IIndexedMutablePropert
   }
 
   @Override
-  public final IIndexedMutablePropertyPit<S, T> getPit()
+  public final IIndexedMutablePropertyPit<P, S, T> getPit()
   {
     return pit;
   }

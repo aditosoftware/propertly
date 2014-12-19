@@ -10,7 +10,9 @@ import java.util.*;
  *         Date: 13.07.14
  *         Time. 22:42
  */
-public class IndexedMutablePropertyPit<S extends IIndexedMutablePropertyPitProvider, T> extends MutablePropertyPit<S, T> implements IIndexedMutablePropertyPit<S, T>
+public class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndexedMutablePropertyPitProvider<P, S, T>, T>
+    extends MutablePropertyPit<P, S, T>
+    implements IIndexedMutablePropertyPit<P, S, T>
 {
 
 
@@ -19,13 +21,14 @@ public class IndexedMutablePropertyPit<S extends IIndexedMutablePropertyPitProvi
     super(pSource, pAllowedChildType);
   }
 
-  public static <S extends IIndexedMutablePropertyPitProvider<S, T>, T> IndexedMutablePropertyPit<S, T> create(S pCreateFor, Class<T> pAllowedChildType)
+  public static <P extends IPropertyPitProvider, S extends IIndexedMutablePropertyPitProvider<P, S, T>, T>
+  IndexedMutablePropertyPit<P, S, T> create(S pCreateFor, Class<T> pAllowedChildType)
   {
-    return new IndexedMutablePropertyPit<S, T>(pCreateFor, pAllowedChildType);
+    return new IndexedMutablePropertyPit<P, S, T>(pCreateFor, pAllowedChildType);
   }
 
   @Override
-  public IIndexedMutablePropertyPit<S, T> getPit()
+  public IIndexedMutablePropertyPit<P, S, T> getPit()
   {
     return this;
   }

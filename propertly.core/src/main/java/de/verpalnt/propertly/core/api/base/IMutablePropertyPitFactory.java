@@ -8,7 +8,7 @@ import de.verpalnt.propertly.core.api.*;
 public interface IMutablePropertyPitFactory
 {
 
-  <S extends IMutablePropertyPitProvider, T> IMutablePropertyPit<S, T> create(S pPropertyPitProvider,
-                                                                              Class<T> pAllowedChildType);
+  <P extends IPropertyPitProvider, S extends IMutablePropertyPitProvider<P, S, T>, T>
+  IMutablePropertyPit<P, S, T> create(S pPropertyPitProvider, Class<T> pAllowedChildType);
 
 }

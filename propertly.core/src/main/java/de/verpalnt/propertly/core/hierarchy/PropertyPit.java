@@ -10,7 +10,8 @@ import java.util.*;
  *         Date: 03.10.11
  *         Time: 22:02
  */
-public class PropertyPit<S extends IPropertyPitProvider, T> implements IPropertyPit<S, T>
+public class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
+    implements IPropertyPit<P, S, T>
 {
 
   private S source;
@@ -22,9 +23,9 @@ public class PropertyPit<S extends IPropertyPitProvider, T> implements IProperty
     source = pSource;
   }
 
-  public static <S extends IPropertyPitProvider> PropertyPit<S, Object> create(S pCreateFor)
+  public static <P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T> PropertyPit<P, S, T> create(S pCreateFor)
   {
-    return new PropertyPit<S, Object>(pCreateFor);
+    return new PropertyPit<P, S, T>(pCreateFor);
   }
 
   @Override
@@ -42,15 +43,15 @@ public class PropertyPit<S extends IPropertyPitProvider, T> implements IProperty
 
   @Override
   @Nullable
-  public final IPropertyPitProvider<?, ?> getParent()
+  public final P getParent()
   {
     INode parent = getNode().getParent();
-    return parent == null ? null : (IPropertyPitProvider) parent.getProperty().getValue();
+    return parent == null ? null : (P) parent.getProperty().getValue();
   }
 
   @Nonnull
   @Override
-  public IProperty<?, S> getOwnProperty()
+  public IProperty<P, S> getOwnProperty()
   {
     return getNode().getProperty();
   }
@@ -143,7 +144,7 @@ public class PropertyPit<S extends IPropertyPitProvider, T> implements IProperty
     getNode().removePropertyEventListener(pListener);
   }
 
-  public IPropertyPit<S, T> getPit()
+  public IPropertyPit<P, S, T> getPit()
   {
     return this;
   }

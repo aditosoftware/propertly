@@ -5,10 +5,11 @@ package de.verpalnt.propertly.core.api;
  *         Date: 31.01.13
  *         Time: 22:55
  */
-public interface IMutablePropertyPitProvider<S extends IMutablePropertyPitProvider, T> extends IPropertyPitProvider<S, T>
+public interface IMutablePropertyPitProvider<P extends IPropertyPitProvider, S extends IMutablePropertyPitProvider<P, S, T>, T>
+    extends IPropertyPitProvider<P, S, T>
 {
 
   @Override
-  IMutablePropertyPit<S, T> getPit();
+  IMutablePropertyPit<P, S, T> getPit();
 
 }

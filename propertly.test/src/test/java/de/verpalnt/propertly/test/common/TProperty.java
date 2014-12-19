@@ -12,7 +12,8 @@ import java.util.Map;
  *         Date: 26.11.12
  *         Time: 21:39
  */
-public class TProperty extends AbstractPPP<TProperty> implements ITest<TProperty>, IComponent<TProperty>
+public class TProperty extends AbstractPPP<IPropertyPitProvider, TProperty, Object>
+    implements ITest<TProperty>, IComponent<IPropertyPitProvider, TProperty>
 {
 
   @IntVerifier(minValue = 0)
@@ -23,7 +24,6 @@ public class TProperty extends AbstractPPP<TProperty> implements ITest<TProperty
   public static final IPropertyDescription<TProperty, Dimension> FF = PD.create(TProperty.class);
 
   public static final IPropertyDescription<TProperty, Map<String, String>> MAP = PD.create(TProperty.class);
-
 
 
   public IProperty<TProperty, Integer> getPropertyX()

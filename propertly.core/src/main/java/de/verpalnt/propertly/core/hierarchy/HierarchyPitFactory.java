@@ -21,19 +21,22 @@ public class HierarchyPitFactory implements IPropertyPitFactory, IMutablePropert
   }
 
   @Override
-  public <S extends IIndexedMutablePropertyPitProvider, T> IIndexedMutablePropertyPit<S, T> create(S pPropertyPitProvider, Class<T> pAllowedChildType)
+  public <P extends IPropertyPitProvider, S extends IIndexedMutablePropertyPitProvider<P, S, T>, T>
+  IIndexedMutablePropertyPit<P, S, T> create(S pPropertyPitProvider, Class<T> pAllowedChildType)
   {
     return IndexedMutablePropertyPit.create(pPropertyPitProvider, pAllowedChildType);
   }
 
   @Override
-  public <S extends IMutablePropertyPitProvider, T> IMutablePropertyPit<S, T> create(S pPropertyPitProvider, Class<T> pAllowedChildType)
+  public <P extends IPropertyPitProvider, S extends IMutablePropertyPitProvider<P, S, T>, T>
+  IMutablePropertyPit<P, S, T> create(S pPropertyPitProvider, Class<T> pAllowedChildType)
   {
     return MutablePropertyPit.create(pPropertyPitProvider, pAllowedChildType);
   }
 
   @Override
-  public <S extends IPropertyPitProvider> IPropertyPit<S, Object> create(S pPropertyPitProvider)
+  public <P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
+  IPropertyPit<P, S, T> create(S pPropertyPitProvider)
   {
     return PropertyPit.create(pPropertyPitProvider);
   }

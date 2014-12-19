@@ -1,7 +1,6 @@
 package de.verpalnt.propertly.core.api.base;
 
-import de.verpalnt.propertly.core.api.IPropertyPit;
-import de.verpalnt.propertly.core.api.IPropertyPitProvider;
+import de.verpalnt.propertly.core.api.*;
 
 /**
  * @author PaL, 09.11.13
@@ -9,6 +8,7 @@ import de.verpalnt.propertly.core.api.IPropertyPitProvider;
 public interface IPropertyPitFactory
 {
 
-  <S extends IPropertyPitProvider> IPropertyPit<S, Object> create(S pPropertyPitProvider);
+  <P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
+  IPropertyPit<P, S, T> create(S pPropertyPitProvider);
 
 }

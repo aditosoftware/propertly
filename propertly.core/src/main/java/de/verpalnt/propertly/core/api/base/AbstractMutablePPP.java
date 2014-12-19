@@ -8,10 +8,11 @@ import de.verpalnt.propertly.core.hierarchy.HierarchyPitFactory;
  *         Date: 07.02.13
  *         Time: 21:44
  */
-public abstract class AbstractMutablePPP<S extends IMutablePropertyPitProvider, T>
-    extends AbstractMutablePropertyPitProviderBase<S, T>
+public abstract class AbstractMutablePPP
+    <P extends IPropertyPitProvider, S extends IMutablePropertyPitProvider<P, S, T>, T>
+    extends AbstractMutablePropertyPitProviderBase<P, S, T>
 {
-  private final IMutablePropertyPit<S, T> pit;
+  private final IMutablePropertyPit<P, S, T> pit;
 
   public AbstractMutablePPP(Class<T> pAllowedChildType)
   {
@@ -25,7 +26,7 @@ public abstract class AbstractMutablePPP<S extends IMutablePropertyPitProvider, 
   }
 
   @Override
-  public final IMutablePropertyPit<S, T> getPit()
+  public final IMutablePropertyPit<P, S, T> getPit()
   {
     return pit;
   }

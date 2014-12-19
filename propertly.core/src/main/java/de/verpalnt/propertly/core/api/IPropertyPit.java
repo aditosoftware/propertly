@@ -6,7 +6,8 @@ import java.util.*;
 /**
  * @author PaL, 09.11.13
  */
-public interface IPropertyPit<S extends IPropertyPitProvider, T> extends IPropertyPitProvider<S, T>, Iterable<IProperty<S, T>>
+public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
+    extends IPropertyPitProvider<P, S, T>, Iterable<IProperty<S, T>>
 {
 
   @Nonnull
@@ -15,10 +16,10 @@ public interface IPropertyPit<S extends IPropertyPitProvider, T> extends IProper
   boolean isValid();
 
   @Nullable
-  IPropertyPitProvider<?, ?> getParent();
+  P getParent();
 
   @Nonnull
-  IProperty<?, S> getOwnProperty();
+  IProperty<P, S> getOwnProperty();
 
   @Nullable
   <E extends T> IProperty<S, E> findProperty(IPropertyDescription<?, E> pPropertyDescription);

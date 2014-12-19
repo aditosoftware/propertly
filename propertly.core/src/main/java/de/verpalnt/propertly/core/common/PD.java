@@ -21,7 +21,7 @@ public class PD
   }
 
 
-  public static <S extends IPropertyPitProvider, T> IPropertyDescription<S, T> create(Class<S> pSource)
+  public static <S extends IPropertyPitProvider<?, ? super S, ? super T>, T> IPropertyDescription<S, T> create(Class<S> pSource)
   {
     List<Field> fields = FIELD_CACHE.get(pSource);
     if (fields == null)

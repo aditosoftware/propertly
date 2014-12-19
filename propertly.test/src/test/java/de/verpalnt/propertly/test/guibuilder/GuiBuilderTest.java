@@ -25,7 +25,7 @@ public class GuiBuilderTest extends Application
   @Override
   public void start(Stage pStage) throws Exception
   {
-    Hierarchy<TProperty> hierarchy = new VerifyingHierarchy<TProperty>(new Hierarchy<TProperty>("root", new _TP()));
+    Hierarchy<_TP> hierarchy = new VerifyingHierarchy<_TP>(new Hierarchy<_TP>("root", new _TP()));
     Parent parent = new GuiBuilder(hierarchy.getValue()).build();
     Scene appScene = new Scene(parent);
     pStage.setScene(appScene);

@@ -8,10 +8,10 @@ import de.verpalnt.propertly.core.hierarchy.HierarchyPitFactory;
  *         Date: 07.02.13
  *         Time: 21:32
  */
-public abstract class AbstractPPP<S extends IPropertyPitProvider<S, Object>>
-    extends AbstractPropertyPitProviderBase<S, Object>
+public abstract class AbstractPPP<P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
+    extends AbstractPropertyPitProviderBase<P, S, T>
 {
-  private final IPropertyPit<S, Object> pit;
+  private final IPropertyPit<P, S, T> pit;
 
   public AbstractPPP()
   {
@@ -25,7 +25,7 @@ public abstract class AbstractPPP<S extends IPropertyPitProvider<S, Object>>
   }
 
   @Override
-  public final IPropertyPit<S, Object> getPit()
+  public final IPropertyPit<P, S, T> getPit()
   {
     return pit;
   }

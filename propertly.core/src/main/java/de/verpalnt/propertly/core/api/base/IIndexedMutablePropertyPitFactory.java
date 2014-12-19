@@ -10,7 +10,7 @@ import de.verpalnt.propertly.core.api.*;
 public interface IIndexedMutablePropertyPitFactory
 {
 
-  <S extends IIndexedMutablePropertyPitProvider, T> IIndexedMutablePropertyPit<S, T> create(S pPropertyPitProvider,
-                                                                                            Class<T> pAllowedChildType);
+  <P extends IPropertyPitProvider, S extends IIndexedMutablePropertyPitProvider<P, S, T>, T>
+  IIndexedMutablePropertyPit<P, S, T> create(S pPropertyPitProvider, Class<T> pAllowedChildType);
 
 }
