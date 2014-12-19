@@ -4,9 +4,9 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <groupId>de.verpalnt.propertly</groupId>
+    <groupId>de.adito.propertly</groupId>
     <artifactId>propertly.parent</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -25,10 +25,10 @@
             <Bundle-Name>${project.artifactId}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
             <Export-Package>
-              de.verpalnt.propertly.core.api,
-              de.verpalnt.propertly.core.api.base,
-              de.verpalnt.propertly.core.common,
-              de.verpalnt.propertly.core.hierarchy
+              de.adito.propertly.core.api,
+              de.adito.propertly.core.api.base,
+              de.adito.propertly.core.common,
+              de.adito.propertly.core.hierarchy
             </Export-Package>
           </instructions>
         </configuration>
