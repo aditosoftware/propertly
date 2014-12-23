@@ -12,8 +12,6 @@
 
   <modules>
     <module>propertly.core</module>
-    <module>propertly.guibuilder</module>
-    <module>propertly.test</module>
   </modules>
 
 
@@ -45,7 +43,7 @@
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
-      <version>2.0.1</version>
+      <version>3.0.0</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -53,7 +51,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
 

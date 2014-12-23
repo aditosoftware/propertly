@@ -3,7 +3,7 @@ package de.adito.propertly.test.core;
 import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.common.PropertyEventAdapter;
 import de.adito.propertly.core.hierarchy.Hierarchy;
-import de.adito.propertly.test.common.*;
+import de.adito.propertly.test.core.impl.*;
 import org.junit.*;
 
 import java.awt.*;

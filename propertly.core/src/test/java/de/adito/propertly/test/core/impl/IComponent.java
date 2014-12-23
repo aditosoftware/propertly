@@ -1,4 +1,4 @@
-package de.adito.propertly.test.common;
+package de.adito.propertly.test.core.impl;
 
 import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.common.PD;

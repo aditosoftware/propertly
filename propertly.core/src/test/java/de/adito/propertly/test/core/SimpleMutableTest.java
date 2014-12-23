@@ -2,7 +2,7 @@ package de.adito.propertly.test.core;
 
 import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.hierarchy.*;
-import de.adito.propertly.test.common.DynamicTestPropertyPitProvider;
+import de.adito.propertly.test.core.impl.DynamicTestPropertyPitProvider;
 import org.junit.*;
 
 import java.awt.*;

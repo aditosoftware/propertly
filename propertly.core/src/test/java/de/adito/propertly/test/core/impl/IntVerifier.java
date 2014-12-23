@@ -1,4 +1,4 @@
-package de.adito.propertly.test.common;
+package de.adito.propertly.test.core.impl;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
