@@ -3,6 +3,8 @@ package de.adito.propertly.core.api.base;
 import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.hierarchy.HierarchyPitFactory;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author PaL
  *         Date: 07.02.13
@@ -24,6 +26,7 @@ public abstract class AbstractPPP<P extends IPropertyPitProvider, S extends IPro
     pit = pFactory.create((S) this);
   }
 
+  @Nonnull
   @Override
   public final IPropertyPit<P, S, T> getPit()
   {

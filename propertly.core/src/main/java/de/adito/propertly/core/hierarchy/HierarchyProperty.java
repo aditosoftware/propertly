@@ -24,6 +24,7 @@ class HierarchyProperty implements IProperty
     propertyDescription = pPropertyDescription;
   }
 
+  @Nonnull
   @Override
   public IPropertyDescription getDescription()
   {
@@ -49,12 +50,14 @@ class HierarchyProperty implements IProperty
     return parent == null ? null : (IPropertyPitProvider) parent.getValue();
   }
 
+  @Nonnull
   @Override
   public Class getType()
   {
     return propertyDescription.getType();
   }
 
+  @Nonnull
   @Override
   public String getName()
   {
@@ -68,7 +71,7 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
-  public void addPropertyEventListener(IPropertyEventListener pListener)
+  public void addPropertyEventListener(@Nonnull IPropertyEventListener pListener)
   {
     if (listeners == null)
       listeners = new ArrayList<IPropertyEventListener>();
@@ -76,7 +79,7 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
-  public void removePropertyEventListener(IPropertyEventListener pListener)
+  public void removePropertyEventListener(@Nonnull IPropertyEventListener pListener)
   {
     if (listeners != null)
       listeners.remove(pListener);
@@ -86,6 +89,7 @@ class HierarchyProperty implements IProperty
   {
     if (listeners != null)
       for (IPropertyEventListener listener : listeners)
+        //noinspection unchecked
         listener.propertyChange(this, pOldValue, pNewValue);
   }
 

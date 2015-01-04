@@ -3,6 +3,7 @@ package de.adito.propertly.test.core.impl;
 import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.common.PD;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -11,6 +12,7 @@ import java.awt.*;
 public class ColoredPitProvider implements IPropertyPitProvider<IPropertyPitProvider, ColoredPitProvider, Color>
 {
 
+  @Nonnull
   @Override
   public IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> getPit()
   {

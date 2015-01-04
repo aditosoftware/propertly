@@ -58,7 +58,7 @@ public class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitP
 
   @Nullable
   @Override
-  public <E extends T> IProperty<S, E> findProperty(IPropertyDescription<?, E> pPropertyDescription)
+  public <E extends T> IProperty<S, E> findProperty(@Nonnull IPropertyDescription<?, E> pPropertyDescription)
   {
     INode childNode = getNode().findNode(pPropertyDescription);
     //noinspection unchecked
@@ -67,7 +67,7 @@ public class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitP
 
   @Nonnull
   @Override
-  public <E extends T> IProperty<S, E> getProperty(IPropertyDescription<? super S, E> pPropertyDescription)
+  public <E extends T> IProperty<S, E> getProperty(@Nonnull IPropertyDescription<? super S, E> pPropertyDescription)
   {
     IProperty<?, E> property = findProperty(pPropertyDescription);
     if (property == null)
@@ -78,14 +78,14 @@ public class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitP
 
   @Override
   @Nullable
-  public final <E extends T> E getValue(IPropertyDescription<? super S, E> pPropertyDescription)
+  public final <E extends T> E getValue(@Nonnull IPropertyDescription<? super S, E> pPropertyDescription)
   {
     return getProperty(pPropertyDescription).getValue();
   }
 
   @Override
   @Nullable
-  public final <E extends T> E setValue(IPropertyDescription<? super S, E> pPropertyDescription, E pValue)
+  public final <E extends T> E setValue(@Nonnull IPropertyDescription<? super S, E> pPropertyDescription, @Nullable E pValue)
   {
     return getProperty(pPropertyDescription).setValue(pValue);
   }
@@ -133,17 +133,18 @@ public class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitP
   }
 
   @Override
-  public final void addPropertyEventListener(final IPropertyEventListener pListener)
+  public final void addPropertyEventListener(@Nonnull final IPropertyEventListener pListener)
   {
     getNode().addPropertyEventListener(pListener);
   }
 
   @Override
-  public final void removePropertyEventListener(IPropertyEventListener pListener)
+  public final void removePropertyEventListener(@Nonnull IPropertyEventListener pListener)
   {
     getNode().removePropertyEventListener(pListener);
   }
 
+  @Nonnull
   public IPropertyPit<P, S, T> getPit()
   {
     return this;

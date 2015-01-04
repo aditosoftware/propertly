@@ -30,6 +30,7 @@ public abstract class AbstractIndexedMutablePPP
     pit = pFactory.create((S) this, pAllowedChildType);
   }
 
+  @Nonnull
   @Override
   public final IIndexedMutablePropertyPit<P, S, T> getPit()
   {

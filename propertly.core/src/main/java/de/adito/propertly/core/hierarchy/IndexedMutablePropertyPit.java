@@ -27,6 +27,7 @@ public class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends
     return new IndexedMutablePropertyPit<P, S, T>(pCreateFor, pAllowedChildType);
   }
 
+  @Nonnull
   @Override
   public IIndexedMutablePropertyPit<P, S, T> getPit()
   {

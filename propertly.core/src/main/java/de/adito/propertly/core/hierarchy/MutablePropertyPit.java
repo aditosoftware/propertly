@@ -31,6 +31,7 @@ public class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutab
     return new MutablePropertyPit<P, S, T>(pCreateFor, pAllowedChildType);
   }
 
+  @Nonnull
   @Override
   public IMutablePropertyPit<P, S, T> getPit()
   {
