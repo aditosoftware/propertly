@@ -41,6 +41,13 @@ public class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitP
     return node != null;
   }
 
+  @Nonnull
+  @Override
+  public Hierarchy<?> getHierarchy()
+  {
+    return getNode().getHierarchy();
+  }
+
   @Override
   @Nullable
   public final P getParent()

@@ -1,5 +1,7 @@
 package de.adito.propertly.core.api;
 
+import de.adito.propertly.core.hierarchy.Hierarchy;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
@@ -24,6 +26,12 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
    * @return whether this IPropertyPit is valid. A pit is valid when it is connected to a Hierarchy object.
    */
   boolean isValid();
+
+  /**
+   * @return the connected Hierarchy object.
+   */
+  @Nonnull
+  Hierarchy<?> getHierarchy();
 
   /**
    * @return the parental IPropertyPitProvider where this IPropertyPit's IPropertyPitProvider is provided through a
