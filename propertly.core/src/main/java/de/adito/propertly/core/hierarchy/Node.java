@@ -102,6 +102,18 @@ public class Node extends AbstractNode
     return value;
   }
 
+  @Override
+  public boolean canRead()
+  {
+    return true;
+  }
+
+  @Override
+  public boolean canWrite()
+  {
+    return true;
+  }
+
   @Nullable
   @Override
   public List<INode> getChildren()

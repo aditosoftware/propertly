@@ -40,6 +40,16 @@ public interface IProperty<S extends IPropertyPitProvider, T>
   T setValue(@Nullable T pValue);
 
   /**
+   * @return whether {@link #getValue()} can be used.
+   */
+  boolean canRead();
+
+  /**
+   * @return whether {@link #setValue(Object)} can be used.
+   */
+  boolean canWrite();
+
+  /**
    * @return the parental IPropertyPitProvider object this IProperty belongs to. May only be null if this IProperty
    * object holds the root IPropertyPitProvider.
    */

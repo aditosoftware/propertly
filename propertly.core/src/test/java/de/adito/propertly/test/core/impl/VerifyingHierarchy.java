@@ -1,11 +1,17 @@
 package de.adito.propertly.test.core.impl;
 
-import de.adito.propertly.core.api.*;
-import de.adito.propertly.core.hierarchy.*;
+import de.adito.propertly.core.api.IPropertyDescription;
+import de.adito.propertly.core.api.IPropertyPitProvider;
 import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.hierarchy.DelegatingHierarchy;
+import de.adito.propertly.core.hierarchy.DelegatingNode;
+import de.adito.propertly.core.hierarchy.Hierarchy;
+import de.adito.propertly.core.hierarchy.INode;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author PaL
@@ -44,6 +50,18 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
   }
 
   @Override
+  public boolean canRead(INode pDelegateNode, DelegatingNode pDelegatingNode)
+  {
+    return true;
+  }
+
+  @Override
+  public boolean canWrite(INode pDelegateNode, DelegatingNode pDelegatingNode)
+  {
+    return true;
+  }
+
+  @Override
   public List<INode> delegatingGetChildren(INode pDelegateNode, DelegatingNode pDelegatingNode)
   {
     List<INode> children = new ArrayList<INode>();
@@ -52,7 +70,7 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
     {
       for (final INode delegateChildNode : delegateChildren)
         children.add(new DelegatingNode(this, pDelegatingNode, delegateChildNode.getProperty().getDescription(),
-                                        PropertlyUtility.getFixedSupplier(delegateChildNode)));
+            PropertlyUtility.getFixedSupplier(delegateChildNode)));
     }
     return children;
   }
@@ -64,7 +82,7 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
     if (delegateChildNode == null)
       return null;
     return new DelegatingNode(this, pDelegatingNode, delegateChildNode.getProperty().getDescription(),
-                              PropertlyUtility.getFixedSupplier(delegateChildNode));
+        PropertlyUtility.getFixedSupplier(delegateChildNode));
   }
 
   @Override

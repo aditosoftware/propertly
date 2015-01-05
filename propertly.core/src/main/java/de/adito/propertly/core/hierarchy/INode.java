@@ -1,9 +1,13 @@
 package de.adito.propertly.core.hierarchy;
 
-import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.api.IProperty;
+import de.adito.propertly.core.api.IPropertyDescription;
+import de.adito.propertly.core.api.IPropertyEventListener;
 
-import javax.annotation.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author PaL
@@ -30,6 +34,10 @@ public interface INode
   @Nullable
   Object setValue(@Nullable Object pValue);
 
+  boolean canRead();
+
+  boolean canWrite();
+
   @Nonnull
   String getPath();
 
@@ -51,6 +59,5 @@ public interface INode
   void addPropertyEventListener(@Nonnull IPropertyEventListener pListener);
 
   void removePropertyEventListener(@Nonnull IPropertyEventListener pListener);
-
 
 }

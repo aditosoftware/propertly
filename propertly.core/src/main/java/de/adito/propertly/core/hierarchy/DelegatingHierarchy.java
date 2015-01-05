@@ -97,6 +97,10 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
 
   public abstract Object delegatingGetValue(INode pDelegateNode, DelegatingNode pDelegatingNode);
 
+  public abstract boolean canRead(INode pDelegateNode, DelegatingNode pDelegatingNode);
+
+  public abstract boolean canWrite(INode pDelegateNode, DelegatingNode pDelegatingNode);
+
   public abstract List<INode> delegatingGetChildren(INode pDelegateNode, DelegatingNode pDelegatingNode);
 
   public abstract INode findDelegatingChild(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription);

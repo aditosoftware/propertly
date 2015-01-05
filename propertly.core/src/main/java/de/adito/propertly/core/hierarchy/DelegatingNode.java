@@ -1,10 +1,16 @@
 package de.adito.propertly.core.hierarchy;
 
-import de.adito.propertly.core.api.*;
-import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.api.IPropertyDescription;
+import de.adito.propertly.core.api.IPropertyPitProvider;
+import de.adito.propertly.core.common.ISupplier;
+import de.adito.propertly.core.common.PropertlyUtility;
 
-import javax.annotation.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author PaL
@@ -35,6 +41,18 @@ public class DelegatingNode extends AbstractNode
   public Object setValue(Object pValue)
   {
     return getHierarchy().delegatingSetValue(delegateProvider.get(), this, pValue);
+  }
+
+  @Override
+  public boolean canRead()
+  {
+    return getHierarchy().canRead(delegateProvider.get(), this);
+  }
+
+  @Override
+  public boolean canWrite()
+  {
+    return getHierarchy().canWrite(delegateProvider.get(), this);
   }
 
   @Override

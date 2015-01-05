@@ -44,6 +44,18 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
+  public boolean canRead()
+  {
+    return node.canRead();
+  }
+
+  @Override
+  public boolean canWrite()
+  {
+    return node.canWrite();
+  }
+
+  @Override
   public IPropertyPitProvider getParent()
   {
     INode parent = node.getParent();
