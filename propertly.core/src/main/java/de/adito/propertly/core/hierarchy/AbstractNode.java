@@ -18,7 +18,7 @@ public abstract class AbstractNode implements INode
   private final AbstractNode parent;
   private final HierarchyProperty property;
 
-  private List<IPropertyEventListener> listeners;
+  private List<IPropertyPitEventListener> listeners;
 
 
   protected AbstractNode(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent,
@@ -62,15 +62,15 @@ public abstract class AbstractNode implements INode
   }
 
   @Override
-  public void addPropertyEventListener(@Nonnull IPropertyEventListener pListener)
+  public void addPropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener)
   {
     if (listeners == null)
-      listeners = new ArrayList<IPropertyEventListener>();
+      listeners = new ArrayList<IPropertyPitEventListener>();
     listeners.add(pListener);
   }
 
   @Override
-  public void removePropertyEventListener(@Nonnull IPropertyEventListener pListener)
+  public void removePropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener)
   {
     if (listeners != null)
       listeners.add(pListener);
@@ -82,11 +82,11 @@ public abstract class AbstractNode implements INode
     AbstractNode p = getParent();
     if (p != null)
     {
-      List<IPropertyEventListener> l = p.listeners;
+      List<IPropertyPitEventListener> l = p.listeners;
       if (l != null)
-        for (IPropertyEventListener eventListener : l)
+        for (IPropertyPitEventListener eventListener : l)
           //noinspection unchecked
-          eventListener.propertyChange(getProperty(), pOldValue, pNewValue);
+          eventListener.propertyChanged(getProperty(), pOldValue, pNewValue);
     }
     property.fire(pOldValue, pNewValue);
   }
@@ -95,7 +95,7 @@ public abstract class AbstractNode implements INode
   {
     getHierarchy().firePropertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription);
     if (listeners != null)
-      for (IPropertyEventListener listener : listeners)
+      for (IPropertyPitEventListener listener : listeners)
         //noinspection unchecked
         listener.propertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription);
   }
@@ -104,7 +104,7 @@ public abstract class AbstractNode implements INode
   {
     getHierarchy().firePropertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
     if (listeners != null)
-      for (IPropertyEventListener listener : listeners)
+      for (IPropertyPitEventListener listener : listeners)
         //noinspection unchecked
         listener.propertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
   }
@@ -113,7 +113,7 @@ public abstract class AbstractNode implements INode
   {
     getHierarchy().firePropertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
     if (listeners != null)
-      for (IPropertyEventListener listener : listeners)
+      for (IPropertyPitEventListener listener : listeners)
         //noinspection unchecked
         listener.propertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
   }

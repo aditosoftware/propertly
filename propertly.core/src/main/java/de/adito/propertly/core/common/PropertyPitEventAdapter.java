@@ -7,11 +7,11 @@ import de.adito.propertly.core.api.*;
  *         Date: 25.11.12
  *         Time: 14:38
  */
-public abstract class PropertyEventAdapter<P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
-    implements IPropertyEventListener<P, S, T>
+public abstract class PropertyPitEventAdapter<P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
+    implements IPropertyPitEventListener<P, S, T>
 {
   @Override
-  public void propertyChange(IProperty<S, T> pProperty, T pOldValue, T pNewValue)
+  public void propertyChanged(IProperty<S, T> pProperty, T pOldValue, T pNewValue)
   {
   }
 

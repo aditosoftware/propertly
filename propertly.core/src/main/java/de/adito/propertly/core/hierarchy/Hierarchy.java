@@ -14,7 +14,7 @@ public class Hierarchy<T extends IPropertyPitProvider>
 {
 
   private final INode node;
-  private final List<IPropertyEventListener> listeners;
+  private final List<IPropertyPitEventListener> listeners;
 
 
   public Hierarchy(final String pName, T pPPP)
@@ -34,7 +34,7 @@ public class Hierarchy<T extends IPropertyPitProvider>
   protected Hierarchy(IFunction<Hierarchy, INode> pNodeSupplier, T pPPP)
   {
     node = pNodeSupplier.run(this);
-    listeners = new ArrayList<IPropertyEventListener>();
+    listeners = new ArrayList<IPropertyPitEventListener>();
     node.setValue(pPPP);
   }
 
@@ -49,12 +49,12 @@ public class Hierarchy<T extends IPropertyPitProvider>
     return getProperty().getValue();
   }
 
-  public void addPropertyEventListener(IPropertyEventListener pListener)
+  public void addPropertyPitEventListener(IPropertyPitEventListener pListener)
   {
     listeners.add(pListener);
   }
 
-  public void removePropertyEventListener(IPropertyEventListener pListener)
+  public void removePropertyPitEventListener(IPropertyPitEventListener pListener)
   {
     listeners.remove(pListener);
   }
@@ -66,28 +66,28 @@ public class Hierarchy<T extends IPropertyPitProvider>
 
   protected void fireNodeChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
   {
-    for (IPropertyEventListener listener : listeners)
+    for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
-      listener.propertyChange(pProperty, pOldValue, pNewValue);
+      listener.propertyChanged(pProperty, pOldValue, pNewValue);
   }
 
   protected void firePropertyAdded(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
   {
-    for (IPropertyEventListener listener : listeners)
+    for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyAdded(pPropertyPitProvider, pDescription);
   }
 
   protected void firePropertyWillBeRemoved(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
   {
-    for (IPropertyEventListener listener : listeners)
+    for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyWillBeRemoved(pPropertyPitProvider, pDescription);
   }
 
   protected void firePropertyRemoved(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
   {
-    for (IPropertyEventListener listener : listeners)
+    for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyRemoved(pPropertyPitProvider, pDescription);
   }

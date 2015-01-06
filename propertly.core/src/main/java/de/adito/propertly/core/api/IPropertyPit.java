@@ -111,13 +111,13 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
    *
    * @param pListener the IPropertyEventListener to be added.
    */
-  void addPropertyEventListener(@Nonnull IPropertyEventListener pListener);
+  void addPropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener);
 
   /**
    * Removes a listener from this IPropertyPit.
    *
    * @param pListener the IPropertyEventListener to be removed.
    */
-  void removePropertyEventListener(@Nonnull IPropertyEventListener pListener);
+  void removePropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener);
 
 }

@@ -83,14 +83,14 @@ abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S
     return getPit().iterator();
   }
 
-  public void addPropertyEventListener(IPropertyEventListener pListener)
+  public void addPropertyEventListener(IPropertyPitEventListener pListener)
   {
-    getPit().addPropertyEventListener(pListener);
+    getPit().addPropertyPitEventListener(pListener);
   }
 
-  public void removePropertyEventListener(IPropertyEventListener pListener)
+  public void removePropertyEventListener(IPropertyPitEventListener pListener)
   {
-    getPit().removePropertyEventListener(pListener);
+    getPit().removePropertyPitEventListener(pListener);
   }
 
 }

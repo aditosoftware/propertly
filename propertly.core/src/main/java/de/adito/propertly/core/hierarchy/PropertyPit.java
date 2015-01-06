@@ -140,15 +140,15 @@ public class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitP
   }
 
   @Override
-  public final void addPropertyEventListener(@Nonnull final IPropertyEventListener pListener)
+  public final void addPropertyPitEventListener(@Nonnull final IPropertyPitEventListener pListener)
   {
-    getNode().addPropertyEventListener(pListener);
+    getNode().addPropertyPitEventListener(pListener);
   }
 
   @Override
-  public final void removePropertyEventListener(@Nonnull IPropertyEventListener pListener)
+  public final void removePropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    getNode().removePropertyEventListener(pListener);
+    getNode().removePropertyPitEventListener(pListener);
   }
 
   @Nonnull

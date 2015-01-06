@@ -1,10 +1,14 @@
 package de.adito.propertly.core.hierarchy;
 
-import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.api.IProperty;
+import de.adito.propertly.core.api.IPropertyDescription;
+import de.adito.propertly.core.api.IPropertyEventListener;
+import de.adito.propertly.core.api.IPropertyPitProvider;
 import de.adito.propertly.core.common.PropertlyUtility;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author PaL
@@ -102,7 +106,7 @@ class HierarchyProperty implements IProperty
     if (listeners != null)
       for (IPropertyEventListener listener : listeners)
         //noinspection unchecked
-        listener.propertyChange(this, pOldValue, pNewValue);
+        listener.propertyChanged(this, pOldValue, pNewValue);
   }
 
   AbstractNode getNode()

@@ -2,7 +2,7 @@ package de.adito.propertly.core.hierarchy;
 
 import de.adito.propertly.core.api.IProperty;
 import de.adito.propertly.core.api.IPropertyDescription;
-import de.adito.propertly.core.api.IPropertyEventListener;
+import de.adito.propertly.core.api.IPropertyPitEventListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,8 +56,8 @@ public interface INode
 
   void reorder(Comparator pComparator);
 
-  void addPropertyEventListener(@Nonnull IPropertyEventListener pListener);
+  void addPropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener);
 
-  void removePropertyEventListener(@Nonnull IPropertyEventListener pListener);
+  void removePropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener);
 
 }

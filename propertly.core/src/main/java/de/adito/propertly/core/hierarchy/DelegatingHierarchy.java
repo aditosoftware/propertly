@@ -18,10 +18,10 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
   {
     super(new _INodeFunction(pSourceHierarchy), pSourceHierarchy.getValue());
 
-    pSourceHierarchy.addPropertyEventListener(new IPropertyEventListener()
+    pSourceHierarchy.addPropertyPitEventListener(new IPropertyPitEventListener()
     {
       @Override
-      public void propertyChange(IProperty pProperty, Object pOldValue, Object pNewValue)
+      public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
       {
         IProperty prop = _findDelegatingProperty(pProperty);
         if (prop != null)
