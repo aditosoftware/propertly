@@ -1,7 +1,10 @@
 package de.adito.propertly.test.core.impl;
 
-import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.api.IPropertyDescription;
+import de.adito.propertly.core.api.IPropertyPit;
+import de.adito.propertly.core.api.IPropertyPitProvider;
 import de.adito.propertly.core.common.PD;
+import de.adito.propertly.core.hierarchy.PropertyPit;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -12,14 +15,24 @@ import java.awt.*;
 public class ColoredPitProvider implements IPropertyPitProvider<IPropertyPitProvider, ColoredPitProvider, Color>
 {
 
+  private IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> pit = PropertyPit.create(this);
+
   @Nonnull
   @Override
   public IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> getPit()
   {
-    Class<ColoredPitProvider> coloredPitProviderClass = ColoredPitProvider.class;
-    return null;
+    return pit;
   }
 
-  IPropertyDescription<ColoredPitProvider, Color> COLOR = PD.create(ColoredPitProvider.class);
+  public static final IPropertyDescription<ColoredPitProvider, Color> DEFAULT_COLOR = PD.create(ColoredPitProvider.class);
+
+  @AccessModifier(canWrite = false)
+  public static final IPropertyDescription<ColoredPitProvider, Color> READ_ONLY_COLOR = PD.create(ColoredPitProvider.class);
+
+  @AccessModifier(canRead = false)
+  public static final IPropertyDescription<ColoredPitProvider, Color> WRITE_ONLE_COLOR = PD.create(ColoredPitProvider.class);
+
+  @AccessModifier(canRead = false, canWrite = false)
+  public static final IPropertyDescription<ColoredPitProvider, Color> INACCESSIBLE_COLOR = PD.create(ColoredPitProvider.class);
 
 }

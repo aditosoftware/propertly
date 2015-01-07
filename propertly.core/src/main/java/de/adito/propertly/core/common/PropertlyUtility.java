@@ -5,7 +5,8 @@ import de.adito.propertly.core.api.IPropertyPitProvider;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author PaL
@@ -74,7 +75,8 @@ public class PropertlyUtility
     return strBuilder.toString();
   }
 
-  public static <T extends Annotation> List<T> findAnnotations(IAnnotationProvider pAnnotationProvider, Class<T> pCls)
+  @Nonnull
+  public static <T extends Annotation> List<T> findAnnotations(@Nonnull IAnnotationProvider pAnnotationProvider, @Nonnull Class<T> pCls)
   {
     List<T> annotations = new ArrayList<T>();
     for (Annotation annotation : pAnnotationProvider.getAnnotations())

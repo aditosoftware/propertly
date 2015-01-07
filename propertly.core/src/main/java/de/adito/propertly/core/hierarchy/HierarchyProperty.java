@@ -38,12 +38,16 @@ class HierarchyProperty implements IProperty
   @Override
   public Object getValue()
   {
-    return node.getValue();
+    if (canRead())
+      return node.getValue();
+    throw new InaccessibleException("IProperty '" + getDescription() + "' can't be read.");
   }
 
   @Override
   public Object setValue(Object pValue)
   {
+    if (!canWrite())
+      throw new InaccessibleException("IProperty '" + getDescription() + "' can't be written.");
     return node.setValue(pValue);
   }
 

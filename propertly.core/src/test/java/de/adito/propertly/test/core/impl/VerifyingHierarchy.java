@@ -8,7 +8,6 @@ import de.adito.propertly.core.hierarchy.DelegatingNode;
 import de.adito.propertly.core.hierarchy.Hierarchy;
 import de.adito.propertly.core.hierarchy.INode;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -29,17 +28,13 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
   @Override
   public Object delegatingSetValue(INode pDelegateNode, DelegatingNode pDelegatingNode, Object pValue)
   {
-    List<? extends Annotation> annotations = pDelegatingNode.getProperty().getDescription().getAnnotations();
-    for (Annotation annotation : annotations)
-    {
-      if (annotation.annotationType().isAssignableFrom(IntVerifier.class) && pValue instanceof Integer)
+    if (pValue instanceof Number)
+      for (IntVerifier verifier : PropertlyUtility.findAnnotations(pDelegatingNode.getProperty().getDescription(), IntVerifier.class))
       {
-        IntVerifier verifier = (IntVerifier) annotation;
-        Integer value = (Integer) pValue;
-        if (value < verifier.minValue() || value > verifier.maxValue())
+        Number value = (Number) pValue;
+        if (value.doubleValue() < verifier.minValue() || value.doubleValue() > verifier.maxValue())
           throw new IllegalArgumentException(value.toString() + " for " + pDelegateNode.getProperty());
       }
-    }
     return pDelegateNode.setValue(pValue);
   }
 
@@ -52,13 +47,15 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
   @Override
   public boolean canRead(INode pDelegateNode, DelegatingNode pDelegatingNode)
   {
-    return true;
+    List<AccessModifier> mod = PropertlyUtility.findAnnotations(pDelegateNode.getProperty().getDescription(), AccessModifier.class);
+    return mod.isEmpty() || mod.get(0).canRead();
   }
 
   @Override
   public boolean canWrite(INode pDelegateNode, DelegatingNode pDelegatingNode)
   {
-    return true;
+    List<AccessModifier> mod = PropertlyUtility.findAnnotations(pDelegateNode.getProperty().getDescription(), AccessModifier.class);
+    return mod.isEmpty() || mod.get(0).canWrite();
   }
 
   @Override

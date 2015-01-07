@@ -1,11 +1,10 @@
 package de.adito.propertly.test.core;
 
-import de.adito.propertly.core.api.IProperty;
-import de.adito.propertly.core.api.IPropertyDescription;
-import de.adito.propertly.core.api.IPropertyPitEventListener;
-import de.adito.propertly.core.api.IPropertyPitProvider;
+import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.common.PropertyPitEventAdapter;
 import de.adito.propertly.core.hierarchy.Hierarchy;
+import de.adito.propertly.core.hierarchy.InaccessibleException;
+import de.adito.propertly.test.core.impl.ColoredPitProvider;
 import de.adito.propertly.test.core.impl.PropertyTestChildren;
 import de.adito.propertly.test.core.impl.TProperty;
 import de.adito.propertly.test.core.impl.VerifyingHierarchy;
@@ -93,7 +92,8 @@ public class PropertyTest
     try
     {
       tProperty.setX(-1);
-    } catch (Exception e)
+    }
+    catch (Exception e)
     {
       ex = e;
     }
@@ -169,6 +169,65 @@ public class PropertyTest
         r += o;
     }
     return r;
+  }
+
+  @Test
+  public void readWriteTest()
+  {
+    Hierarchy<ColoredPitProvider> hierarchy = new VerifyingHierarchy<ColoredPitProvider>(new Hierarchy<ColoredPitProvider>("root", new ColoredPitProvider()));
+    IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> pit = hierarchy.getValue().getPit();
+
+
+    pit.setValue(ColoredPitProvider.DEFAULT_COLOR, Color.MAGENTA);
+    Assert.assertEquals(pit.getValue(ColoredPitProvider.DEFAULT_COLOR), Color.MAGENTA);
+
+
+    InaccessibleException ex = null;
+    try
+    {
+      pit.setValue(ColoredPitProvider.READ_ONLY_COLOR, Color.CYAN);
+    }
+    catch (InaccessibleException e)
+    {
+      ex = e;
+    }
+    Assert.assertNotNull(ex);
+    ex = null;
+    Assert.assertEquals(pit.getValue(ColoredPitProvider.READ_ONLY_COLOR), null);
+
+
+    pit.setValue(ColoredPitProvider.WRITE_ONLE_COLOR, Color.YELLOW);
+    try
+    {
+      Assert.assertEquals(pit.getValue(ColoredPitProvider.WRITE_ONLE_COLOR), null);
+    }
+    catch (InaccessibleException e)
+    {
+      ex = e;
+    }
+    Assert.assertNotNull(ex);
+    ex = null;
+
+
+    try
+    {
+      pit.setValue(ColoredPitProvider.INACCESSIBLE_COLOR, Color.GREEN);
+    }
+    catch (InaccessibleException e)
+    {
+      ex = e;
+    }
+    Assert.assertNotNull(ex);
+    ex = null;
+    try
+    {
+      Assert.assertEquals(pit.getValue(ColoredPitProvider.INACCESSIBLE_COLOR), null);
+    }
+    catch (InaccessibleException e)
+    {
+      ex = e;
+    }
+    Assert.assertNotNull(ex);
   }
 
 }
