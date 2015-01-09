@@ -1,6 +1,7 @@
 package de.adito.propertly.core.common;
 
 import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.common.exception.InitializationException;
 import de.adito.propertly.core.hierarchy.PropertyDescription;
 
 import javax.annotation.Nonnull;
@@ -91,6 +92,6 @@ public class PD
       iterator.remove();
     }
 
-    throw new RuntimeException("couldn't find field at " + pSource);
+    throw new InitializationException("couldn't find field at " + pSource);
   }
 }

@@ -1,9 +1,12 @@
 package de.adito.propertly.core.common;
 
-import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.api.IPropertyDescription;
+import de.adito.propertly.core.api.IPropertyPitProvider;
+import de.adito.propertly.core.common.exception.WrongModifiersException;
 import de.adito.propertly.core.hierarchy.PropertyDescription;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
@@ -33,6 +36,9 @@ public class PPPIntrospector
           field.setAccessible(true);
           if (IPropertyDescription.class.isAssignableFrom(field.getType()))
           {
+            int modifiers = field.getModifiers();
+            if (!(Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)))
+              throw new WrongModifiersException("Wrong modifiers for '" + field.getName() + "'. IPropertyDescriptions must have static and final modifiers for PPPIntrospection.");
             IPropertyDescription<?, ?> propertyDescription = (IPropertyDescription) field.get(pPPPClass);
             boolean isParentalType = propertyDescription.getSourceType().isAssignableFrom(pPPPClass);
             if (isParentalType)
