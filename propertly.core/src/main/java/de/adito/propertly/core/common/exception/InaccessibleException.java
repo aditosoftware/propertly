@@ -1,4 +1,4 @@
-package de.adito.propertly.core.hierarchy;
+package de.adito.propertly.core.common.exception;
 
 /**
  * @author PaL

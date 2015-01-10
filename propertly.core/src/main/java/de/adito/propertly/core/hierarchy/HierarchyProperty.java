@@ -5,6 +5,8 @@ import de.adito.propertly.core.api.IPropertyDescription;
 import de.adito.propertly.core.api.IPropertyEventListener;
 import de.adito.propertly.core.api.IPropertyPitProvider;
 import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.common.exception.InaccessibleException;
+import de.adito.propertly.core.common.exception.PropertlyRenameException;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package de.adito.propertly.test.core;
 import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.common.PropertyPitEventAdapter;
 import de.adito.propertly.core.hierarchy.Hierarchy;
-import de.adito.propertly.core.hierarchy.InaccessibleException;
+import de.adito.propertly.core.common.exception.InaccessibleException;
 import de.adito.propertly.test.core.impl.ColoredPitProvider;
 import de.adito.propertly.test.core.impl.PropertyTestChildren;
 import de.adito.propertly.test.core.impl.TProperty;

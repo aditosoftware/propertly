@@ -1,6 +1,7 @@
 package de.adito.propertly.core.hierarchy;
 
 import de.adito.propertly.core.api.IPropertyDescription;
+import de.adito.propertly.core.common.exception.PropertlyRenameException;
 
 import javax.annotation.Nonnull;
 

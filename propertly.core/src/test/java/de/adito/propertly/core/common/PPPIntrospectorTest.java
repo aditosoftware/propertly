@@ -7,8 +7,6 @@ import de.adito.propertly.core.common.exception.InitializationException;
 import de.adito.propertly.core.common.exception.WrongModifiersException;
 import org.junit.Test;
 
-import java.util.Set;
-
 public class PPPIntrospectorTest
 {
 
