@@ -10,6 +10,9 @@ import de.adito.propertly.core.spi.IPropertyPitProvider;
 import javax.annotation.Nonnull;
 
 /**
+ * Hierarchy is the source of IPropertyPitProvider structures. Each IPropertyPitProvider is assigned to a Hierarchy.
+ * Further each change in the structure can be registered with listeners.
+ *
  * @author PaL
  *         Date: 29.01.13
  *         Time: 23:13
@@ -21,6 +24,12 @@ public class Hierarchy<T extends IPropertyPitProvider>
   private final ListenerList<IPropertyPitEventListener> listeners;
 
 
+  /**
+   * Instantiates this Hierarchy.
+   *
+   * @param pName the name for the root IProperty.
+   * @param pPPP  the root IPropertyPitProvider.
+   */
   public Hierarchy(final String pName, T pPPP)
   {
     this(new IFunction<Hierarchy, INode>()
@@ -42,12 +51,18 @@ public class Hierarchy<T extends IPropertyPitProvider>
     node.setValue(pPPP);
   }
 
+  /**
+   * @return this Hierarchy's root IProperty.
+   */
   public IProperty<IPropertyPitProvider, T> getProperty()
   {
     //noinspection unchecked
     return getNode().getProperty();
   }
 
+  /**
+   * @return this Hierarchy's root IPropertyPitProvider.
+   */
   public T getValue()
   {
     return getProperty().getValue();

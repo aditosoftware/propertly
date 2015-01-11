@@ -10,6 +10,8 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
+ * INodes are the storage structure behind IProperty objects.
+ *
  * @author PaL
  *         Date: 06.04.13
  *         Time: 18:59
