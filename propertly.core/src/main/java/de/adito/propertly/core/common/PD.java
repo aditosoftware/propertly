@@ -1,8 +1,8 @@
 package de.adito.propertly.core.common;
 
-import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.common.exception.InitializationException;
-import de.adito.propertly.core.hierarchy.PropertyDescription;
+import de.adito.propertly.core.api.PropertyDescription;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;

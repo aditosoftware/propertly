@@ -1,7 +1,7 @@
 package de.adito.propertly.test.core.impl;
 
 
-import de.adito.propertly.core.api.base.AbstractMutablePPP;
+import de.adito.propertly.core.spi.extension.AbstractMutablePPP;
 
 import java.awt.*;
 

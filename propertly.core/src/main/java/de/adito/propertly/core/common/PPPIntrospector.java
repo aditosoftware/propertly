@@ -1,9 +1,9 @@
 package de.adito.propertly.core.common;
 
-import de.adito.propertly.core.api.IPropertyDescription;
-import de.adito.propertly.core.api.IPropertyPitProvider;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.common.exception.WrongModifiersException;
-import de.adito.propertly.core.hierarchy.PropertyDescription;
+import de.adito.propertly.core.api.PropertyDescription;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

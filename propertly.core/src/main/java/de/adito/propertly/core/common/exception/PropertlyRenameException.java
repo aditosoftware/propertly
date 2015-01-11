@@ -1,6 +1,6 @@
 package de.adito.propertly.core.common.exception;
 
-import de.adito.propertly.core.api.IProperty;
+import de.adito.propertly.core.spi.IProperty;
 
 import javax.annotation.Nonnull;
 

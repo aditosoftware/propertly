@@ -25,10 +25,10 @@
             <Bundle-Name>${project.artifactId}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
             <Export-Package>
-              de.adito.propertly.core.api,
-              de.adito.propertly.core.api.base,
+              de.adito.propertly.core.spi,
+              de.adito.propertly.core.spi.extension,
               de.adito.propertly.core.common,
-              de.adito.propertly.core.hierarchy
+              de.adito.propertly.core.api
             </Export-Package>
           </instructions>
         </configuration>

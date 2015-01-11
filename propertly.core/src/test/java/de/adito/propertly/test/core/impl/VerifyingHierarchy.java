@@ -1,12 +1,12 @@
 package de.adito.propertly.test.core.impl;
 
-import de.adito.propertly.core.api.IPropertyDescription;
-import de.adito.propertly.core.api.IPropertyPitProvider;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.common.PropertlyUtility;
-import de.adito.propertly.core.hierarchy.DelegatingHierarchy;
-import de.adito.propertly.core.hierarchy.DelegatingNode;
-import de.adito.propertly.core.hierarchy.Hierarchy;
-import de.adito.propertly.core.hierarchy.INode;
+import de.adito.propertly.core.api.DelegatingHierarchy;
+import de.adito.propertly.core.api.DelegatingNode;
+import de.adito.propertly.core.api.Hierarchy;
+import de.adito.propertly.core.api.INode;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -1,7 +1,7 @@
 package de.adito.propertly.core.common;
 
 
-import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.spi.*;
 
 /**
  * @author PaL

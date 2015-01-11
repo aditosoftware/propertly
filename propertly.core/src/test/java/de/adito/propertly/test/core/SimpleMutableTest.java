@@ -1,9 +1,12 @@
 package de.adito.propertly.test.core;
 
-import de.adito.propertly.core.api.*;
-import de.adito.propertly.core.hierarchy.*;
+import de.adito.propertly.core.api.Hierarchy;
+import de.adito.propertly.core.api.PropertyDescription;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
 import de.adito.propertly.test.core.impl.DynamicTestPropertyPitProvider;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.awt.*;
 import java.util.*;
@@ -68,7 +71,7 @@ public class SimpleMutableTest
     for (Iterator<IProperty<DynamicTestPropertyPitProvider, Color>> i = propertyList.iterator(); i.hasNext(); )
     {
       IProperty<DynamicTestPropertyPitProvider, Color> next = i.next();
-      if (Arrays.asList(pinkDescription, blackDescription).contains(next.getDescription()))
+      if (Arrays.<IPropertyDescription>asList(pinkDescription, blackDescription).contains(next.getDescription()))
         i.remove();
     }
     root.removeProperty(pinkDescription);

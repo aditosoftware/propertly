@@ -1,10 +1,10 @@
 package de.adito.propertly.test.core.impl;
 
-import de.adito.propertly.core.api.IPropertyDescription;
-import de.adito.propertly.core.api.IPropertyPit;
-import de.adito.propertly.core.api.IPropertyPitProvider;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPit;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.common.PD;
-import de.adito.propertly.core.hierarchy.PropertyPit;
+import de.adito.propertly.core.api.PitFactory;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -15,7 +15,7 @@ import java.awt.*;
 public class ColoredPitProvider implements IPropertyPitProvider<IPropertyPitProvider, ColoredPitProvider, Color>
 {
 
-  private IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> pit = PropertyPit.create(this);
+  private IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> pit = PitFactory.getInstance().create(this);
 
   @Nonnull
   @Override

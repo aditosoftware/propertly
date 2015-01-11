@@ -1,7 +1,7 @@
 package de.adito.propertly.test.core.impl;
 
-import de.adito.propertly.core.api.IPropertyDescription;
-import de.adito.propertly.core.api.IPropertyPitProvider;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.common.PD;
 
 /**

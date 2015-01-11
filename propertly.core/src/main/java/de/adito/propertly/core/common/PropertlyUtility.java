@@ -1,7 +1,7 @@
 package de.adito.propertly.core.common;
 
 
-import de.adito.propertly.core.api.IPropertyPitProvider;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
