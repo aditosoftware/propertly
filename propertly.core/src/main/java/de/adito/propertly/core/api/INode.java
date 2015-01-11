@@ -56,8 +56,25 @@ public interface INode
 
   void reorder(Comparator pComparator);
 
-  void addPropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener);
+  /**
+   * Adds a weak listener.
+   *
+   * @param pListener the listener to be weakly added.
+   */
+  void addWeakListener(@Nonnull IPropertyPitEventListener pListener);
 
-  void removePropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener);
+  /**
+   * Adds a strong listener.
+   *
+   * @param pListener the listener to be strongly added.
+   */
+  void addStrongListener(@Nonnull IPropertyPitEventListener pListener);
+
+  /**
+   * Removes a listener.
+   *
+   * @param pListener the listener to be removed.
+   */
+  void removeListener(@Nonnull IPropertyPitEventListener pListener);
 
 }

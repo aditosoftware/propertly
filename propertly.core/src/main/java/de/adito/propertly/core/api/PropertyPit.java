@@ -146,15 +146,21 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
   }
 
   @Override
-  public final void addPropertyPitEventListener(@Nonnull final IPropertyPitEventListener pListener)
+  public void addWeakListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    getNode().addPropertyPitEventListener(pListener);
+    getNode().addWeakListener(pListener);
   }
 
   @Override
-  public final void removePropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener)
+  public void addStrongListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    getNode().removePropertyPitEventListener(pListener);
+    getNode().addStrongListener(pListener);
+  }
+
+  @Override
+  public void removeListener(@Nonnull IPropertyPitEventListener pListener)
+  {
+    getNode().removeListener(pListener);
   }
 
   @Nonnull

@@ -1,16 +1,15 @@
 package de.adito.propertly.core.api;
 
+import de.adito.propertly.core.common.ListenerList;
+import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.common.exception.InaccessibleException;
+import de.adito.propertly.core.common.exception.PropertlyRenameException;
 import de.adito.propertly.core.spi.IProperty;
 import de.adito.propertly.core.spi.IPropertyDescription;
 import de.adito.propertly.core.spi.IPropertyEventListener;
 import de.adito.propertly.core.spi.IPropertyPitProvider;
-import de.adito.propertly.core.common.PropertlyUtility;
-import de.adito.propertly.core.common.exception.InaccessibleException;
-import de.adito.propertly.core.common.exception.PropertlyRenameException;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author PaL
@@ -22,12 +21,13 @@ class HierarchyProperty implements IProperty
 
   private AbstractNode node;
   private IPropertyDescription propertyDescription;
-  private List<IPropertyEventListener> listeners;
+  private ListenerList<IPropertyEventListener> listeners;
 
   HierarchyProperty(AbstractNode pNode, IPropertyDescription pPropertyDescription)
   {
     node = pNode;
     propertyDescription = pPropertyDescription;
+    listeners = new ListenerList<IPropertyEventListener>();
   }
 
   @Nonnull
@@ -93,18 +93,21 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
-  public void addPropertyEventListener(@Nonnull IPropertyEventListener pListener)
+  public void addWeakListener(@Nonnull IPropertyEventListener pListener)
   {
-    if (listeners == null)
-      listeners = new ArrayList<IPropertyEventListener>();
-    listeners.add(pListener);
+    listeners.addWeakListener(pListener);
   }
 
   @Override
-  public void removePropertyEventListener(@Nonnull IPropertyEventListener pListener)
+  public void addStrongListener(@Nonnull IPropertyEventListener pListener)
   {
-    if (listeners != null)
-      listeners.remove(pListener);
+    listeners.addStrongListener(pListener);
+  }
+
+  @Override
+  public void removeListener(@Nonnull IPropertyEventListener pListener)
+  {
+    listeners.removeListener(pListener);
   }
 
   void fire(Object pOldValue, Object pNewValue)

@@ -1,10 +1,11 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.common.ListenerList;
 import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.spi.*;
 
-import javax.annotation.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author PaL
@@ -18,7 +19,7 @@ abstract class AbstractNode implements INode
   private final AbstractNode parent;
   private final HierarchyProperty property;
 
-  private List<IPropertyPitEventListener> listeners;
+  private ListenerList<IPropertyPitEventListener> listeners;
 
 
   protected AbstractNode(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent,
@@ -30,6 +31,7 @@ abstract class AbstractNode implements INode
       property = new DynamicHierarchyProperty(this, pPropertyDescription);
     else
       property = new HierarchyProperty(this, pPropertyDescription);
+    listeners = new ListenerList<IPropertyPitEventListener>();
   }
 
   @Nonnull
@@ -62,18 +64,21 @@ abstract class AbstractNode implements INode
   }
 
   @Override
-  public void addPropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener)
+  public void addWeakListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    if (listeners == null)
-      listeners = new ArrayList<IPropertyPitEventListener>();
-    listeners.add(pListener);
+    listeners.addWeakListener(pListener);
   }
 
   @Override
-  public void removePropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener)
+  public void addStrongListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    if (listeners != null)
-      listeners.add(pListener);
+    listeners.addStrongListener(pListener);
+  }
+
+  @Override
+  public void removeListener(@Nonnull IPropertyPitEventListener pListener)
+  {
+    listeners.removeListener(pListener);
   }
 
   protected void fireValueChange(Object pOldValue, Object pNewValue)
@@ -82,11 +87,9 @@ abstract class AbstractNode implements INode
     AbstractNode p = getParent();
     if (p != null)
     {
-      List<IPropertyPitEventListener> l = p.listeners;
-      if (l != null)
-        for (IPropertyPitEventListener eventListener : l)
-          //noinspection unchecked
-          eventListener.propertyChanged(getProperty(), pOldValue, pNewValue);
+      for (IPropertyPitEventListener eventListener : p.listeners)
+        //noinspection unchecked
+        eventListener.propertyChanged(getProperty(), pOldValue, pNewValue);
     }
     property.fire(pOldValue, pNewValue);
   }

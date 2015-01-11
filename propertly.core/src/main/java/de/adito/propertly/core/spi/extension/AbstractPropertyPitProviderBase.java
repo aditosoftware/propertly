@@ -1,9 +1,15 @@
 package de.adito.propertly.core.spi.extension;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitEventListener;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
-import javax.annotation.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author j.boesl, 30.10.14
@@ -83,14 +89,34 @@ abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S
     return getPit().iterator();
   }
 
-  public void addPropertyEventListener(IPropertyPitEventListener pListener)
+  /**
+   * Adds a weak listener.
+   *
+   * @param pListener the listener to be weakly added.
+   */
+  public void addWeakListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    getPit().addPropertyPitEventListener(pListener);
+    getPit().addWeakListener(pListener);
   }
 
-  public void removePropertyEventListener(IPropertyPitEventListener pListener)
+  /**
+   * Adds a strong listener.
+   *
+   * @param pListener the listener to be strongly added.
+   */
+  public void addStrongListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    getPit().removePropertyPitEventListener(pListener);
+    getPit().addStrongListener(pListener);
+  }
+
+  /**
+   * Removes a listener.
+   *
+   * @param pListener the listener to be removed.
+   */
+  public void removeListener(@Nonnull IPropertyPitEventListener pListener)
+  {
+    getPit().removeListener(pListener);
   }
 
 }

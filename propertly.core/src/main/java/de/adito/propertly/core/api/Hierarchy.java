@@ -1,9 +1,13 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.common.IFunction;
+import de.adito.propertly.core.common.ListenerList;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitEventListener;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
-import java.util.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author PaL
@@ -14,7 +18,7 @@ public class Hierarchy<T extends IPropertyPitProvider>
 {
 
   private final INode node;
-  private final List<IPropertyPitEventListener> listeners;
+  private final ListenerList<IPropertyPitEventListener> listeners;
 
 
   public Hierarchy(final String pName, T pPPP)
@@ -34,7 +38,7 @@ public class Hierarchy<T extends IPropertyPitProvider>
   protected Hierarchy(IFunction<Hierarchy, INode> pNodeSupplier, T pPPP)
   {
     node = pNodeSupplier.run(this);
-    listeners = new ArrayList<IPropertyPitEventListener>();
+    listeners = new ListenerList<IPropertyPitEventListener>();
     node.setValue(pPPP);
   }
 
@@ -49,14 +53,34 @@ public class Hierarchy<T extends IPropertyPitProvider>
     return getProperty().getValue();
   }
 
-  public void addPropertyPitEventListener(IPropertyPitEventListener pListener)
+  /**
+   * Adds a weak listener.
+   *
+   * @param pListener the listener to be weakly added.
+   */
+  public void addWeakListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    listeners.add(pListener);
+    listeners.addWeakListener(pListener);
   }
 
-  public void removePropertyPitEventListener(IPropertyPitEventListener pListener)
+  /**
+   * Adds a strong listener.
+   *
+   * @param pListener the listener to be strongly added.
+   */
+  public void addStrongListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    listeners.remove(pListener);
+    listeners.addStrongListener(pListener);
+  }
+
+  /**
+   * Removes a listener.
+   *
+   * @param pListener the listener to be removed.
+   */
+  public void removeListener(@Nonnull IPropertyPitEventListener pListener)
+  {
+    listeners.removeListener(pListener);
   }
 
   protected INode getNode()

@@ -27,7 +27,7 @@ public class PropertyTest
     final StringBuilder resultStringBuild = new StringBuilder();
 
     Hierarchy<TProperty> hierarchy = new VerifyingHierarchy<TProperty>(new Hierarchy<TProperty>("root", new TProperty()));
-    hierarchy.addPropertyPitEventListener(new IPropertyPitEventListener()
+    hierarchy.addStrongListener(new IPropertyPitEventListener()
     {
       @Override
       public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
@@ -55,7 +55,7 @@ public class PropertyTest
     });
     TProperty tProperty = hierarchy.getValue();
     //GetterSetterGen.run(tProperty);
-    tProperty.getPit().addPropertyPitEventListener(new PropertyPitEventAdapter()
+    tProperty.getPit().addStrongListener(new PropertyPitEventAdapter()
     {
       @Override
       public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
@@ -64,7 +64,7 @@ public class PropertyTest
       }
     });
     PropertyTestChildren children = tProperty.setCHILD(new PropertyTestChildren());
-    children.addPropertyEventListener(new PropertyPitEventAdapter()
+    children.addStrongListener(new PropertyPitEventAdapter()
     {
       @Override
       public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)

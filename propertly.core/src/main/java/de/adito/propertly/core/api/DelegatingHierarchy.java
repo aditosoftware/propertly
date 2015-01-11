@@ -1,10 +1,15 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.*;
-import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.common.IFunction;
+import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitEventListener;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author PaL
@@ -14,11 +19,14 @@ import java.util.*;
 public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extends Hierarchy<T>
 {
 
+  @SuppressWarnings("FieldCanBeLocal")
+  private IPropertyPitEventListener propertyPitEventListener; // strong reference for weak listener
+
   protected DelegatingHierarchy(Hierarchy<T> pSourceHierarchy)
   {
     super(new _INodeFunction(pSourceHierarchy), pSourceHierarchy.getValue());
 
-    pSourceHierarchy.addPropertyPitEventListener(new IPropertyPitEventListener()
+    propertyPitEventListener = new IPropertyPitEventListener()
     {
       @Override
       public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
@@ -66,7 +74,9 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
           node.fireNodeRemoved(prop.getDescription());
         }
       }
-    });
+    };
+
+    pSourceHierarchy.addWeakListener(propertyPitEventListener);
   }
 
   @Nullable
@@ -135,7 +145,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
     {
       INode sourceNode = sourceHierarchy.getNode();
       return new DelegatingNode((DelegatingHierarchy) pHierarchy, null, sourceNode.getProperty().getDescription(),
-                                PropertlyUtility.getFixedSupplier(sourceNode));
+          PropertlyUtility.getFixedSupplier(sourceNode));
     }
   }
 

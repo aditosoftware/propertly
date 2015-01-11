@@ -107,17 +107,24 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
   List<T> getValues();
 
   /**
-   * Adds a listener to this IPropertyPit.
+   * Adds a weak listener.
    *
-   * @param pListener the IPropertyEventListener to be added.
+   * @param pListener the listener to be weakly added.
    */
-  void addPropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener);
+  void addWeakListener(@Nonnull IPropertyPitEventListener pListener);
 
   /**
-   * Removes a listener from this IPropertyPit.
+   * Adds a strong listener.
    *
-   * @param pListener the IPropertyEventListener to be removed.
+   * @param pListener the listener to be strongly added.
    */
-  void removePropertyPitEventListener(@Nonnull IPropertyPitEventListener pListener);
+  void addStrongListener(@Nonnull IPropertyPitEventListener pListener);
+
+  /**
+   * Removes a listener.
+   *
+   * @param pListener the listener to be removed.
+   */
+  void removeListener(@Nonnull IPropertyPitEventListener pListener);
 
 }

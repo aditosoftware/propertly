@@ -81,17 +81,24 @@ public interface IProperty<S extends IPropertyPitProvider, T>
   void rename(@Nonnull String pName) throws PropertlyRenameException;
 
   /**
-   * Adds a Listener.
+   * Adds a weak listener.
    *
-   * @param pListener the listener to be added.
+   * @param pListener the listener to be weakly added.
    */
-  void addPropertyEventListener(@Nonnull IPropertyEventListener pListener);
+  void addWeakListener(@Nonnull IPropertyEventListener pListener);
+
+  /**
+   * Adds a strong listener.
+   *
+   * @param pListener the listener to be strongly added.
+   */
+  void addStrongListener(@Nonnull IPropertyEventListener pListener);
 
   /**
    * Removes a listener.
    *
    * @param pListener the listener to be removed.
    */
-  void removePropertyEventListener(@Nonnull IPropertyEventListener pListener);
+  void removeListener(@Nonnull IPropertyEventListener pListener);
 
 }
