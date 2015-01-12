@@ -1,9 +1,13 @@
 package de.adito.propertly.core.common;
 
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPit;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
 /**
+ * A helper class to quickly supply getters and setters.
+ *
  * @author PaL
  *         Date: 12.10.12
  *         Time: 23:10

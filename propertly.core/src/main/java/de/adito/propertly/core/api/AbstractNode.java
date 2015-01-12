@@ -8,6 +8,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * Abstract class for INode implementations.
+ *
  * @author PaL
  *         Date: 09.02.13
  *         Time: 19:36

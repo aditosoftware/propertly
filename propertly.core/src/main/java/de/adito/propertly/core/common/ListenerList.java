@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * An listener list implementation that can handle weak and strong listeners.
+ *
  * @author PaL
  *         Date: 11.01.15
  *         Time. 03:15

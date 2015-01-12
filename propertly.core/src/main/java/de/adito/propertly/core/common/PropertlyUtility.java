@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * An Utility class with common functions.
+ *
  * @author PaL
  *         Date: 07.04.13
  *         Time: 14:23

@@ -1,8 +1,13 @@
 package de.adito.propertly.core.common;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitEventListener;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
 /**
+ * An adapter implementation for IPropertyPitEventListener implementations.
+ *
  * @author PaL
  *         Date: 25.11.12
  *         Time: 14:38

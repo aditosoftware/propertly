@@ -1,15 +1,17 @@
 package de.adito.propertly.core.common;
 
+import de.adito.propertly.core.api.PropertyDescription;
+import de.adito.propertly.core.common.exception.WrongModifiersException;
 import de.adito.propertly.core.spi.IPropertyDescription;
 import de.adito.propertly.core.spi.IPropertyPitProvider;
-import de.adito.propertly.core.common.exception.WrongModifiersException;
-import de.adito.propertly.core.api.PropertyDescription;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
+ * PPPIntrospector supplies all IPropertyDescriptions for a class inherited from IPropertyPitProvider.
+ *
  * @author PaL
  *         Date: 29.01.13
  *         Time: 23:48
@@ -23,6 +25,10 @@ public class PPPIntrospector
   {
   }
 
+  /**
+   * @param pPPPClass the class which gets inspected.
+   * @return all IPropertyDescriptions available at given IPropertyPitProvider.
+   */
   public static Set<IPropertyDescription> get(Class<? extends IPropertyPitProvider> pPPPClass)
   {
     Set<IPropertyDescription> propertyDescriptions = ALREADY_KNOWN.get(pPPPClass);
