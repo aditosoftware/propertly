@@ -1,10 +1,18 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.*;
-import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.common.PPPIntrospector;
+import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.common.exception.PropertlyRenameException;
+import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
-import javax.annotation.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author PaL
@@ -206,18 +214,26 @@ class Node extends AbstractNode
   }
 
   @Override
-  public void rename(String pName)
+  public void rename(String pName) throws PropertlyRenameException
   {
     IProperty property = getProperty();
     if (!(property instanceof DynamicHierarchyProperty))
-      throw new IllegalStateException("can't rename: " + property);
-    Node parent = (Node) getParent();
-    if (parent != null)
+      throw new PropertlyRenameException(property, pName);
+
+    try
     {
-      assert parent.children != null;
-      parent.children.rename(property.getDescription(), pName);
+      Node parent = (Node) getParent();
+      if (parent != null)
+      {
+        assert parent.children != null;
+        parent.children.rename(property.getDescription(), pName);
+      }
+      ((PropertyDescription) property.getDescription()).setName(pName);
     }
-    ((PropertyDescription) property.getDescription()).setName(pName);
+    catch (Exception e)
+    {
+      throw new PropertlyRenameException(e, property, pName);
+    }
   }
 
 }

@@ -1,9 +1,10 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.common.ISupplier;
 import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.common.exception.PropertlyRenameException;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -122,7 +123,7 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public void rename(String pName)
+  public void rename(String pName) throws PropertlyRenameException
   {
     getHierarchy().rename(delegateProvider.get(), this, pName);
   }
