@@ -1,23 +1,16 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.IFunction;
-import de.adito.propertly.core.common.ListenerList;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitEventListener;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.spi.*;
 
 import javax.annotation.Nonnull;
 
 /**
- * Hierarchy is the source of IPropertyPitProvider structures. Each IPropertyPitProvider is assigned to a Hierarchy.
- * Further each change in the structure can be registered with listeners.
- *
  * @author PaL
  *         Date: 29.01.13
  *         Time: 23:13
  */
-public class Hierarchy<T extends IPropertyPitProvider>
+public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
 {
 
   private final INode node;
@@ -51,48 +44,32 @@ public class Hierarchy<T extends IPropertyPitProvider>
     node.setValue(pPPP);
   }
 
-  /**
-   * @return this Hierarchy's root IProperty.
-   */
+  @Override
   public IProperty<IPropertyPitProvider, T> getProperty()
   {
     //noinspection unchecked
     return getNode().getProperty();
   }
 
-  /**
-   * @return this Hierarchy's root IPropertyPitProvider.
-   */
+  @Override
   public T getValue()
   {
     return getProperty().getValue();
   }
 
-  /**
-   * Adds a weak listener.
-   *
-   * @param pListener the listener to be weakly added.
-   */
+  @Override
   public void addWeakListener(@Nonnull IPropertyPitEventListener pListener)
   {
     listeners.addWeakListener(pListener);
   }
 
-  /**
-   * Adds a strong listener.
-   *
-   * @param pListener the listener to be strongly added.
-   */
+  @Override
   public void addStrongListener(@Nonnull IPropertyPitEventListener pListener)
   {
     listeners.addStrongListener(pListener);
   }
 
-  /**
-   * Removes a listener.
-   *
-   * @param pListener the listener to be removed.
-   */
+  @Override
   public void removeListener(@Nonnull IPropertyPitEventListener pListener)
   {
     listeners.removeListener(pListener);

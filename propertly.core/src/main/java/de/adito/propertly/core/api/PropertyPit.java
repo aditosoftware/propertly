@@ -44,7 +44,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
 
   @Nonnull
   @Override
-  public Hierarchy<?> getHierarchy()
+  public IHierarchy<?> getHierarchy()
   {
     return getNode().getHierarchy();
   }

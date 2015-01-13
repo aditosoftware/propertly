@@ -1,9 +1,7 @@
 package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitEventListener;
+import de.adito.propertly.core.spi.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +24,7 @@ public interface INode
    * @return the assigned hierarchy.
    */
   @Nonnull
-  Hierarchy getHierarchy();
+  IHierarchy getHierarchy();
 
   /**
    * Gives access to the parent.

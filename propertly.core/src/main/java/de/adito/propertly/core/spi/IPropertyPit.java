@@ -1,7 +1,5 @@
 package de.adito.propertly.core.spi;
 
-import de.adito.propertly.core.api.Hierarchy;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
@@ -31,7 +29,7 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
    * @return the connected Hierarchy object.
    */
   @Nonnull
-  Hierarchy<?> getHierarchy();
+  IHierarchy<?> getHierarchy();
 
   /**
    * @return the parental IPropertyPitProvider where this IPropertyPit's IPropertyPitProvider is provided through a

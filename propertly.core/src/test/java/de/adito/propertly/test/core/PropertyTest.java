@@ -26,8 +26,8 @@ public class PropertyTest
   {
     final StringBuilder resultStringBuild = new StringBuilder();
 
-    Hierarchy<TProperty> hierarchy = new VerifyingHierarchy<TProperty>(new Hierarchy<TProperty>("root", new TProperty()));
-    hierarchy.addStrongListener(new IPropertyPitEventListener()
+    IHierarchy<TProperty> IHierarchy = new VerifyingHierarchy<TProperty>(new Hierarchy<TProperty>("root", new TProperty()));
+    IHierarchy.addStrongListener(new IPropertyPitEventListener()
     {
       @Override
       public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
@@ -53,7 +53,7 @@ public class PropertyTest
         _append(resultStringBuild, "hierarchy propertyRemoved", pSource, pPropertyDescription);
       }
     });
-    TProperty tProperty = hierarchy.getValue();
+    TProperty tProperty = IHierarchy.getValue();
     //GetterSetterGen.run(tProperty);
     tProperty.getPit().addStrongListener(new PropertyPitEventAdapter()
     {
@@ -174,8 +174,8 @@ public class PropertyTest
   @Test
   public void readWriteTest()
   {
-    Hierarchy<ColoredPitProvider> hierarchy = new VerifyingHierarchy<ColoredPitProvider>(new Hierarchy<ColoredPitProvider>("root", new ColoredPitProvider()));
-    IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> pit = hierarchy.getValue().getPit();
+    IHierarchy<ColoredPitProvider> IHierarchy = new VerifyingHierarchy<ColoredPitProvider>(new Hierarchy<ColoredPitProvider>("root", new ColoredPitProvider()));
+    IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> pit = IHierarchy.getValue().getPit();
 
 
     pit.setValue(ColoredPitProvider.DEFAULT_COLOR, Color.MAGENTA);
