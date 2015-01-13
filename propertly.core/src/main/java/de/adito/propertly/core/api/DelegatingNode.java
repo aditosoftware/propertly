@@ -1,17 +1,11 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.ISupplier;
-import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * @author PaL
@@ -21,7 +15,7 @@ import java.util.Map;
 public class DelegatingNode extends AbstractNode
 {
   private final ISupplier<INode> delegateProvider;
-  private Map<IPropertyPitProvider, IPropertyPitProvider> pitProvider;
+  private IPropertyPitProvider pitProvider;
 
   public DelegatingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
                         @Nonnull IPropertyDescription pPropertyDescription,
@@ -65,15 +59,16 @@ public class DelegatingNode extends AbstractNode
       IPropertyPitProvider ppp = (IPropertyPitProvider) o;
       if (!this.equals(HierarchyHelper.getNode(ppp)))
       {
-        IPropertyPitProvider currentPit = pitProvider == null ? null : pitProvider.get(ppp);
-        if (currentPit != null)
-          return currentPit;
-        IPropertyPitProvider ownPitProvider = PropertlyUtility.create(ppp);
-        HierarchyHelper.setNode(ownPitProvider, this);
-        pitProvider = Collections.singletonMap(ppp, ownPitProvider);
-        return ownPitProvider;
+        if (pitProvider != null)
+          return pitProvider;
+        ppp = PropertlyUtility.create(ppp);
+        HierarchyHelper.setNode(ppp, this);
+        pitProvider = ppp;
+        return ppp;
       }
     }
+    else if (pitProvider != null)
+      pitProvider = null;
     return o;
   }
 
