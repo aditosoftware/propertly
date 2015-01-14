@@ -1,7 +1,7 @@
 package de.adito.propertly.test.core;
 
 import de.adito.propertly.core.api.Hierarchy;
-import de.adito.propertly.core.common.PropertyPitEventAdapter;
+import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.common.exception.InaccessibleException;
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.test.core.impl.ColoredPitProvider;
@@ -26,8 +26,8 @@ public class PropertyTest
   {
     final StringBuilder resultStringBuild = new StringBuilder();
 
-    IHierarchy<TProperty> IHierarchy = new VerifyingHierarchy<TProperty>(new Hierarchy<TProperty>("root", new TProperty()));
-    IHierarchy.addStrongListener(new IPropertyPitEventListener()
+    IHierarchy<TProperty> hierarchy = new VerifyingHierarchy<TProperty>(new Hierarchy<TProperty>("root", new TProperty()));
+    hierarchy.addStrongListener(new IPropertyPitEventListener()
     {
       @Override
       public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
@@ -53,7 +53,7 @@ public class PropertyTest
         _append(resultStringBuild, "hierarchy propertyRemoved", pSource, pPropertyDescription);
       }
     });
-    TProperty tProperty = IHierarchy.getValue();
+    TProperty tProperty = hierarchy.getValue();
     //GetterSetterGen.run(tProperty);
     tProperty.getPit().addStrongListener(new PropertyPitEventAdapter()
     {
@@ -133,6 +133,20 @@ public class PropertyTest
 
     Assert.assertEquals(expected,
         resultStringBuild.toString());
+
+    expected = "/root\n" +
+        "\t X : 123\n" +
+        "\t Y : null\n" +
+        "\t FF : java.awt.Dimension[width=123,height=456]\n" +
+        "\t MAP : null\n" +
+        "\t/CHILD\n" +
+        "\t\t color1 : java.awt.Color[r=0,g=0,b=0]\n" +
+        "\t\t color2 : java.awt.Color[r=255,g=0,b=0]\n" +
+        "\t WIDTH : null\n" +
+        "\t HEIGHT : null\n";
+
+    Assert.assertEquals(expected,
+                        PropertlyDebug.toTreeString(hierarchy));
   }
 
   private static void _append(StringBuilder pStrBuilder, String pEvent, Object... pAdd)
@@ -174,8 +188,8 @@ public class PropertyTest
   @Test
   public void readWriteTest()
   {
-    IHierarchy<ColoredPitProvider> IHierarchy = new VerifyingHierarchy<ColoredPitProvider>(new Hierarchy<ColoredPitProvider>("root", new ColoredPitProvider()));
-    IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> pit = IHierarchy.getValue().getPit();
+    IHierarchy<ColoredPitProvider> hierarchy = new VerifyingHierarchy<ColoredPitProvider>(new Hierarchy<ColoredPitProvider>("root", new ColoredPitProvider()));
+    IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> pit = hierarchy.getValue().getPit();
 
 
     pit.setValue(ColoredPitProvider.DEFAULT_COLOR, Color.MAGENTA);
