@@ -1,7 +1,7 @@
 package de.adito.propertly.test.core.impl;
 
-import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.common.PD;
+import de.adito.propertly.core.spi.*;
 
 /**
  * @author PaL
@@ -15,5 +15,7 @@ public interface IComponent<P extends IPropertyPitProvider, S extends IComponent
   IPropertyDescription<IComponent, Integer> Y = PD.create(IComponent.class);
   IPropertyDescription<IComponent, Integer> WIDTH = PD.create(IComponent.class);
   IPropertyDescription<IComponent, Integer> HEIGHT = PD.create(IComponent.class);
+
+  IPropertyDescription<IComponent, String> DESCRIPTION = PD.create(IComponent.class);
 
 }

@@ -1,8 +1,8 @@
 package de.adito.propertly.test.core.impl;
 
+import de.adito.propertly.core.common.PD;
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.spi.extension.AbstractPPP;
-import de.adito.propertly.core.common.PD;
 
 import java.awt.*;
 import java.util.Map;

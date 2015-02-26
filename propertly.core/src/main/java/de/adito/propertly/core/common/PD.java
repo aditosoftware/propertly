@@ -1,8 +1,8 @@
 package de.adito.propertly.core.common;
 
-import de.adito.propertly.core.spi.*;
-import de.adito.propertly.core.common.exception.InitializationException;
 import de.adito.propertly.core.api.PropertyDescription;
+import de.adito.propertly.core.common.exception.InitializationException;
+import de.adito.propertly.core.spi.*;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
@@ -23,7 +23,6 @@ import java.util.*;
  * @author PaL
  *         Date: 13.11.12
  *         Time: 19:23
- *
  */
 public class PD
 {
@@ -35,14 +34,16 @@ public class PD
 
   /**
    * Creates a IPropertyDescription object at a IPropertyPitProvider.
+   *
    * @param pSource the corresponding IPropertyPitProvider class that the created IPropertyDescription object will be a
    *                static member of.
-   * @param <S> the type of the corresponding IPropertyPitProvider.
-   * @param <T> the value's type this IPropertyDescription object describes.
+   * @param <S>     the type of the corresponding IPropertyPitProvider.
+   * @param <T>     the value's type this IPropertyDescription object describes.
    * @return the fitting IPropertyDescription object for the given IPropertyPitProvider.
    */
   @Nonnull
-  public static <S extends IPropertyPitProvider<?, ? super S, ? super T>, T> IPropertyDescription<S, T> create(@Nonnull Class<S> pSource)
+  public static <S extends IPropertyPitProvider<?, ? extends S, ?>, T> IPropertyDescription<S, T>
+  create(@Nonnull Class<S> pSource)
   {
     List<Field> fields = FIELD_CACHE.get(pSource);
     if (fields == null)

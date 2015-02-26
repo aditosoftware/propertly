@@ -129,7 +129,8 @@ public class PropertyTest
         "tProperty property: property(MAP, Map, null)\n" +
         "tProperty property: property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
         "tProperty property: property(WIDTH, Integer, null)\n" +
-        "tProperty property: property(HEIGHT, Integer, null)";
+        "tProperty property: property(HEIGHT, Integer, null)\n" +
+        "tProperty property: property(DESCRIPTION, String, null)";
 
     Assert.assertEquals(expected,
         resultStringBuild.toString());
@@ -143,7 +144,8 @@ public class PropertyTest
         "\t\t color1 : java.awt.Color[r=0,g=0,b=0]\n" +
         "\t\t color2 : java.awt.Color[r=255,g=0,b=0]\n" +
         "\t WIDTH : null\n" +
-        "\t HEIGHT : null\n";
+        "\t HEIGHT : null\n" +
+        "\t DESCRIPTION : null\n";
 
     Assert.assertEquals(expected,
                         PropertlyDebug.toTreeString(hierarchy));
