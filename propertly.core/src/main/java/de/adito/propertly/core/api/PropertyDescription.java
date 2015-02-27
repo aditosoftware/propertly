@@ -15,12 +15,12 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
 {
 
   private Class<S> sourceType;
-  private Class<T> type;
+  private Class<? extends T> type;
   private String name;
   private List<? extends Annotation> annotations;
 
 
-  private PropertyDescription(Class<S> pSourceType, Class<T> pType, String pName,
+  private PropertyDescription(Class<S> pSourceType, Class<? extends T> pType, String pName,
                               Iterable<? extends Annotation> pAnnotations)
   {
     sourceType = pSourceType;
@@ -51,7 +51,7 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
   }
 
   @Override
-  public Class<T> getType()
+  public Class<? extends T> getType()
   {
     return type;
   }
@@ -75,7 +75,7 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
 
   @Nonnull
   public static <S extends IPropertyPitProvider, T> IPropertyDescription<S, T> create(
-      @Nonnull Class<S> pSourceType, @Nonnull Class<T> pType, @Nonnull String pName,
+      @Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType, @Nonnull String pName,
       @Nullable Iterable<? extends Annotation> pAnnotations)
   {
     return new PropertyDescription<S, T>(pSourceType, pType, pName, pAnnotations);

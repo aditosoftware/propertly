@@ -20,7 +20,7 @@ public interface IPropertyDescription<S extends IPropertyPitProvider, T> extends
   /**
    * @return the class for the IProperty's value.
    */
-  Class<T> getType();
+  Class<? extends T> getType();
 
   /**
    * @return the name for the corresponding IProperty.
