@@ -100,13 +100,13 @@ public class PropertyTest
     Assert.assertNotNull(ex);
 
 
-    String expected = "hierarchy propertyChanged: null, MutablePropertyPit, root, property(root, IPropertyPitProvider, PropertyPit)\n" +
+    String expected = "hierarchy propertyChanged: null, MutablePropertyPit, root, property(root, TProperty, PropertyPit)\n" +
         "hierarchy propertyChanged: null, MutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
         "tProperty propertyChanged: property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
-        "hierarchy propertyChanged: null, 123, root, property(root, IPropertyPitProvider, PropertyPit)\n" +
+        "hierarchy propertyChanged: null, 123, root, property(root, TProperty, PropertyPit)\n" +
         "hierarchy propertyChanged: null, 123, X, property(X, Integer, 123)\n" +
         "tProperty propertyChanged: property(X, Integer, 123)\n" +
-        "hierarchy propertyChanged: null, java.awt.Dimension[width=123,height=456], root, property(root, IPropertyPitProvider, PropertyPit)\n" +
+        "hierarchy propertyChanged: null, java.awt.Dimension[width=123,height=456], root, property(root, TProperty, PropertyPit)\n" +
         "hierarchy propertyChanged: null, java.awt.Dimension[width=123,height=456], FF, property(FF, Dimension, java.awt.Dimension[width=123,height=456])\n" +
         "tProperty propertyChanged: property(FF, Dimension, java.awt.Dimension[width=123,height=456])\n" +
         "hierarchy propertyAdded: MutablePropertyPit, description(CHILD, class de.adito.propertly.test.core.impl.PropertyTestChildren)\n" +

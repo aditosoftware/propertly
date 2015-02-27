@@ -23,7 +23,7 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
    * @param pName the name for the root IProperty.
    * @param pPPP  the root IPropertyPitProvider.
    */
-  public Hierarchy(final String pName, T pPPP)
+  public Hierarchy(final String pName, final T pPPP)
   {
     this(new IFunction<Hierarchy, INode>()
     {
@@ -31,7 +31,7 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
       public INode run(Hierarchy pHierarchy)
       {
         return new Node(pHierarchy, null, PropertyDescription.create(
-            IPropertyPitProvider.class, IPropertyPitProvider.class, pName));
+            IPropertyPitProvider.class, pPPP.getClass(), pName));
       }
     }, pPPP);
 
