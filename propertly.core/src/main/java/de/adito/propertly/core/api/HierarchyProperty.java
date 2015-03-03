@@ -93,6 +93,12 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
+  public boolean isDynamic()
+  {
+    return false;
+  }
+
+  @Override
   public void addWeakListener(@Nonnull IPropertyEventListener pListener)
   {
     listeners.addWeakListener(pListener);

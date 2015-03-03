@@ -49,11 +49,11 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
    * the searched description's source does not necessarily have to fit this IPropertyPit's IPropertyPitProvider.
    *
    * @param pPropertyDescription an arbitrary IPropertyDescription that describes the searched IProperty.
-   * @param <T>                  the searched IProperty's value type.
+   * @param <E>                  the searched IProperty's value type.
    * @return the IProperty if available otherwise <tt>null</tt>.
    */
   @Nullable
-  <T> IProperty<S, T> findProperty(@Nonnull IPropertyDescription<?, T> pPropertyDescription);
+  <E> IProperty<S, E> findProperty(@Nonnull IPropertyDescription<?, E> pPropertyDescription);
 
   /**
    * Returns an IProperty for the supplied IPropertyDescription. In case the searched IPropertyDescription does not

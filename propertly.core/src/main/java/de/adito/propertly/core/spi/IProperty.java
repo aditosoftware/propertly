@@ -81,6 +81,11 @@ public interface IProperty<S extends IPropertyPitProvider, T>
   void rename(@Nonnull String pName) throws PropertlyRenameException;
 
   /**
+   * @return whether this Property is defined at runtime and can be renamed or removed.
+   */
+  boolean isDynamic();
+
+  /**
    * Adds a weak listener.
    *
    * @param pListener the listener to be weakly added.

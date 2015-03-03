@@ -1,7 +1,7 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.IPropertyDescription;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
+import de.adito.propertly.core.spi.IPropertyDescription;
 
 import javax.annotation.Nonnull;
 
@@ -22,4 +22,9 @@ class DynamicHierarchyProperty extends HierarchyProperty
     getNode().rename(pName);
   }
 
+  @Override
+  public boolean isDynamic()
+  {
+    return true;
+  }
 }

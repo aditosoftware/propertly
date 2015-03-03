@@ -165,7 +165,7 @@ class Node extends AbstractNode
     if (childNode != null)
     {
       IProperty property = childNode.getProperty();
-      if (!(property instanceof DynamicHierarchyProperty))
+      if (!property.isDynamic())
         throw new IllegalStateException("can't remove: " + getProperty());
       IPropertyDescription description = property.getDescription();
       fireNodeWillBeRemoved(description);
@@ -198,7 +198,7 @@ class Node extends AbstractNode
     if (!(value instanceof IMutablePropertyPitProvider) || children == null)
       throw new IllegalStateException("not mutable: " + getProperty());
     IProperty property = children.get(pIndex).getProperty();
-    if (!(property instanceof DynamicHierarchyProperty))
+    if (!property.isDynamic())
       throw new IllegalStateException("can't remove: " + getProperty());
     IPropertyDescription description = property.getDescription();
     fireNodeWillBeRemoved(description);
@@ -217,7 +217,7 @@ class Node extends AbstractNode
   public void rename(String pName) throws PropertlyRenameException
   {
     IProperty property = getProperty();
-    if (!(property instanceof DynamicHierarchyProperty))
+    if (!property.isDynamic())
       throw new PropertlyRenameException(property, pName);
 
     try
