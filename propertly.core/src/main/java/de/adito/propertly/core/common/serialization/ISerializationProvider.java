@@ -20,7 +20,7 @@ public interface ISerializationProvider<F>
 
   @Nonnull
   F serializeFixedNode(
-      @Nonnull F pParentOutputData, @Nonnull String pName, @Nullable Class<? extends IPropertyPitProvider> pType,
+      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pType,
       @Nonnull ChildRunner<F> pChildRunner);
 
   @Nonnull
@@ -31,7 +31,7 @@ public interface ISerializationProvider<F>
   @Nonnull
   F serializeDynamicNode(
       @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
-      @Nullable Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations,
+      @Nonnull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations,
       @Nonnull ChildRunner<F> pChildRunner);
 
   void serializeFixedValue(
