@@ -14,17 +14,35 @@ import java.util.List;
 public interface ISerializationProvider<F>
 {
 
-  <V> void serializeValue(
-      @Nonnull F pParentOutputData, @Nonnull Class<V> pType, @Nonnull String pName,
-      @Nullable List<? extends Annotation> pAnnotations, @Nullable V pValue);
+  @Nonnull
+  F serializeFixedNode(
+      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull ChildRunner<F> pChildRunner);
 
   @Nonnull
-  F serializeNode(
-      @Nullable F pParentOutputData, @Nonnull Class<? extends IPropertyPitProvider> pType, @Nonnull String pName,
-      @Nullable List<? extends Annotation> pAnnotations, @Nullable IPropertyPitProvider pValue,
+  F serializeFixedNode(
+      @Nonnull F pParentOutputData, @Nonnull String pName, @Nullable Class<? extends IPropertyPitProvider> pType,
       @Nonnull ChildRunner<F> pChildRunner);
 
-  void deserialize(@Nonnull F pInputData, @Nonnull ChildAppender<F> pAppendChild);
+  @Nonnull
+  F serializeDynamicNode(
+      @Nullable F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+      @Nullable List<? extends Annotation> pAnnotations, @Nonnull ChildRunner<F> pChildRunner);
+
+  @Nonnull
+  F serializeDynamicNode(
+      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+      @Nullable Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations,
+      @Nonnull ChildRunner<F> pChildRunner);
+
+  void serializeFixedValue(
+      @Nonnull F pParentOutputData, @Nonnull String pName, @Nullable Object pValue);
+
+  <V> void serializeDynamicValue(
+      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? super V> pPropertyType, @Nullable V pValue,
+      @Nullable List<? extends Annotation> pAnnotations);
+
+
+  void deserialize(@Nonnull F pInputData, @Nonnull ChildAppender<F> pChildAppender);
 
 
   /**
@@ -40,11 +58,35 @@ public interface ISerializationProvider<F>
    */
   interface ChildAppender<F>
   {
-    <V> void appendValue(@Nonnull Class<V> pType, @Nonnull String pName, @Nullable List<? extends Annotation> pAnnotations,
-                         @Nullable V pValue);
+    EChildType getChildType(String pName);
 
-    void appendNode(@Nullable F pInputData, @Nonnull Class<? extends IPropertyPitProvider> pType, @Nonnull String pName,
-                    @Nullable List<? extends Annotation> pAnnotations);
+    void appendFixedNode(
+        @Nonnull F pInputData, @Nonnull String pName);
+
+    void appendFixedNode(
+        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pType);
+
+    void appendDynamicNode(
+        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+        @Nullable List<? extends Annotation> pAnnotations);
+
+    void appendDynamicNode(
+        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+        @Nonnull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations);
+
+    void appendFixedValue(
+        @Nonnull String pName, @Nullable Object pValue);
+
+    <V> void appendDynamicValue(
+        @Nonnull String pName, @Nonnull Class<V> pPropertyType, @Nullable V pValue,
+        @Nullable List<? extends Annotation> pAnnotations);
+  }
+
+  enum EChildType
+  {
+    FIXED_VALUE,
+    FIXED_NODE,
+    DYNAMIC
   }
 
 }

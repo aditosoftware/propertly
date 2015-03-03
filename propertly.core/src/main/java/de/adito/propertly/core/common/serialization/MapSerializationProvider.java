@@ -11,55 +11,162 @@ import java.util.*;
  *
  * @author j.boesl, 27.02.15
  */
-public class MapSerializationProvider implements ISerializationProvider<MapSerializationProviderMap>
+public class MapSerializationProvider implements ISerializationProvider<Map<String, Object>>
 {
 
+  @Nonnull
   @Override
-  public <V> void serializeValue(
-      @Nonnull MapSerializationProviderMap pParentOutputData, @Nonnull Class<V> pType, @Nonnull String pName,
-      @Nullable List<? extends Annotation> pAnnotations, @Nullable V pValue)
+  public Map<String, Object> serializeFixedNode(
+      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
+      @Nonnull ChildRunner<Map<String, Object>> pChildRunner)
   {
-    pParentOutputData.put(pName, new MapSerializationProviderMap.Entry(pType, pValue, pAnnotations));
+    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    pParentOutputData.put(pName, map);
+    pChildRunner.run(map);
+    return pParentOutputData;
   }
 
   @Nonnull
   @Override
-  public MapSerializationProviderMap serializeNode(
-      @Nullable MapSerializationProviderMap pParentOutputData, @Nonnull Class<? extends IPropertyPitProvider> pType,
-      @Nonnull String pName, @Nullable List<? extends Annotation> pAnnotations, @Nullable IPropertyPitProvider pValue,
-      @Nonnull ChildRunner<MapSerializationProviderMap> pChildRunner)
+  public Map<String, Object> serializeFixedNode(
+      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
+      @Nonnull Class<? extends IPropertyPitProvider> pType, @Nonnull ChildRunner<Map<String, Object>> pChildRunner)
   {
-    if (pParentOutputData == null) // root
-      pParentOutputData = new MapSerializationProviderMap();
+    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    pParentOutputData.put(pName, new Property(null, pType, map, null));
+    pChildRunner.run(map);
+    return pParentOutputData;
+  }
 
-    MapSerializationProviderMap map = pValue == null ? null : new MapSerializationProviderMap();
-    pParentOutputData.put(pName, new MapSerializationProviderMap.Entry(pType, map, pAnnotations));
+  @Nonnull
+  @Override
+  public Map<String, Object> serializeDynamicNode(
+      @Nullable Map<String, Object> pParentOutputData, @Nonnull String pName,
+      @Nonnull Class<? extends IPropertyPitProvider> pPropertyType, @Nullable List<? extends Annotation> pAnnotations,
+      @Nonnull ChildRunner<Map<String, Object>> pChildRunner)
+  {
+    if (pParentOutputData == null)
+      pParentOutputData = new LinkedHashMap<String, Object>();
+    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    pParentOutputData.put(pName, new Property(pPropertyType, null, map, pAnnotations));
+    pChildRunner.run(map);
+    return pParentOutputData;
+  }
 
-    if (map != null)
-      pChildRunner.run(map);
-
+  @Nonnull
+  @Override
+  public Map<String, Object> serializeDynamicNode(
+      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
+      @Nonnull Class<? extends IPropertyPitProvider> pPropertyType, @Nonnull Class<? extends IPropertyPitProvider> pType,
+      @Nullable List<? extends Annotation> pAnnotations, @Nonnull ChildRunner<Map<String, Object>> pChildRunner)
+  {
+    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    pParentOutputData.put(pName, new Property(pPropertyType, pType, map, pAnnotations));
+    pChildRunner.run(map);
     return pParentOutputData;
   }
 
   @Override
-  public void deserialize(
-      @Nonnull MapSerializationProviderMap pInputData, @Nonnull ChildAppender<MapSerializationProviderMap> pAppendChild)
+  public void serializeFixedValue(
+      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName, @Nullable Object pValue)
   {
-    for (Map.Entry<String, MapSerializationProviderMap.Entry> mapEntry : pInputData.entrySet())
+    pParentOutputData.put(pName, pValue);
+  }
+
+  @Override
+  public <V> void serializeDynamicValue(
+      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName, @Nonnull Class<? super V> pPropertyType,
+      @Nullable V pValue, @Nullable List<? extends Annotation> pAnnotations)
+  {
+    pParentOutputData.put(pName, new Property(pPropertyType, pValue, null, pAnnotations));
+  }
+
+
+  @Override
+  public void deserialize(
+      @Nonnull Map<String, Object> pInputData, @Nonnull ChildAppender<Map<String, Object>> pChildAppender)
+  {
+    for (Map.Entry<String, Object> mapEntry : pInputData.entrySet())
     {
       String name = mapEntry.getKey();
-      MapSerializationProviderMap.Entry entry = mapEntry.getValue();
+      Object mapValue = mapEntry.getValue();
 
-      Class type = entry.getType();
-      List<? extends Annotation> annotations = entry.getAnnotations();
-      Object value = entry.getValue();
-
-      if (IPropertyPitProvider.class.isAssignableFrom(type))
-        //noinspection unchecked
-        pAppendChild.appendNode((MapSerializationProviderMap) value, type, name, annotations);
-      else
-        pAppendChild.appendValue(type, name, annotations, value);
+      switch (pChildAppender.getChildType(name))
+      {
+        case FIXED_NODE:
+          if (mapValue instanceof Map)
+            //noinspection unchecked
+            pChildAppender.appendFixedNode((Map<String, Object>) mapValue, name);
+          else
+          {
+            Property prop = (Property) mapValue;
+            //noinspection unchecked
+            pChildAppender.appendFixedNode(prop.getChildren(), name, (Class) prop.getValue());
+          }
+          break;
+        case FIXED_VALUE:
+          pChildAppender.appendFixedValue(name, mapValue);
+          break;
+        case DYNAMIC:
+        default:
+          Property prop = (Property) mapValue;
+          Class type = prop.getType();
+          Object value = prop.getValue();
+          Map<String, Object> children = prop.getChildren();
+          List<? extends Annotation> annotations = prop.getAnnotations();
+          if (IPropertyPitProvider.class.isAssignableFrom(type))
+          {
+            if (prop.getValue() == null)
+              //noinspection unchecked
+              pChildAppender.appendDynamicNode(children, name, type, annotations);
+            else
+              //noinspection unchecked
+              pChildAppender.appendDynamicNode(children, name, type, (Class) value, annotations);
+          }
+          else
+            pChildAppender.appendDynamicValue(name, type, value, annotations);
+          break;
+      }
     }
   }
 
+
+  /**
+   * Value class for properties.
+   */
+  public static class Property
+  {
+    Class type;
+    Object value;
+    private Map<String, Object> children;
+    List<? extends Annotation> annotations;
+
+    public Property(Class pType, Object pValue, Map<String, Object> pChildren, List<? extends Annotation> pAnnotations)
+    {
+      type = pType;
+      value = pValue;
+      children = pChildren;
+      annotations = pAnnotations;
+    }
+
+    public Class getType()
+    {
+      return type;
+    }
+
+    public Object getValue()
+    {
+      return value;
+    }
+
+    public Map<String, Object> getChildren()
+    {
+      return children;
+    }
+
+    public List<? extends Annotation> getAnnotations()
+    {
+      return annotations;
+    }
+  }
 }

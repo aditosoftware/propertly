@@ -6,7 +6,7 @@ import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
 import java.lang.annotation.Annotation;
-import java.util.List;
+import java.util.*;
 
 /**
  * Can serialize and deserialize IPropertyPitProviders. Output format is dependent on used ISerializationProvider
@@ -31,12 +31,14 @@ public class Serializer<F>
   }
 
 
-  public F serialize(IHierarchy pHierarchy)
+  @Nonnull
+  public F serialize(@Nonnull IHierarchy pHierarchy)
   {
     return serialize(pHierarchy.getValue());
   }
 
-  public F serialize(IPropertyPitProvider<?, ?, ?> pPropertyPitProvider)
+  @Nonnull
+  public F serialize(@Nonnull IPropertyPitProvider<?, ?, ?> pPropertyPitProvider)
   {
     return _serialize(null, pPropertyPitProvider);
   }
@@ -46,11 +48,29 @@ public class Serializer<F>
     return _deserialize(pData, null);
   }
 
-  private F _serialize(F pOutputData, final IPropertyPitProvider<?, ?, ?> pPPP)
+  private F _serialize(F pOutputData, IPropertyPitProvider<?, ?, ?> pPPP)
   {
     ISerializationProvider.ChildRunner<F> childRunner = new _ChildRunner(pPPP);
-    IPropertyDescription<?, ? extends IPropertyPitProvider> descr = pPPP.getPit().getOwnProperty().getDescription();
-    return sp.serializeNode(pOutputData, descr.getType(), descr.getName(), descr.getAnnotations(), pPPP, childRunner);
+    IProperty<? extends IPropertyPitProvider, ? extends IPropertyPitProvider> property = pPPP.getPit().getOwnProperty();
+    IPropertyDescription<?, ? extends IPropertyPitProvider> descr = property.getDescription();
+    String name = descr.getName();
+    Class<? extends IPropertyPitProvider> type = descr.getType();
+    if (property.isDynamic())
+    {
+      List<? extends Annotation> annotations = descr.getAnnotations();
+      if (annotations.isEmpty())
+        annotations = null;
+      if (pPPP.getClass().equals(type))
+        return sp.serializeDynamicNode(pOutputData, name, type, annotations, childRunner);
+      return sp.serializeDynamicNode(
+          pOutputData, name, type, pPPP.getClass(), annotations, childRunner);
+    }
+    else
+    {
+      if (pPPP.getClass().equals(type))
+        return sp.serializeFixedNode(pOutputData, name, childRunner);
+      return sp.serializeFixedNode(pOutputData, name, pPPP.getClass(), childRunner);
+    }
   }
 
   private IPropertyPitProvider _deserialize(F pData, IProperty<?, IPropertyPitProvider> pProperty)
@@ -78,10 +98,19 @@ public class Serializer<F>
       for (IProperty property : ppp.getPit().getProperties())
       {
         IPropertyDescription descr = property.getDescription();
-        if (IPropertyPitProvider.class.isAssignableFrom(descr.getType()))
+        String name = descr.getName();
+        Class type = descr.getType();
+        if (IPropertyPitProvider.class.isAssignableFrom(type))
           _serialize(pOutputData, (IPropertyPitProvider<?, ?, ?>) property.getValue());
+        else if (property.isDynamic())
+        {
+          List<? extends Annotation> annotations = descr.getAnnotations();
+          if (annotations.isEmpty())
+            annotations = null;
+          sp.serializeDynamicValue(pOutputData, name, type, property.getValue(), annotations);
+        }
         else
-          sp.serializeValue(pOutputData, descr.getType(), descr.getName(), descr.getAnnotations(), property.getValue());
+          sp.serializeFixedValue(pOutputData, name, property.getValue());
       }
     }
   }
@@ -99,56 +128,120 @@ public class Serializer<F>
     }
 
     @Override
-    public void appendNode(@Nullable F pInputData, @Nonnull Class<? extends IPropertyPitProvider> pType,
-                           @Nonnull String pName, @Nullable List<? extends Annotation> pAnnotations)
+    public ISerializationProvider.EChildType getChildType(String pName)
     {
+      if (property != null)
+      {
+        IPropertyPitProvider<?, ?, ?> ppp = property.getValue();
+        if (ppp != null)
+        {
+          IProperty<? extends IPropertyPitProvider<?, ?, ?>, ?> childProperty =
+              ppp.getPit().findProperty(PropertyDescription.create(IPropertyPitProvider.class, Object.class, pName));
+          if (childProperty != null && !childProperty.isDynamic())
+            return IPropertyPitProvider.class.isAssignableFrom(childProperty.getType()) ?
+                ISerializationProvider.EChildType.FIXED_NODE : ISerializationProvider.EChildType.FIXED_VALUE;
+        }
+      }
+      return ISerializationProvider.EChildType.DYNAMIC;
+    }
+
+    @Override
+    public void appendFixedNode(
+        @Nonnull F pInputData, @Nonnull String pName)
+    {
+      _appendFixedNode(pInputData, pName, null);
+    }
+
+    @Override
+    public void appendFixedNode(
+        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pType)
+    {
+      _appendFixedNode(pInputData, pName, pType);
+    }
+
+    @Override
+    public void appendDynamicNode(
+        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+        @Nullable List<? extends Annotation> pAnnotations)
+    {
+      _appendDynamicNode(pInputData, pName, pPropertyType, null, pAnnotations);
+    }
+
+    @Override
+    public void appendDynamicNode(
+        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+        @Nonnull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations)
+    {
+      _appendDynamicNode(pInputData, pName, pPropertyType, pType, pAnnotations);
+    }
+
+    @Override
+    public void appendFixedValue(
+        @Nonnull String pName, @Nullable Object pValue)
+    {
+      IProperty<?, Object> prop = _getProperty(pName, Object.class);
+      prop.setValue(pValue);
+    }
+
+    @Override
+    public <V> void appendDynamicValue(
+        @Nonnull String pName, @Nonnull Class<V> pPropertyType, @Nullable V pValue,
+        @Nullable List<? extends Annotation> pAnnotations)
+    {
+      IMutablePropertyPitProvider<?, ?, ? super V> mppp = _getMutablePropertyPitProvider();
+      IProperty<?, V> prop = mppp.getPit().addProperty(pPropertyType, pName, pAnnotations);
+      prop.setValue(pValue);
+    }
+
+    private void _appendFixedNode(
+        @Nonnull F pInputData, @Nonnull String pName, @Nullable Class<? extends IPropertyPitProvider> pType)
+    {
+      IProperty<?, IPropertyPitProvider> prop = _getProperty(pName, IPropertyPitProvider.class);
+      prop.setValue(PropertlyUtility.create(pType == null ? prop.getType() : pType));
+      _deserialize(pInputData, prop);
+    }
+
+    public void _appendDynamicNode(
+        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+        @Nullable Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations)
+    {
+      IPropertyPitProvider<?, ?, IPropertyPitProvider> ppp = PropertlyUtility.create(pType == null ? pPropertyType : pType);
       if (property == null)
       {
-        assert IPropertyPitProvider.class.isAssignableFrom(pType);
-        property = new Hierarchy<IPropertyPitProvider>(pName, PropertlyUtility.create(pType)).getProperty();
+        Hierarchy<IPropertyPitProvider> hierarchy = new Hierarchy<IPropertyPitProvider>(pName, ppp);
+        property = hierarchy.getProperty();
         _deserialize(pInputData, property);
       }
       else
       {
-        IProperty<?, IPropertyPitProvider> property = _put(pType, pName, pAnnotations, null);
-        _deserialize(pInputData, property);
+        IMutablePropertyPitProvider<?, ?, ? super IPropertyPitProvider> mppp = _getMutablePropertyPitProvider();
+        IProperty<?, IPropertyPitProvider> prop =
+            (IProperty<?, IPropertyPitProvider>) mppp.getPit().addProperty(pPropertyType, pName, pAnnotations);
+        prop.setValue(ppp);
+        _deserialize(pInputData, prop);
       }
     }
 
-    @Override
-    public <V> void appendValue(@Nonnull Class<V> pType, @Nonnull String pName,
-                                @Nullable List<? extends Annotation> pAnnotations, @Nullable V pValue)
+    private IMutablePropertyPitProvider _getMutablePropertyPitProvider()
     {
-      _put(pType, pName, pAnnotations, pValue);
+      return (IMutablePropertyPitProvider) _getPropertyPitProvider();
     }
 
-    private <T> IProperty<?, T> _put(@Nonnull Class<? extends T> pType, @Nonnull String pName,
-                                     @Nullable List<? extends Annotation> pAnnotations, @Nullable T pValue)
+    @Nonnull
+    private IPropertyPitProvider _getPropertyPitProvider()
     {
-      assert property != null;
-      IPropertyPitProvider<?, ?, ?> ppp = property.getValue();
-      if (ppp == null)
-      {
-        property.setValue(PropertlyUtility.create(property.getType()));
-        ppp = property.getValue();
-      }
+      Objects.requireNonNull(property);
+      IPropertyPitProvider ppp = property.getValue();
+      Objects.requireNonNull(ppp);
+      return ppp;
+    }
 
-      IPropertyPit<? extends IPropertyPitProvider, ? extends IPropertyPitProvider, ?> pit = ppp.getPit();
-      IPropertyDescription<?, T> pd = PropertyDescription.create(IPropertyPitProvider.class, pType, pName, pAnnotations);
-      IProperty<?, T> property = pit.findProperty(pd);
-      if (property == null)
-      {
-        if (pit instanceof IMutablePropertyPit)
-        {
-          pd = PropertyDescription.create(pit.getOwnProperty().getType(), pType, pName, pAnnotations);
-          //noinspection unchecked
-          property = ((IMutablePropertyPit) pit).addProperty(pd);
-        }
-        else
-          throw new RuntimeException("can't restore property: " + pd);
-      }
-      property.setValue(pValue);
-      return property;
+    @Nonnull
+    private <T> IProperty<?, T> _getProperty(String pName, Class<T> pType)
+    {
+      IPropertyPitProvider ppp = _getPropertyPitProvider();
+      IPropertyDescription<?, T> pd = PropertyDescription.create(IPropertyPitProvider.class, pType, pName);
+      return ppp.getPit().getProperty(pd);
     }
   }
 
