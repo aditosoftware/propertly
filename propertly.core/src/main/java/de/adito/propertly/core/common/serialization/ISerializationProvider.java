@@ -16,23 +16,23 @@ public interface ISerializationProvider<F>
 
   @Nonnull
   F serializeFixedNode(
-      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull ChildRunner<F> pChildRunner);
+      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull IChildRunner<F> pChildRunner);
 
   @Nonnull
   F serializeFixedNode(
       @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pType,
-      @Nonnull ChildRunner<F> pChildRunner);
+      @Nonnull IChildRunner<F> pChildRunner);
 
   @Nonnull
   F serializeDynamicNode(
       @Nullable F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
-      @Nullable List<? extends Annotation> pAnnotations, @Nonnull ChildRunner<F> pChildRunner);
+      @Nullable List<? extends Annotation> pAnnotations, @Nonnull IChildRunner<F> pChildRunner);
 
   @Nonnull
   F serializeDynamicNode(
       @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
       @Nonnull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations,
-      @Nonnull ChildRunner<F> pChildRunner);
+      @Nonnull IChildRunner<F> pChildRunner);
 
   void serializeFixedValue(
       @Nonnull F pParentOutputData, @Nonnull String pName, @Nullable Object pValue);
@@ -42,13 +42,13 @@ public interface ISerializationProvider<F>
       @Nullable List<? extends Annotation> pAnnotations);
 
 
-  void deserialize(@Nonnull F pInputData, @Nonnull ChildAppender<F> pChildAppender);
+  void deserialize(@Nonnull F pInputData, @Nonnull IChildAppender<F> pChildAppender);
 
 
   /**
    * @param <F>
    */
-  interface ChildRunner<F>
+  interface IChildRunner<F>
   {
     void run(@Nonnull F pOutputData);
   }
@@ -56,9 +56,10 @@ public interface ISerializationProvider<F>
   /**
    * @param <F>
    */
-  interface ChildAppender<F>
+  interface IChildAppender<F>
   {
-    EChildType getChildType(String pName);
+    @Nonnull
+    IChildDetail getChildDetail(@Nonnull String pName);
 
     void appendFixedNode(
         @Nonnull F pInputData, @Nonnull String pName);
@@ -82,7 +83,16 @@ public interface ISerializationProvider<F>
         @Nullable List<? extends Annotation> pAnnotations);
   }
 
-  enum EChildType
+  interface IChildDetail
+  {
+    @Nonnull
+    EChildCategory getCategory();
+
+    @Nonnull
+    Class getType();
+  }
+
+  enum EChildCategory
   {
     FIXED_VALUE,
     FIXED_NODE,

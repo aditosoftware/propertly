@@ -43,14 +43,15 @@ public class Serializer<F>
     return _serialize(null, pPropertyPitProvider);
   }
 
-  public IPropertyPitProvider deserialize(F pData)
+  @Nonnull
+  public IPropertyPitProvider deserialize(@Nonnull F pData)
   {
     return _deserialize(pData, null);
   }
 
   private F _serialize(F pOutputData, IPropertyPitProvider<?, ?, ?> pPPP)
   {
-    ISerializationProvider.ChildRunner<F> childRunner = new _ChildRunner(pPPP);
+    ISerializationProvider.IChildRunner<F> childRunner = new _ChildRunner(pPPP);
     IProperty<? extends IPropertyPitProvider, ? extends IPropertyPitProvider> property = pPPP.getPit().getOwnProperty();
     IPropertyDescription<?, ? extends IPropertyPitProvider> descr = property.getDescription();
     String name = descr.getName();
@@ -83,7 +84,7 @@ public class Serializer<F>
   /**
    * ChildRunner implementation.
    */
-  private class _ChildRunner implements ISerializationProvider.ChildRunner<F>
+  private class _ChildRunner implements ISerializationProvider.IChildRunner<F>
   {
     private IPropertyPitProvider<?, ?, ?> ppp;
 
@@ -118,7 +119,7 @@ public class Serializer<F>
   /**
    * ChildAppender implementation.
    */
-  private class _ChildAppender implements ISerializationProvider.ChildAppender<F>
+  private class _ChildAppender implements ISerializationProvider.IChildAppender<F>
   {
     IProperty<?, IPropertyPitProvider> property;
 
@@ -127,8 +128,9 @@ public class Serializer<F>
       property = pProperty;
     }
 
+    @Nonnull
     @Override
-    public ISerializationProvider.EChildType getChildType(String pName)
+    public ISerializationProvider.IChildDetail getChildDetail(@Nonnull String pName)
     {
       if (property != null)
       {
@@ -138,11 +140,15 @@ public class Serializer<F>
           IProperty<? extends IPropertyPitProvider<?, ?, ?>, ?> childProperty =
               ppp.getPit().findProperty(PropertyDescription.create(IPropertyPitProvider.class, Object.class, pName));
           if (childProperty != null && !childProperty.isDynamic())
-            return IPropertyPitProvider.class.isAssignableFrom(childProperty.getType()) ?
-                ISerializationProvider.EChildType.FIXED_NODE : ISerializationProvider.EChildType.FIXED_VALUE;
+          {
+            Class<?> type = childProperty.getType();
+            return new _ChildDetail(IPropertyPitProvider.class.isAssignableFrom(type) ?
+                                        ISerializationProvider.EChildCategory.FIXED_NODE :
+                                        ISerializationProvider.EChildCategory.FIXED_VALUE, type);
+          }
         }
       }
-      return ISerializationProvider.EChildType.DYNAMIC;
+      return new _ChildDetail(ISerializationProvider.EChildCategory.DYNAMIC, Object.class);
     }
 
     @Override
@@ -242,6 +248,35 @@ public class Serializer<F>
       IPropertyPitProvider ppp = _getPropertyPitProvider();
       IPropertyDescription<?, T> pd = PropertyDescription.create(IPropertyPitProvider.class, pType, pName);
       return ppp.getPit().getProperty(pd);
+    }
+  }
+
+  /**
+   * IChildDetail implementation
+   */
+  private static class _ChildDetail implements ISerializationProvider.IChildDetail
+  {
+    private ISerializationProvider.EChildCategory category;
+    private Class type;
+
+    public _ChildDetail(ISerializationProvider.EChildCategory pCategory, Class pType)
+    {
+      category = pCategory;
+      type = pType;
+    }
+
+    @Nonnull
+    @Override
+    public ISerializationProvider.EChildCategory getCategory()
+    {
+      return category;
+    }
+
+    @Nonnull
+    @Override
+    public Class getType()
+    {
+      return type;
     }
   }
 
