@@ -101,17 +101,18 @@ public class Serializer<F>
         IPropertyDescription descr = property.getDescription();
         String name = descr.getName();
         Class type = descr.getType();
+        Object value = property.getValue();
         if (IPropertyPitProvider.class.isAssignableFrom(type))
-          _serialize(pOutputData, (IPropertyPitProvider<?, ?, ?>) property.getValue());
+          _serialize(pOutputData, (IPropertyPitProvider<?, ?, ?>) value);
         else if (property.isDynamic())
         {
           List<? extends Annotation> annotations = descr.getAnnotations();
           if (annotations.isEmpty())
             annotations = null;
-          sp.serializeDynamicValue(pOutputData, name, type, property.getValue(), annotations);
+          sp.serializeDynamicValue(pOutputData, name, type, value, annotations);
         }
-        else
-          sp.serializeFixedValue(pOutputData, name, property.getValue());
+        else if (value != null)
+          sp.serializeFixedValue(pOutputData, name, value);
       }
     }
   }

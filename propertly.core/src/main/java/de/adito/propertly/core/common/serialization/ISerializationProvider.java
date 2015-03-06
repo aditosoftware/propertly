@@ -35,7 +35,7 @@ public interface ISerializationProvider<F>
       @Nonnull IChildRunner<F> pChildRunner);
 
   void serializeFixedValue(
-      @Nonnull F pParentOutputData, @Nonnull String pName, @Nullable Object pValue);
+      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Object pValue);
 
   <V> void serializeDynamicValue(
       @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? super V> pPropertyType, @Nullable V pValue,

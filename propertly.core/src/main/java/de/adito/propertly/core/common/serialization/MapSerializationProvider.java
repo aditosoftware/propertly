@@ -68,7 +68,7 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
 
   @Override
   public void serializeFixedValue(
-      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName, @Nullable Object pValue)
+      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName, @Nonnull Object pValue)
   {
     pParentOutputData.put(pName, pValue);
   }

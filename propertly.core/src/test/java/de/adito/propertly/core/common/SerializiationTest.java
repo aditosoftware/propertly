@@ -2,9 +2,11 @@ package de.adito.propertly.core.common;
 
 import de.adito.propertly.core.api.Hierarchy;
 import de.adito.propertly.core.common.serialization.*;
+import de.adito.propertly.core.common.serialization.xml.XMLSerializationProvider;
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.test.core.impl.*;
 import org.junit.*;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -36,6 +38,14 @@ public class SerializiationTest
 
     Map<String, Object> serialize = mapSerializer.serialize(hierarchy);
     IPropertyPitProvider deserialize = mapSerializer.deserialize(serialize);
+
+    Assert.assertEquals(PropertlyDebug.toTreeString(tProperty),
+                        PropertlyDebug.toTreeString(deserialize));
+
+
+    Serializer<Element> xmlSerializer = Serializer.create(new XMLSerializationProvider());
+    Document document = xmlSerializer.serialize(hierarchy).getOwnerDocument();
+    deserialize = xmlSerializer.deserialize(document.getDocumentElement());
 
     Assert.assertEquals(PropertlyDebug.toTreeString(tProperty),
                         PropertlyDebug.toTreeString(deserialize));
