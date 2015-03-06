@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author j.boesl, 27.02.15
  */
-public class SerializiationTest
+public class SerializationTest
 {
 
   @Test
