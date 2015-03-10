@@ -1,5 +1,6 @@
 package de.adito.propertly.core.common.serialization.structuredescription;
 
+import de.adito.propertly.core.api.Hierarchy;
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
 
@@ -44,7 +45,8 @@ public class StructureDescriptor
         }
       }
     }
-    _collect(pMap, subClasses);
+    if (!subClasses.isEmpty())
+      _collect(pMap, subClasses);
   }
 
   private class _PPPDescription implements IPPPDescription
@@ -53,7 +55,7 @@ public class StructureDescriptor
 
     public _PPPDescription(Class<? extends IPropertyPitProvider> pType)
     {
-      ppp = PropertlyUtility.create(pType);
+      ppp = new Hierarchy<IPropertyPitProvider>("", PropertlyUtility.create(pType)).getValue();
     }
 
     @Override
