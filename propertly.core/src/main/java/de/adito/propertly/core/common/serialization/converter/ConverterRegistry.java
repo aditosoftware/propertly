@@ -24,9 +24,11 @@ public class ConverterRegistry
          new DoubleStringConverter(),
          new EnumStringConverter(),
          new FloatStringConverter(),
+         new FontStringConverter(),
          new IntegerStringConverter(),
          new LongStringConverter(),
          new ShortStringConverter(),
+         new StringStringConverter(),
          new TypePPPStringConverter());
   }
 
