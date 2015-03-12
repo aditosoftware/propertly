@@ -22,7 +22,7 @@ public class StructureDescriptor
   public String getStructureDescription(Iterable<Class<? extends IPropertyPitProvider>> pPPPClasses)
   {
     Map<Class<? extends IPropertyPitProvider>, IPPPDescription> map =
-        new HashMap<Class<? extends IPropertyPitProvider>, IPPPDescription>();
+        new LinkedHashMap<Class<? extends IPropertyPitProvider>, IPPPDescription>();
     _collect(map, pPPPClasses);
     return descriptionProvider.getSerializationDescription(map);
   }
