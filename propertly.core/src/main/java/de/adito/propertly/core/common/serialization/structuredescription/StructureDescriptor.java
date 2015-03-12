@@ -1,7 +1,6 @@
 package de.adito.propertly.core.common.serialization.structuredescription;
 
-import de.adito.propertly.core.api.Hierarchy;
-import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.common.PPPIntrospector;
 import de.adito.propertly.core.spi.*;
 
 import java.util.*;
@@ -42,6 +41,14 @@ public class StructureDescriptor
           if (IPropertyPitProvider.class.isAssignableFrom(description.getType()))
             //noinspection unchecked
             subClasses.add(description.getType());
+          if (IMutablePropertyPitProvider.class.isAssignableFrom(description.getType()))
+          {
+            //noinspection unchecked
+            Class<?> childType = PPPIntrospector.getChildType(description.getType());
+            if (IPropertyPitProvider.class.isAssignableFrom(childType))
+              //noinspection unchecked
+              subClasses.add((Class<? extends IPropertyPitProvider>) childType);
+          }
         }
       }
     }
@@ -51,36 +58,35 @@ public class StructureDescriptor
 
   private class _PPPDescription implements IPPPDescription
   {
-    private IPropertyPitProvider ppp;
+    private Class<? extends IPropertyPitProvider> type;
 
     public _PPPDescription(Class<? extends IPropertyPitProvider> pType)
     {
-      ppp = new Hierarchy<IPropertyPitProvider>("", PropertlyUtility.create(pType)).getValue();
+      type = pType;
     }
 
     @Override
     public Class<? extends IPropertyPitProvider> getType()
     {
-      return ppp.getClass();
+      return type;
     }
 
     @Override
     public Class getAllowedSubType()
     {
-      return isMutable() ? ((IMutablePropertyPitProvider) ppp).getPit().getChildType() : Object.class;
+      return PPPIntrospector.getChildType(type);
     }
 
     @Override
     public boolean isMutable()
     {
-      return ppp instanceof IMutablePropertyPitProvider;
+      return IMutablePropertyPitProvider.class.isAssignableFrom(type);
     }
 
     @Override
     public Set<IPropertyDescription> getPropertyDescriptions()
     {
-      //noinspection unchecked
-      return ppp.getPit().getPropertyDescriptions();
+      return PPPIntrospector.get(type);
     }
   }
 
