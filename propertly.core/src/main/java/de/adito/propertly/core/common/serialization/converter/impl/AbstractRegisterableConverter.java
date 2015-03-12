@@ -1,6 +1,6 @@
 package de.adito.propertly.core.common.serialization.converter.impl;
 
-import de.adito.propertly.core.common.serialization.converter.ITypeStringConverter;
+import de.adito.propertly.core.common.serialization.converter.*;
 
 import javax.annotation.*;
 import java.util.*;
@@ -13,6 +13,15 @@ public abstract class AbstractRegisterableConverter<T> implements ITypeStringCon
 
   private Map<Class<? extends T>, String> map = new HashMap<Class<? extends T>, String>();
   private Map<String, Class<? extends T>> reverseMap = new HashMap<String, Class<? extends T>>();
+
+  public void register(Class<? extends T> pCls)
+  {
+    TypeStringConverterRegistration a = pCls.getAnnotation(TypeStringConverterRegistration.class);
+    if (a != null)
+      register(pCls, a.value());
+    else
+      register(pCls, pCls.getSimpleName());
+  }
 
   public void register(Class<? extends T> pCls, String pRepresentation)
   {
