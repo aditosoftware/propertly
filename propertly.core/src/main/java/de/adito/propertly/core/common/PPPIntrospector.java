@@ -2,11 +2,9 @@ package de.adito.propertly.core.common;
 
 import de.adito.propertly.core.api.PropertyDescription;
 import de.adito.propertly.core.common.exception.WrongModifiersException;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -20,9 +18,43 @@ public class PPPIntrospector
 {
 
   private static final Map<Class, Set<IPropertyDescription>> ALREADY_KNOWN = new LinkedHashMap<Class, Set<IPropertyDescription>>();
+  private static final Map<Class<? extends IPropertyPitProvider>, Class> CHILD_TYPES = new HashMap<Class<? extends IPropertyPitProvider>, Class>();
 
   private PPPIntrospector()
   {
+  }
+
+  /**
+   * Resolves the child type for an IPropertyPitProvider class.
+   *
+   * @param pCls an IPropertyPitProvider implementation.
+   * @return the child type.
+   */
+  public static Class<?> getChildType(Class<? extends IPropertyPitProvider> pCls)
+  {
+    Class<?> childType = CHILD_TYPES.get(pCls);
+    if (childType == null)
+    {
+      if (IMutablePropertyPitProvider.class.isAssignableFrom(pCls))
+      {
+        try
+        {
+          IMutablePropertyPitProvider mppp = (IMutablePropertyPitProvider) PropertlyUtility.create(pCls);
+          childType = mppp.getPit().getChildType();
+        }
+        catch (Exception e)
+        {
+          childType = Object.class;
+        }
+      }
+      else if (IPropertyPitProvider.class.isAssignableFrom(pCls))
+        childType = Object.class;
+      else
+        throw new IllegalArgumentException("invalid class: " + pCls);
+
+      CHILD_TYPES.put(pCls, childType);
+    }
+    return childType;
   }
 
   /**
