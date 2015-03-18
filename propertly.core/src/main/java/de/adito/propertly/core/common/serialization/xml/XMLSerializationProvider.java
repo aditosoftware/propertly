@@ -7,13 +7,17 @@ import org.w3c.dom.*;
 
 import javax.annotation.*;
 import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
  * @author j.boesl, 28.02.15
  */
-public class XMLSerializationProvider implements ISerializationProvider<Element>
+public class XMLSerializationProvider implements ISerializationProvider<Document, Element>
 {
 
   private final ConverterRegistry converterRegistry;
@@ -22,6 +26,45 @@ public class XMLSerializationProvider implements ISerializationProvider<Element>
   public XMLSerializationProvider()
   {
     converterRegistry = new ConverterRegistry();
+  }
+
+  public static String toString(Element pElement) throws TransformerException
+  {
+    return toString(pElement.getOwnerDocument());
+  }
+
+  public static String toString(Document pDocument) throws TransformerException
+  {
+    Transformer transformer = TransformerFactory.newInstance().newTransformer();
+    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+    StreamResult result = new StreamResult(new StringWriter());
+    DOMSource source = new DOMSource(pDocument);
+    transformer.transform(source, result);
+    return result.getWriter().toString();
+  }
+
+  @Nonnull
+  @Override
+  public Document serializeRootNode(
+      @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+      @Nonnull IChildRunner<Element> pChildRunner)
+  {
+    try
+    {
+      DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+      Document document = docBuilder.newDocument();
+      Element element = document.createElement(converterRegistry.typeToString(pPropertyType));
+      element.setAttribute("name", pName);
+      document.appendChild(element);
+      pChildRunner.run(element);
+      return document;
+    }
+    catch (ParserConfigurationException e)
+    {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
@@ -44,39 +87,17 @@ public class XMLSerializationProvider implements ISerializationProvider<Element>
     pChildRunner.run(element);
   }
 
-  @Nonnull
   @Override
-  public Element serializeDynamicNode(
-      @Nullable Element pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+  public void serializeDynamicNode(
+      @Nonnull Element pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
       @Nullable List<? extends Annotation> pAnnotations, @Nonnull IChildRunner<Element> pChildRunner)
   {
-    Element element;
-    if (pParentOutputData == null)
-    {
-      try
-      {
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        Document document = docBuilder.newDocument();
-        pParentOutputData = document.createElement(converterRegistry.typeToString(pPropertyType));
-        document.appendChild(pParentOutputData);
-        element = pParentOutputData;
-      }
-      catch (ParserConfigurationException e)
-      {
-        throw new RuntimeException(e);
-      }
-    }
-    else
-    {
-      element = pParentOutputData.getOwnerDocument().createElement(converterRegistry.typeToString(pPropertyType));
-      pParentOutputData.appendChild(element);
-    }
+    Element element = pParentOutputData.getOwnerDocument().createElement(converterRegistry.typeToString(pPropertyType));
+    pParentOutputData.appendChild(element);
     element.setAttribute("name", pName);
     if (pAnnotations != null && !pAnnotations.isEmpty())
       element.setAttribute("annotations", pAnnotations.toString());
     pChildRunner.run(element);
-    return pParentOutputData;
   }
 
   @Override
@@ -121,26 +142,22 @@ public class XMLSerializationProvider implements ISerializationProvider<Element>
 
 
   @Override
-  public void deserialize(@Nonnull Element pInputData, @Nonnull IChildAppender<Element> pAppendChild)
+  public void deserializeRoot(@Nonnull Document pRootData, @Nonnull IChildAppender<Element> pChildAppender)
   {
-    if (pInputData.getOwnerDocument().getDocumentElement().equals(pInputData) && !pInputData.hasAttribute("visited"))
+    _deserialize(pRootData.getDocumentElement(), pChildAppender);
+  }
+
+  @Override
+  public void deserializeChild(@Nonnull Element pInputData, @Nonnull IChildAppender<Element> pChildAppender)
+  {
+    NodeList childNodes = pInputData.getChildNodes();
+    for (int i = 0; i < childNodes.getLength(); i++)
     {
-      // workaround :/
-      pInputData.setAttribute("visited", "true");
-      _deserialize(pInputData, pAppendChild);
-      pInputData.removeAttribute("visited");
-    }
-    else
-    {
-      NodeList childNodes = pInputData.getChildNodes();
-      for (int i = 0; i < childNodes.getLength(); i++)
+      Node node = childNodes.item(i);
+      if (node instanceof Element)
       {
-        Node node = childNodes.item(i);
-        if (node instanceof Element)
-        {
-          Element e = (Element) node;
-          _deserialize(e, pAppendChild);
-        }
+        Element e = (Element) node;
+        _deserialize(e, pChildAppender);
       }
     }
   }

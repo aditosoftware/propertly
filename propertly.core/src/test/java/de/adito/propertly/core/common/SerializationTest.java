@@ -6,7 +6,7 @@ import de.adito.propertly.core.common.serialization.xml.XMLSerializationProvider
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.test.core.impl.*;
 import org.junit.*;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -43,9 +43,9 @@ public class SerializationTest
                         PropertlyDebug.toTreeString(deserialize));
 
 
-    Serializer<Element> xmlSerializer = Serializer.create(new XMLSerializationProvider());
-    Document document = xmlSerializer.serialize(hierarchy).getOwnerDocument();
-    deserialize = xmlSerializer.deserialize(document.getDocumentElement());
+    Serializer<Document> xmlSerializer = Serializer.create(new XMLSerializationProvider());
+    Document document = xmlSerializer.serialize(hierarchy);
+    deserialize = xmlSerializer.deserialize(document);
 
     Assert.assertEquals(PropertlyDebug.toTreeString(tProperty),
                         PropertlyDebug.toTreeString(deserialize));

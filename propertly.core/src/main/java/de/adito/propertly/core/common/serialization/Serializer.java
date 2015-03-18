@@ -14,79 +14,49 @@ import java.util.*;
  *
  * @author j.boesl, 27.02.15
  */
-public class Serializer<F>
+public class Serializer<T>
 {
 
-  public static <F> Serializer<F> create(ISerializationProvider<F> pSerializationProvider)
+  public static <T> Serializer<T> create(ISerializationProvider<T, ?> pSerializationProvider)
   {
-    return new Serializer<F>(pSerializationProvider);
+    return new Serializer<T>(pSerializationProvider);
   }
 
 
-  private ISerializationProvider<F> sp;
+  private ISerializationProvider<T, ?> sp;
 
-  Serializer(ISerializationProvider<F> pSerializationProvider)
+  Serializer(ISerializationProvider<T, ?> pSerializationProvider)
   {
     sp = pSerializationProvider;
   }
 
 
   @Nonnull
-  public F serialize(@Nonnull IHierarchy pHierarchy)
+  public T serialize(@Nonnull IHierarchy pHierarchy)
   {
     return serialize(pHierarchy.getValue());
   }
 
   @Nonnull
-  public F serialize(@Nonnull IPropertyPitProvider<?, ?, ?> pPropertyPitProvider)
+  public T serialize(@Nonnull IPropertyPitProvider<?, ?, ?> pPropertyPitProvider)
   {
-    return _serialize(null, pPropertyPitProvider);
+    ISerializationProvider.IChildRunner childRunner = new _ChildRunner(pPropertyPitProvider);
+    return sp.serializeRootNode(
+        pPropertyPitProvider.getPit().getOwnProperty().getName(), pPropertyPitProvider.getClass(), childRunner);
   }
 
   @Nonnull
-  public IPropertyPitProvider deserialize(@Nonnull F pData)
+  public IPropertyPitProvider deserialize(@Nonnull T pData)
   {
-    return _deserialize(pData, null);
-  }
-
-  private F _serialize(F pOutputData, IPropertyPitProvider<?, ?, ?> pPPP)
-  {
-    ISerializationProvider.IChildRunner<F> childRunner = new _ChildRunner(pPPP);
-    IProperty<? extends IPropertyPitProvider, ? extends IPropertyPitProvider> property = pPPP.getPit().getOwnProperty();
-    IPropertyDescription<?, ? extends IPropertyPitProvider> descr = property.getDescription();
-    String name = descr.getName();
-    Class<? extends IPropertyPitProvider> type = descr.getType();
-    if (property.isDynamic())
-    {
-      List<? extends Annotation> annotations = descr.getAnnotations();
-      if (annotations.isEmpty())
-        annotations = null;
-      if (pPPP.getClass().equals(type))
-        return sp.serializeDynamicNode(pOutputData, name, type, annotations, childRunner);
-      sp.serializeDynamicNode(pOutputData, name, type, pPPP.getClass(), annotations, childRunner);
-      return pOutputData;
-    }
-    else
-    {
-      if (pPPP.getClass().equals(type))
-        sp.serializeFixedNode(pOutputData, name, childRunner);
-      else
-        sp.serializeFixedNode(pOutputData, name, pPPP.getClass(), childRunner);
-      return pOutputData;
-    }
-  }
-
-  private IPropertyPitProvider _deserialize(F pData, IProperty<?, IPropertyPitProvider> pProperty)
-  {
-    _ChildAppender childAppender = new _ChildAppender(pProperty);
-    sp.deserialize(pData, childAppender);
+    _ChildAppender<?> childAppender = new _ChildAppender(null);
+    sp.deserializeRoot(pData, (_ChildAppender) childAppender);
     return childAppender.property.getValue();
   }
 
   /**
    * ChildRunner implementation.
    */
-  private class _ChildRunner implements ISerializationProvider.IChildRunner<F>
+  private class _ChildRunner<F> implements ISerializationProvider.IChildRunner<F>
   {
     private IPropertyPitProvider<?, ?, ?> ppp;
 
@@ -111,18 +81,52 @@ public class Serializer<F>
           List<? extends Annotation> annotations = descr.getAnnotations();
           if (annotations.isEmpty())
             annotations = null;
-          sp.serializeDynamicValue(pOutputData, name, type, value, annotations);
+          _getSerializationProvider().serializeDynamicValue(pOutputData, name, type, value, annotations);
         }
         else if (value != null)
-          sp.serializeFixedValue(pOutputData, name, value);
+          _getSerializationProvider().serializeFixedValue(pOutputData, name, value);
       }
+    }
+
+    private F _serialize(F pOutputData, IPropertyPitProvider<?, ?, ?> pPPP)
+    {
+      IProperty<? extends IPropertyPitProvider, ? extends IPropertyPitProvider> property = pPPP.getPit().getOwnProperty();
+      IPropertyDescription<?, ? extends IPropertyPitProvider> descr = property.getDescription();
+      String name = descr.getName();
+      Class<? extends IPropertyPitProvider> type = descr.getType();
+
+      ISerializationProvider.IChildRunner childRunner = new _ChildRunner(pPPP);
+      if (property.isDynamic())
+      {
+        List<? extends Annotation> annotations = descr.getAnnotations();
+        if (annotations.isEmpty())
+          annotations = null;
+        if (pPPP.getClass().equals(type))
+          _getSerializationProvider().serializeDynamicNode(pOutputData, name, type, annotations, childRunner);
+        else
+          _getSerializationProvider().serializeDynamicNode(pOutputData, name, type, pPPP.getClass(), annotations, childRunner);
+        return pOutputData;
+      }
+      else
+      {
+        if (pPPP.getClass().equals(type))
+          _getSerializationProvider().serializeFixedNode(pOutputData, name, childRunner);
+        else
+          _getSerializationProvider().serializeFixedNode(pOutputData, name, pPPP.getClass(), childRunner);
+        return pOutputData;
+      }
+    }
+
+    private ISerializationProvider<T, F> _getSerializationProvider()
+    {
+      return (ISerializationProvider<T, F>) sp;
     }
   }
 
   /**
    * ChildAppender implementation.
    */
-  private class _ChildAppender implements ISerializationProvider.IChildAppender<F>
+  private class _ChildAppender<F> implements ISerializationProvider.IChildAppender<F>
   {
     IProperty<?, IPropertyPitProvider> property;
 
@@ -235,6 +239,13 @@ public class Serializer<F>
         prop.setValue(ppp);
         _deserialize(pInputData, prop);
       }
+    }
+
+    private <F> IPropertyPitProvider _deserialize(F pData, IProperty<?, IPropertyPitProvider> pProperty)
+    {
+      _ChildAppender<F> childAppender = new _ChildAppender<F>(pProperty);
+      ((ISerializationProvider<T, F>) sp).deserializeChild(pData, childAppender);
+      return childAppender.property.getValue();
     }
 
     private IMutablePropertyPitProvider _getMutablePropertyPitProvider()

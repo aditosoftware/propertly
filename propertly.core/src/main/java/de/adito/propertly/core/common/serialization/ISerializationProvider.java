@@ -11,8 +11,13 @@ import java.util.List;
  *
  * @author j.boesl, 27.02.15
  */
-public interface ISerializationProvider<F>
+public interface ISerializationProvider<T, F>
 {
+
+  @Nonnull
+  T serializeRootNode(
+      @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+      @Nonnull IChildRunner<F> pChildRunner);
 
   void serializeFixedNode(
       @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull IChildRunner<F> pChildRunner);
@@ -21,9 +26,8 @@ public interface ISerializationProvider<F>
       @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pType,
       @Nonnull IChildRunner<F> pChildRunner);
 
-  @Nonnull
-  F serializeDynamicNode(
-      @Nullable F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+  void serializeDynamicNode(
+      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
       @Nullable List<? extends Annotation> pAnnotations, @Nonnull IChildRunner<F> pChildRunner);
 
   void serializeDynamicNode(
@@ -39,7 +43,9 @@ public interface ISerializationProvider<F>
       @Nullable List<? extends Annotation> pAnnotations);
 
 
-  void deserialize(@Nonnull F pInputData, @Nonnull IChildAppender<F> pChildAppender);
+  void deserializeRoot(@Nonnull T pRootData, @Nonnull IChildAppender<F> pChildAppender);
+
+  void deserializeChild(@Nonnull F pInputData, @Nonnull IChildAppender<F> pChildAppender);
 
 
   /**

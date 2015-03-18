@@ -11,8 +11,21 @@ import java.util.*;
  *
  * @author j.boesl, 27.02.15
  */
-public class MapSerializationProvider implements ISerializationProvider<Map<String, Object>>
+public class MapSerializationProvider implements ISerializationProvider<Map<String, Object>, Map<String, Object>>
 {
+
+  @Nonnull
+  @Override
+  public Map<String, Object> serializeRootNode(
+      @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+      @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
+  {
+    LinkedHashMap<String, Object> root = new LinkedHashMap<String, Object>();
+    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    root.put(pName, new Property(pPropertyType, null, map, null));
+    pChildRunner.run(map);
+    return root;
+  }
 
   @Override
   public void serializeFixedNode(
@@ -34,19 +47,15 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
     pChildRunner.run(map);
   }
 
-  @Nonnull
   @Override
-  public Map<String, Object> serializeDynamicNode(
-      @Nullable Map<String, Object> pParentOutputData, @Nonnull String pName,
+  public void serializeDynamicNode(
+      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
       @Nonnull Class<? extends IPropertyPitProvider> pPropertyType, @Nullable List<? extends Annotation> pAnnotations,
       @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
   {
-    if (pParentOutputData == null)
-      pParentOutputData = new LinkedHashMap<String, Object>();
     Map<String, Object> map = new LinkedHashMap<String, Object>();
     pParentOutputData.put(pName, new Property(pPropertyType, null, map, pAnnotations));
     pChildRunner.run(map);
-    return pParentOutputData;
   }
 
   @Override
@@ -77,7 +86,13 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
 
 
   @Override
-  public void deserialize(
+  public void deserializeRoot(@Nonnull Map<String, Object> pInputData, @Nonnull IChildAppender<Map<String, Object>> pChildAppender)
+  {
+    deserializeChild(pInputData, pChildAppender);
+  }
+
+  @Override
+  public void deserializeChild(
       @Nonnull Map<String, Object> pInputData, @Nonnull IChildAppender<Map<String, Object>> pChildAppender)
   {
     for (Map.Entry<String, Object> mapEntry : pInputData.entrySet())
