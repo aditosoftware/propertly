@@ -135,6 +135,7 @@ public class Serializer<F>
     @Override
     public ISerializationProvider.IChildDetail getChildDetail(@Nonnull String pName)
     {
+      Class<?> type = Object.class;
       if (property != null)
       {
         IPropertyPitProvider<?, ?, ?> ppp = property.getValue();
@@ -142,16 +143,21 @@ public class Serializer<F>
         {
           IProperty<? extends IPropertyPitProvider<?, ?, ?>, ?> childProperty =
               ppp.getPit().findProperty(PropertyDescription.create(IPropertyPitProvider.class, Object.class, pName));
-          if (childProperty != null && !childProperty.isDynamic())
+
+          if (childProperty != null)
           {
-            Class<?> type = childProperty.getType();
-            return new _ChildDetail(IPropertyPitProvider.class.isAssignableFrom(type) ?
-                                        ISerializationProvider.EChildCategory.FIXED_NODE :
-                                        ISerializationProvider.EChildCategory.FIXED_VALUE, type);
+            type = childProperty.getType();
+            if (!childProperty.isDynamic())
+              return new _ChildDetail(IPropertyPitProvider.class.isAssignableFrom(type) ?
+                                          ISerializationProvider.EChildCategory.FIXED_NODE :
+                                          ISerializationProvider.EChildCategory.FIXED_VALUE, type);
           }
+          else
+            type = ppp.getPit().getChildType();
         }
       }
-      return new _ChildDetail(ISerializationProvider.EChildCategory.DYNAMIC, Object.class);
+
+      return new _ChildDetail(ISerializationProvider.EChildCategory.DYNAMIC, type);
     }
 
     @Override
