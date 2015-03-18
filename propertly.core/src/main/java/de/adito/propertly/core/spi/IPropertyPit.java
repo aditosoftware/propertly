@@ -105,6 +105,11 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
   List<T> getValues();
 
   /**
+   * @return the type all children must be inferred from.
+   */
+  Class<T> getChildType();
+
+  /**
    * Adds a weak listener.
    *
    * @param pListener the listener to be weakly added.

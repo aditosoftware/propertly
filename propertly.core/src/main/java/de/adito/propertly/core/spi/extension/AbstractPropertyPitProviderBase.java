@@ -1,15 +1,9 @@
 package de.adito.propertly.core.spi.extension;
 
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitEventListener;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * @author j.boesl, 30.10.14
@@ -17,7 +11,6 @@ import java.util.Set;
 abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
     implements IPropertyPitProvider<P, S, T>, Iterable<IProperty<S, T>>
 {
-
   @Nonnull
   public S getSource()
   {
@@ -75,6 +68,11 @@ abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S
   public List<IProperty<S, T>> getProperties()
   {
     return getPit().getProperties();
+  }
+
+  public Class<T> getChildType()
+  {
+    return getPit().getChildType();
   }
 
   @Nonnull

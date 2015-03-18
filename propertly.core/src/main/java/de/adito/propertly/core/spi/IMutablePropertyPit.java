@@ -76,9 +76,4 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    * @return <tt>true</tt> when an IProperty was removed <tt>false</tt> otherwise.
    */
   boolean removeProperty(@Nonnull IProperty<S, T> pProperty);
-
-  /**
-   * @return the type all children must be inferred from.
-   */
-  Class<T> getChildType();
 }

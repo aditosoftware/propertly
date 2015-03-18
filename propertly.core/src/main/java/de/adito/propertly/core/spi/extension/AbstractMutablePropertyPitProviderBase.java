@@ -17,11 +17,6 @@ abstract class AbstractMutablePropertyPitProviderBase
     extends AbstractPropertyPitProviderBase<P, S, T>
     implements IMutablePropertyPitProvider<P, S, T>
 {
-  public Class<T> getChildType()
-  {
-    return getPit().getChildType();
-  }
-
   @Nonnull
   public <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue)
   {

@@ -2,8 +2,7 @@ package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.util.*;
 
 /**
@@ -137,6 +136,12 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
         //noinspection unchecked
         values.add((T) childNode.getValue());
     return values;
+  }
+
+  @Override
+  public Class<T> getChildType()
+  {
+    return (Class<T>) Object.class;
   }
 
   @Override

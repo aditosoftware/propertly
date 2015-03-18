@@ -35,20 +35,18 @@ public class PPPIntrospector
     Class<?> childType = CHILD_TYPES.get(pCls);
     if (childType == null)
     {
-      if (IMutablePropertyPitProvider.class.isAssignableFrom(pCls))
+      if (IPropertyPitProvider.class.isAssignableFrom(pCls))
       {
         try
         {
-          IMutablePropertyPitProvider mppp = (IMutablePropertyPitProvider) PropertlyUtility.create(pCls);
-          childType = mppp.getPit().getChildType();
+          IPropertyPitProvider ppp = PropertlyUtility.create(pCls);
+          childType = ppp.getPit().getChildType();
         }
         catch (Exception e)
         {
           childType = Object.class;
         }
       }
-      else if (IPropertyPitProvider.class.isAssignableFrom(pCls))
-        childType = Object.class;
       else
         throw new IllegalArgumentException("invalid class: " + pCls);
 
