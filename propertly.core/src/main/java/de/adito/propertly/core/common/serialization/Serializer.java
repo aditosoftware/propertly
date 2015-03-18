@@ -63,14 +63,16 @@ public class Serializer<F>
         annotations = null;
       if (pPPP.getClass().equals(type))
         return sp.serializeDynamicNode(pOutputData, name, type, annotations, childRunner);
-      return sp.serializeDynamicNode(
-          pOutputData, name, type, pPPP.getClass(), annotations, childRunner);
+      sp.serializeDynamicNode(pOutputData, name, type, pPPP.getClass(), annotations, childRunner);
+      return pOutputData;
     }
     else
     {
       if (pPPP.getClass().equals(type))
-        return sp.serializeFixedNode(pOutputData, name, childRunner);
-      return sp.serializeFixedNode(pOutputData, name, pPPP.getClass(), childRunner);
+        sp.serializeFixedNode(pOutputData, name, childRunner);
+      else
+        sp.serializeFixedNode(pOutputData, name, pPPP.getClass(), childRunner);
+      return pOutputData;
     }
   }
 

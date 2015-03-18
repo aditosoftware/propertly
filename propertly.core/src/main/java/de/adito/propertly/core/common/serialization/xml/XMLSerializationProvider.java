@@ -19,26 +19,22 @@ public class XMLSerializationProvider implements ISerializationProvider<Element>
   private final ConverterRegistry converterRegistry;
 
 
-  public XMLSerializationProvider() throws ParserConfigurationException
+  public XMLSerializationProvider()
   {
     converterRegistry = new ConverterRegistry();
   }
 
-
-  @Nonnull
   @Override
-  public Element serializeFixedNode(
+  public void serializeFixedNode(
       @Nonnull Element pParentOutputData, @Nonnull String pName, @Nonnull IChildRunner<Element> pChildRunner)
   {
     final Element element = pParentOutputData.getOwnerDocument().createElement(pName);
     pParentOutputData.appendChild(element);
     pChildRunner.run(element);
-    return pParentOutputData;
   }
 
-  @Nonnull
   @Override
-  public Element serializeFixedNode(
+  public void serializeFixedNode(
       @Nonnull Element pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pType,
       @Nonnull IChildRunner<Element> pChildRunner)
   {
@@ -46,7 +42,6 @@ public class XMLSerializationProvider implements ISerializationProvider<Element>
     pParentOutputData.appendChild(element);
     element.setAttribute("type", converterRegistry.typeToString(pType));
     pChildRunner.run(element);
-    return pParentOutputData;
   }
 
   @Nonnull
@@ -84,9 +79,8 @@ public class XMLSerializationProvider implements ISerializationProvider<Element>
     return pParentOutputData;
   }
 
-  @Nonnull
   @Override
-  public Element serializeDynamicNode(
+  public void serializeDynamicNode(
       @Nonnull Element pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
       @Nonnull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations,
       @Nonnull IChildRunner<Element> pChildRunner)
@@ -98,7 +92,6 @@ public class XMLSerializationProvider implements ISerializationProvider<Element>
     if (pAnnotations != null && !pAnnotations.isEmpty())
       element.setAttribute("annotations", pAnnotations.toString());
     pChildRunner.run(element);
-    return pParentOutputData;
   }
 
   @Override

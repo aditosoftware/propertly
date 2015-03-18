@@ -14,12 +14,10 @@ import java.util.List;
 public interface ISerializationProvider<F>
 {
 
-  @Nonnull
-  F serializeFixedNode(
+  void serializeFixedNode(
       @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull IChildRunner<F> pChildRunner);
 
-  @Nonnull
-  F serializeFixedNode(
+  void serializeFixedNode(
       @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pType,
       @Nonnull IChildRunner<F> pChildRunner);
 
@@ -28,8 +26,7 @@ public interface ISerializationProvider<F>
       @Nullable F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
       @Nullable List<? extends Annotation> pAnnotations, @Nonnull IChildRunner<F> pChildRunner);
 
-  @Nonnull
-  F serializeDynamicNode(
+  void serializeDynamicNode(
       @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
       @Nonnull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations,
       @Nonnull IChildRunner<F> pChildRunner);

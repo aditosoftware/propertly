@@ -14,28 +14,24 @@ import java.util.*;
 public class MapSerializationProvider implements ISerializationProvider<Map<String, Object>>
 {
 
-  @Nonnull
   @Override
-  public Map<String, Object> serializeFixedNode(
+  public void serializeFixedNode(
       @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
       @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
   {
     Map<String, Object> map = new LinkedHashMap<String, Object>();
     pParentOutputData.put(pName, map);
     pChildRunner.run(map);
-    return pParentOutputData;
   }
 
-  @Nonnull
   @Override
-  public Map<String, Object> serializeFixedNode(
+  public void serializeFixedNode(
       @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
       @Nonnull Class<? extends IPropertyPitProvider> pType, @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
   {
     Map<String, Object> map = new LinkedHashMap<String, Object>();
     pParentOutputData.put(pName, new Property(null, pType, map, null));
     pChildRunner.run(map);
-    return pParentOutputData;
   }
 
   @Nonnull
@@ -53,9 +49,8 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
     return pParentOutputData;
   }
 
-  @Nonnull
   @Override
-  public Map<String, Object> serializeDynamicNode(
+  public void serializeDynamicNode(
       @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
       @Nonnull Class<? extends IPropertyPitProvider> pPropertyType, @Nonnull Class<? extends IPropertyPitProvider> pType,
       @Nullable List<? extends Annotation> pAnnotations, @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
@@ -63,7 +58,6 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
     Map<String, Object> map = new LinkedHashMap<String, Object>();
     pParentOutputData.put(pName, new Property(pPropertyType, pType, map, pAnnotations));
     pChildRunner.run(map);
-    return pParentOutputData;
   }
 
   @Override
