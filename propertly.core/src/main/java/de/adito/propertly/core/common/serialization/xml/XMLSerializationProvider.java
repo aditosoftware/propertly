@@ -25,7 +25,12 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
 
   public XMLSerializationProvider()
   {
-    converterRegistry = new ConverterRegistry();
+    this(new ConverterRegistry());
+  }
+
+  public XMLSerializationProvider(ConverterRegistry pConverterRegistry)
+  {
+    converterRegistry = pConverterRegistry;
   }
 
   public static String toString(Element pElement) throws TransformerException
