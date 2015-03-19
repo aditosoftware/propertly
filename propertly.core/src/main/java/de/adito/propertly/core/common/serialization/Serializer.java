@@ -32,16 +32,17 @@ public class Serializer<T>
 
 
   @Nonnull
-  public T serialize(@Nonnull IHierarchy pHierarchy)
+  public T serialize(@Nonnull IHierarchy<?> pHierarchy)
   {
-    return serialize(pHierarchy.getValue());
+    IPropertyPitProvider<?, ?, ?> value = pHierarchy.getValue();
+    return serialize(value);
   }
 
   @Nonnull
   public T serialize(@Nonnull IPropertyPitProvider<?, ?, ?> pPropertyPitProvider)
   {
-    ISerializationProvider.IChildRunner childRunner = new _ChildRunner(pPropertyPitProvider);
-    return sp.serializeRootNode(
+    ISerializationProvider.IChildRunner<Object> childRunner = new _ChildRunner(pPropertyPitProvider);
+    return ((ISerializationProvider<T, Object>) sp).serializeRootNode(
         pPropertyPitProvider.getPit().getOwnProperty().getName(), pPropertyPitProvider.getClass(), childRunner);
   }
 
@@ -88,8 +89,11 @@ public class Serializer<T>
       }
     }
 
-    private F _serialize(F pOutputData, IPropertyPitProvider<?, ?, ?> pPPP)
+    private void _serialize(F pOutputData, IPropertyPitProvider<?, ?, ?> pPPP)
     {
+      if (pPPP == null)
+        return;
+
       IProperty<? extends IPropertyPitProvider, ? extends IPropertyPitProvider> property = pPPP.getPit().getOwnProperty();
       IPropertyDescription<?, ? extends IPropertyPitProvider> descr = property.getDescription();
       String name = descr.getName();
@@ -105,7 +109,6 @@ public class Serializer<T>
           _getSerializationProvider().serializeDynamicNode(pOutputData, name, type, annotations, childRunner);
         else
           _getSerializationProvider().serializeDynamicNode(pOutputData, name, type, pPPP.getClass(), annotations, childRunner);
-        return pOutputData;
       }
       else
       {
@@ -113,7 +116,6 @@ public class Serializer<T>
           _getSerializationProvider().serializeFixedNode(pOutputData, name, childRunner);
         else
           _getSerializationProvider().serializeFixedNode(pOutputData, name, pPPP.getClass(), childRunner);
-        return pOutputData;
       }
     }
 

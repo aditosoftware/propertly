@@ -32,6 +32,7 @@ public class SerializationTest
 
     children.addProperty(Color.class, "color1", null).setValue(Color.BLACK);
     children.addProperty(Color.class, "color2", null).setValue(Color.RED);
+    children.addProperty(TProperty.class, "pppChild", null);
 
     Serializer<Map<String, Object>> mapSerializer = Serializer.create(new MapSerializationProvider());
 

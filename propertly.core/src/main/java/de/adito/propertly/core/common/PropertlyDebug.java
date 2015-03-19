@@ -51,6 +51,8 @@ public class PropertlyDebug
       return;
     boolean isPitProvider = IPropertyPitProvider.class.isAssignableFrom(pProperty.getType());
     Object value = pProperty.getValue();
+    if (isPitProvider && value == null)
+      return;
 
     pStr.append(pLevel);
     if (isPitProvider)
@@ -63,7 +65,6 @@ public class PropertlyDebug
     pStr.append("\n");
     if (isPitProvider)
     {
-      assert value != null;
       for (IProperty<?, ?> childProperty : ((IPropertyPitProvider<?, ?, ?>) value).getPit().getProperties())
         _buildTree(pStr, childProperty, pLevel + "\t");
     }
