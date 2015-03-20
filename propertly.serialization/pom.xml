@@ -10,20 +10,25 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>propertly.core</artifactId>
+  <artifactId>propertly.serialization</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>de.adito.propertly</groupId>
+      <artifactId>propertly.core</artifactId>
+      <version>0.3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>de.adito.propertly</groupId>
+      <artifactId>propertly.core</artifactId>
+      <version>0.3-SNAPSHOT</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
@@ -33,11 +38,11 @@
             <Bundle-Name>${project.artifactId}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
             <Export-Package>
-              de.adito.propertly.core.spi,
-              de.adito.propertly.core.spi.extension,
-              de.adito.propertly.core.common,
-              de.adito.propertly.core.common.exception,
-              de.adito.propertly.core.api
+              de.adito.propertly.serialization,
+              de.adito.propertly.serialization.converter,
+              de.adito.propertly.serialization.converter.impl,
+              de.adito.propertly.serialization.structuredescription,
+              de.adito.propertly.serialization.xml
             </Export-Package>
           </instructions>
         </configuration>
