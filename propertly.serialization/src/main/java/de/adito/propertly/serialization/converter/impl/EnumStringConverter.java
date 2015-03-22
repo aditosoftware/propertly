@@ -1,17 +1,15 @@
 package de.adito.propertly.serialization.converter.impl;
 
-import de.adito.propertly.serialization.converter.IObjectStringConverter;
-
 import javax.annotation.*;
 
 /**
  * @author j.boesl, 04.03.15
  */
-public class EnumStringConverter extends AbstractRegisterableConverter<Enum> implements IObjectStringConverter<Enum>
+public class EnumStringConverter extends AbstractSubTypeStringConverter<Enum>
 {
   @Nonnull
   @Override
-  public Class<? super Enum> getCommonType()
+  public Class<Enum> getCommonType()
   {
     return Enum.class;
   }

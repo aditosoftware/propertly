@@ -2,6 +2,11 @@ package de.adito.propertly.serialization.converter;
 
 import de.adito.propertly.core.common.IFunction;
 import de.adito.propertly.serialization.converter.impl.*;
+import net.java.sezpoz.*;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.logging.*;
 
 /**
  * @author j.boesl, 05.03.15
@@ -9,8 +14,7 @@ import de.adito.propertly.serialization.converter.impl.*;
 public class ConverterRegistry
 {
 
-  private final ConverterTypeProviderRegistry<IObjectStringConverter> objectStringConverterRegistry;
-  private final ConverterTypeProviderRegistry<ITypeStringConverter> typeStringConverterRegistry;
+  private final _Registry<IObjectConverter> registry;
 
 
   public ConverterRegistry()
@@ -22,44 +26,58 @@ public class ConverterRegistry
          new DateStringConverter(),
          new DimensionStringConverter(),
          new DoubleStringConverter(),
-         new EnumStringConverter(),
          new FloatStringConverter(),
          new FontStringConverter(),
          new IntegerStringConverter(),
          new LongStringConverter(),
          new ShortStringConverter(),
          new StringStringConverter(),
+         new EnumStringConverter(),
          new TypePPPStringConverter());
   }
 
-  public ConverterRegistry(IConverterTypeProvider... pProviders)
+  public ConverterRegistry(IObjectConverter... pProviders)
   {
-    objectStringConverterRegistry = new ConverterTypeProviderRegistry<IObjectStringConverter>();
-    typeStringConverterRegistry = new ConverterTypeProviderRegistry<ITypeStringConverter>();
+    registry = new _Registry<IObjectConverter>();
     if (pProviders != null)
-      for (IConverterTypeProvider provider : pProviders)
+      for (IObjectConverter provider : pProviders)
         register(provider);
+    registerProvided();
   }
 
-  public void register(IConverterTypeProvider pProvider)
+  protected void registerProvided()
   {
-    if (pProvider instanceof IObjectStringConverter)
-      objectStringConverterRegistry.register((IObjectStringConverter) pProvider);
-    if (pProvider instanceof ITypeStringConverter)
-      typeStringConverterRegistry.register((ITypeStringConverter) pProvider);
+    Index<ConverterProvider, IObjectConverter> index = Index.load(ConverterProvider.class, IObjectConverter.class);
+    for (IndexItem<ConverterProvider, IObjectConverter> indexItem : index)
+    {
+      try
+      {
+        register(indexItem.instance());
+      }
+      catch (InstantiationException e)
+      {
+        Logger.getLogger(getClass().getCanonicalName()).
+            log(Level.WARNING, "Annotated wrong element with " + ConverterProvider.class.getSimpleName(), e);
+      }
+    }
   }
 
-  public IObjectStringConverter findObjectStringConverter(Class pCls)
+  public void register(IObjectConverter pProvider)
   {
-    IObjectStringConverter converter = objectStringConverterRegistry.find(pCls);
+    registry.register(pProvider);
+  }
+
+  public IObjectConverter findObjectStringConverter(Class pCls)
+  {
+    IObjectConverter converter = registry.find(pCls);
     if (converter == null)
       throw new RuntimeException("No converter found for: " + pCls);
     return converter;
   }
 
-  public ITypeStringConverter findTypeStringConverter(Class pCls)
+  public IObjectConverter findTypeStringConverter(Class pCls)
   {
-    ITypeStringConverter converter = typeStringConverterRegistry.find(pCls);
+    IObjectConverter converter = registry.find(pCls);
     if (converter == null)
       throw new RuntimeException("No converter found for: " + pCls);
     return converter;
@@ -67,15 +85,16 @@ public class ConverterRegistry
 
   public String typeToString(Class pCls)
   {
+    //noinspection unchecked
     return findTypeStringConverter(pCls).typeToString(pCls);
   }
 
   public Class stringToType(final String pTypeAsString)
   {
-    ITypeStringConverter converter = typeStringConverterRegistry.find(new IFunction<ITypeStringConverter, Boolean>()
+    IObjectConverter converter = registry.find(new IFunction<IObjectConverter, Boolean>()
     {
       @Override
-      public Boolean run(ITypeStringConverter pTypeStringConverter)
+      public Boolean run(IObjectConverter pTypeStringConverter)
       {
         return pTypeStringConverter.stringToType(pTypeAsString) != null;
       }
@@ -83,6 +102,58 @@ public class ConverterRegistry
     if (converter == null)
       throw new RuntimeException("No converter found for: " + pTypeAsString);
     return converter.stringToType(pTypeAsString);
+  }
+
+  /**
+   * Registry
+   */
+  private static class _Registry<T extends IObjectConverter>
+  {
+
+    private final List<T> typeProviders;
+
+    _Registry()
+    {
+      typeProviders = new ArrayList<T>();
+    }
+
+    synchronized void register(T pProvider)
+    {
+      Class commonType = pProvider.getCommonType();
+
+      for (int i = 0; i < typeProviders.size(); i++)
+      {
+        T tp = typeProviders.get(i);
+        //noinspection unchecked
+        if (tp.getCommonType().isAssignableFrom(commonType))
+        {
+          if (tp.getCommonType().equals(commonType))
+            typeProviders.remove(i);
+          typeProviders.add(i, pProvider);
+          return;
+        }
+      }
+      typeProviders.add(pProvider);
+    }
+
+    @Nullable
+    T find(Class<?> pCls)
+    {
+      for (T typeProvider : typeProviders)
+        //noinspection unchecked
+        if (typeProvider.getCommonType().isAssignableFrom(pCls))
+          return typeProvider;
+      return null;
+    }
+
+    @Nullable
+    T find(IFunction<T, Boolean> pPredicate)
+    {
+      for (T typeProvider : typeProviders)
+        if (pPredicate.run(typeProvider))
+          return typeProvider;
+      return null;
+    }
   }
 
 }

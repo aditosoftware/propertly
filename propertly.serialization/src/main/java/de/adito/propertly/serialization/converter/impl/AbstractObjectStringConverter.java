@@ -7,7 +7,7 @@ import javax.annotation.*;
 /**
  * @author j.boesl, 04.03.15
  */
-public abstract class AbstractObjectStringConverter<T> implements ITypeStringConverter<T>, IObjectStringConverter<T>
+public abstract class AbstractObjectStringConverter<T> implements IObjectConverter<T>
 {
   private Class<T> cls;
 
@@ -18,7 +18,7 @@ public abstract class AbstractObjectStringConverter<T> implements ITypeStringCon
 
   @Nonnull
   @Override
-  public Class<? super T> getCommonType()
+  public Class<T> getCommonType()
   {
     return cls;
   }
