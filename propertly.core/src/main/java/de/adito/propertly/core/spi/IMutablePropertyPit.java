@@ -59,6 +59,19 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    */
   @Nonnull
   <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName,
+                                            @Nullable Annotation... pAnnotations);
+
+  /**
+   * Adds a new IProperty to this IMutablePropertyPit.
+   *
+   * @param pType        the type for the new IProperty.
+   * @param pName        the name for the new IProperty.
+   * @param pAnnotations optional Annotations present at the new IProperty.
+   * @param <E>          the created IProperty's type.
+   * @return the created IProperty.
+   */
+  @Nonnull
+  <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName,
                                             @Nullable Iterable<? extends Annotation> pAnnotations);
 
   /**

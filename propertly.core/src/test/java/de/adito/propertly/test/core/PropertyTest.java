@@ -76,8 +76,8 @@ public class PropertyTest
     tProperty.setX(123);
     tProperty.setFF(new Dimension(123, 456));
 
-    children.addProperty(Color.class, "color1", null).setValue(Color.BLACK);
-    children.addProperty(Color.class, "color2", null).setValue(Color.RED);
+    children.addProperty(Color.class, "color1").setValue(Color.BLACK);
+    children.addProperty(Color.class, "color2").setValue(Color.RED);
 
     _append(resultStringBuild, "child parent", tProperty.getCHILD().getParent());
     for (IProperty property : tProperty.getCHILD())

@@ -2,11 +2,15 @@ package de.adito.propertly.core.common;
 
 import de.adito.propertly.core.api.PropertyDescription;
 import de.adito.propertly.core.common.exception.InitializationException;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -79,7 +83,7 @@ public class PD
                   type = (Class) ((ParameterizedType) types[1]).getRawType();
               }
               String name = field.getName();
-              List<Annotation> annotations = Arrays.asList(field.getDeclaredAnnotations());
+              Annotation[] annotations = field.getDeclaredAnnotations();
               //noinspection unchecked
               return (IPropertyDescription<S, T>) PropertyDescription.create(pSource, type, name, annotations);
             }

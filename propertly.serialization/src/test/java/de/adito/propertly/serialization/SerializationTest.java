@@ -30,9 +30,9 @@ public class SerializationTest
     tProperty.setX(123);
     tProperty.setFF(new Dimension(123, 456));
 
-    children.addProperty(Color.class, "color1", null).setValue(Color.BLACK);
-    children.addProperty(Color.class, "color2", null).setValue(Color.RED);
-    children.addProperty(TProperty.class, "pppChild", null);
+    children.addProperty(Color.class, "color1").setValue(Color.BLACK);
+    children.addProperty(Color.class, "color2").setValue(Color.RED);
+    children.addProperty(TProperty.class, "pppChild");
 
     Serializer<Map<String, Object>> mapSerializer = Serializer.create(new MapSerializationProvider());
 

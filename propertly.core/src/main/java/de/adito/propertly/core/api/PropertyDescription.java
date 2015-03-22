@@ -1,10 +1,15 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author PaL
@@ -17,7 +22,7 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
   private Class<S> sourceType;
   private Class<? extends T> type;
   private String name;
-  private List<? extends Annotation> annotations;
+  private Map<Class<? extends Annotation>, Annotation> annotations;
 
 
   private PropertyDescription(Class<S> pSourceType, Class<? extends T> pType, String pName,
@@ -27,20 +32,12 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
     type = pType;
     name = pName;
     if (pAnnotations == null)
-      annotations = Collections.emptyList();
+      annotations = Collections.emptyMap();
     else
     {
-      List<Annotation> annos;
-      if (pAnnotations instanceof List)
-        //noinspection unchecked
-        annos = (List<Annotation>) pAnnotations;
-      else
-      {
-        annos = new ArrayList<Annotation>();
-        for (Annotation annotation : pAnnotations)
-          annos.add(annotation);
-      }
-      annotations = Collections.unmodifiableList(annos);
+      annotations = new HashMap<Class<? extends Annotation>, Annotation>();
+      for (Annotation annotation : pAnnotations)
+        annotations.put(annotation.annotationType(), annotation);
     }
   }
 
@@ -62,15 +59,47 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
     return name;
   }
 
-  @Nonnull
-  public List<? extends Annotation> getAnnotations()
+  @Override
+  public boolean isAnnotationPresent(Class<? extends Annotation> pAnnotationClass)
   {
-    return annotations;
+    return annotations.containsKey(pAnnotationClass);
+  }
+
+  @Override
+  public <A extends Annotation> A getAnnotation(Class<A> pAnnotationClass)
+  {
+    //noinspection unchecked
+    return (A) annotations.get(pAnnotationClass);
+  }
+
+  @Override
+  public Annotation[] getAnnotations()
+  {
+    Annotation[] arr = new Annotation[annotations.size()];
+    int i = 0;
+    for (Annotation annotation : annotations.values())
+      arr[i++] = annotation;
+    return arr;
+  }
+
+  @Override
+  public Annotation[] getDeclaredAnnotations()
+  {
+    return getAnnotations();
   }
 
   void setName(String name)
   {
     this.name = name;
+  }
+
+  @Nonnull
+  public static <S extends IPropertyPitProvider, T> IPropertyDescription<S, T> create(
+      @Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType, @Nonnull String pName,
+      @Nullable Annotation... pAnnotations)
+  {
+    return new PropertyDescription<S, T>(pSourceType, pType, pName,
+        pAnnotations == null ? Collections.<Annotation>emptyList() : Arrays.asList(pAnnotations));
   }
 
   @Nonnull
@@ -93,7 +122,7 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
       @Nonnull IPropertyDescription<S, T> pPropertyDescription)
   {
     return new PropertyDescription<S, T>(pPropertyDescription.getSourceType(), pPropertyDescription.getType(),
-                                         pPropertyDescription.getName(), pPropertyDescription.getAnnotations());
+        pPropertyDescription.getName(), Arrays.asList(pPropertyDescription.getAnnotations()));
   }
 
   @Override

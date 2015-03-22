@@ -1,12 +1,17 @@
 package de.adito.propertly.serialization;
 
-import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.api.Hierarchy;
+import de.adito.propertly.core.api.PropertyDescription;
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Can serialize and deserialize IPropertyPitProviders. Output format is dependent on used ISerializationProvider
@@ -79,9 +84,9 @@ public class Serializer<T>
           _serialize(pOutputData, (IPropertyPitProvider<?, ?, ?>) value);
         else if (property.isDynamic())
         {
-          List<? extends Annotation> annotations = descr.getAnnotations();
-          if (annotations.isEmpty())
-            annotations = null;
+          Annotation[] arr = descr.getAnnotations();
+          List<? extends Annotation> annotations =
+              arr == null || arr.length == 0 ? Collections.<Annotation>emptyList() : Arrays.asList(arr);
           _getSerializationProvider().serializeDynamicValue(pOutputData, name, type, value, annotations);
         }
         else if (value != null)
@@ -102,9 +107,9 @@ public class Serializer<T>
       ISerializationProvider.IChildRunner childRunner = new _ChildRunner(pPPP);
       if (property.isDynamic())
       {
-        List<? extends Annotation> annotations = descr.getAnnotations();
-        if (annotations.isEmpty())
-          annotations = null;
+        Annotation[] arr = descr.getAnnotations();
+        List<? extends Annotation> annotations =
+            arr == null || arr.length == 0 ? Collections.<Annotation>emptyList() : Arrays.asList(arr);
         if (pPPP.getClass().equals(type))
           _getSerializationProvider().serializeDynamicNode(pOutputData, name, type, annotations, childRunner);
         else
@@ -155,8 +160,8 @@ public class Serializer<T>
             type = childProperty.getType();
             if (!childProperty.isDynamic())
               return new _ChildDetail(IPropertyPitProvider.class.isAssignableFrom(type) ?
-                                          ISerializationProvider.EChildCategory.FIXED_NODE :
-                                          ISerializationProvider.EChildCategory.FIXED_VALUE, type);
+                  ISerializationProvider.EChildCategory.FIXED_NODE :
+                  ISerializationProvider.EChildCategory.FIXED_VALUE, type);
           }
           else
             type = ppp.getPit().getChildType();

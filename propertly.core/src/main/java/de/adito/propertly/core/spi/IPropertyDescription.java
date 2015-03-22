@@ -1,6 +1,6 @@
 package de.adito.propertly.core.spi;
 
-import de.adito.propertly.core.common.IAnnotationProvider;
+import java.lang.reflect.AnnotatedElement;
 
 /**
  * IPropertyDescription gives static detail about a IProperty.
@@ -9,7 +9,7 @@ import de.adito.propertly.core.common.IAnnotationProvider;
  *         Date: 29.09.11
  *         Time: 21:39
  */
-public interface IPropertyDescription<S extends IPropertyPitProvider, T> extends IAnnotationProvider
+public interface IPropertyDescription<S extends IPropertyPitProvider, T> extends AnnotatedElement
 {
 
   /**

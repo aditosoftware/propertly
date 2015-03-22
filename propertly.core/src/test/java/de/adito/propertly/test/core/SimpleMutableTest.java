@@ -36,17 +36,17 @@ public class SimpleMutableTest
     propertyList.add(property);
 
     IPropertyDescription<DynamicTestPropertyPitProvider, Color> pinkDescription =
-        PropertyDescription.create(DynamicTestPropertyPitProvider.class, Color.class, "pink", null /*annotations*/);
+        PropertyDescription.create(DynamicTestPropertyPitProvider.class, Color.class, "pink" /*annotations*/);
     property = root.addProperty(0, pinkDescription);
     property.setValue(Color.PINK);
     propertyList.add(0, property);
 
-    property = root.addProperty(Color.class, "green", null);
+    property = root.addProperty(Color.class, "green");
     property.setValue(Color.green);
     propertyList.add(property);
 
     IPropertyDescription<DynamicTestPropertyPitProvider, Color> blackDescription =
-        PropertyDescription.create(DynamicTestPropertyPitProvider.class, Color.class, "black", null /*annotations*/);
+        PropertyDescription.create(DynamicTestPropertyPitProvider.class, Color.class, "black" /*annotations*/);
     property = root.addProperty(3, blackDescription);
     property.setValue(Color.black);
     propertyList.add(3, property);

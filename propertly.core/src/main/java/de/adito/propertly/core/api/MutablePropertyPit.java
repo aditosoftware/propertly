@@ -73,7 +73,17 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
 
   @Nonnull
   @Override
-  public <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName, @Nullable Iterable<? extends Annotation> pAnnotations)
+  public <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName,
+                                                   @Nullable Annotation... pAnnotations)
+  {
+    //noinspection unchecked
+    return addProperty(PropertyDescription.create((Class<S>) getSource().getClass(), pType, pName, pAnnotations));
+  }
+
+  @Nonnull
+  @Override
+  public <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName,
+                                                   @Nullable Iterable<? extends Annotation> pAnnotations)
   {
     //noinspection unchecked
     return addProperty(PropertyDescription.create((Class<S>) getSource().getClass(), pType, pName, pAnnotations));

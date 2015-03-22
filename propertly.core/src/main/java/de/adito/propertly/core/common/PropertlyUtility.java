@@ -77,17 +77,4 @@ public class PropertlyUtility
     return strBuilder.toString();
   }
 
-  @Nonnull
-  public static <T extends Annotation> List<T> findAnnotations(@Nonnull IAnnotationProvider pAnnotationProvider, @Nonnull Class<T> pCls)
-  {
-    List<T> annotations = new ArrayList<T>();
-    for (Annotation annotation : pAnnotationProvider.getAnnotations())
-    {
-      if (pCls.isAssignableFrom(annotation.getClass()))
-        //noinspection unchecked
-        annotations.add((T) annotation);
-    }
-    return annotations;
-  }
-
 }

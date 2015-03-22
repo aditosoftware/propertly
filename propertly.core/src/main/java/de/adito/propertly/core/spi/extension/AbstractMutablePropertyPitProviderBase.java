@@ -37,7 +37,7 @@ abstract class AbstractMutablePropertyPitProviderBase
 
   @Nonnull
   public <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName,
-                                                   @Nullable Iterable<? extends Annotation> pAnnotations)
+                                                   @Nullable Annotation... pAnnotations)
   {
     return getPit().addProperty(pType, pName, pAnnotations);
   }
