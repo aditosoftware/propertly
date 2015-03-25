@@ -39,16 +39,7 @@ public abstract class AbstractSubTypeStringConverter<T> implements IObjectConver
   @Override
   public Class<? extends T> stringToType(@Nonnull String pTypeAsString)
   {
-    try
-    {
-      Class<? extends T> cls = reverseMap.get(pTypeAsString);
-      //noinspection unchecked
-      return cls == null ? (Class<? extends T>) Class.forName(pTypeAsString) : cls;
-    }
-    catch (ClassNotFoundException e)
-    {
-      return null;
-    }
+    return reverseMap.get(pTypeAsString);
   }
 
   @Nonnull
@@ -56,7 +47,9 @@ public abstract class AbstractSubTypeStringConverter<T> implements IObjectConver
   public String typeToString(@Nonnull Class<? extends T> pType)
   {
     String s = map.get(pType);
-    return s == null ? pType.getCanonicalName() : s;
+    if (s == null)
+      throw new RuntimeException("No converter found for '" + pType + "'.");
+    return s;
   }
 
 }

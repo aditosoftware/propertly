@@ -3,6 +3,8 @@ package de.adito.propertly.serialization;
 import de.adito.propertly.core.api.Hierarchy;
 import de.adito.propertly.core.common.PropertlyDebug;
 import de.adito.propertly.core.spi.*;
+import de.adito.propertly.serialization.converter.ConverterRegistry;
+import de.adito.propertly.serialization.converter.impl.*;
 import de.adito.propertly.serialization.xml.XMLSerializationProvider;
 import de.adito.propertly.test.core.impl.*;
 import org.junit.*;
@@ -44,12 +46,26 @@ public class SerializationTest
                         PropertlyDebug.toTreeString(deserialize));
 
 
-    Serializer<Document> xmlSerializer = Serializer.create(new XMLSerializationProvider());
+    Serializer<Document> xmlSerializer = Serializer.create(new XMLSerializationProvider(_getConverterRegistry()));
     Document document = xmlSerializer.serialize(hierarchy);
     deserialize = xmlSerializer.deserialize(document);
 
     Assert.assertEquals(PropertlyDebug.toTreeString(tProperty),
                         PropertlyDebug.toTreeString(deserialize));
+  }
+
+  private static ConverterRegistry _getConverterRegistry()
+  {
+    ConverterRegistry converterRegistry = new ConverterRegistry();
+
+    TypePPPStringConverter typePPPStringConverter = new TypePPPStringConverter();
+    typePPPStringConverter.register(TProperty.class, null);
+    converterRegistry.register(typePPPStringConverter);
+
+    EnumStringConverter enumStringConverter = new EnumStringConverter();
+    converterRegistry.register(enumStringConverter);
+
+    return converterRegistry;
   }
 
 }

@@ -1,16 +1,17 @@
 package de.adito.propertly.serialization.xml;
 
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.serialization.ISerializationProvider;
 import de.adito.propertly.serialization.converter.ConverterRegistry;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
 import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 import javax.annotation.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -33,11 +34,6 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
     converterRegistry = pConverterRegistry;
   }
 
-  public static String toString(Element pElement) throws TransformerException
-  {
-    return toString(pElement.getOwnerDocument());
-  }
-
   public static String toString(Document pDocument) throws TransformerException
   {
     Transformer transformer = TransformerFactory.newInstance().newTransformer();
@@ -47,6 +43,14 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
     DOMSource source = new DOMSource(pDocument);
     transformer.transform(source, result);
     return result.getWriter().toString();
+  }
+
+  public static Document toDocument(String pXmlString) throws IOException, SAXException, ParserConfigurationException
+  {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setNamespaceAware(true);
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    return builder.parse(new ByteArrayInputStream(pXmlString.getBytes()));
   }
 
   @Nonnull

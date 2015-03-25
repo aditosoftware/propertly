@@ -10,10 +10,12 @@ import javax.annotation.*;
 public abstract class AbstractObjectStringConverter<T> implements IObjectConverter<T>
 {
   private Class<T> cls;
+  private String name;
 
   public AbstractObjectStringConverter(@Nonnull Class<T> pCls)
   {
     cls = pCls;
+    name = pCls.getSimpleName();
   }
 
   @Nonnull
@@ -27,14 +29,14 @@ public abstract class AbstractObjectStringConverter<T> implements IObjectConvert
   @Override
   public Class<? extends T> stringToType(@Nonnull String pTypeAsString)
   {
-    return cls.getSimpleName().equals(pTypeAsString) ? cls : null;
+    return name.equals(pTypeAsString) ? cls : null;
   }
 
   @Nonnull
   @Override
   public String typeToString(@Nonnull Class<? extends T> pType)
   {
-    return pType.getSimpleName();
+    return name;
   }
 
   @Nullable
