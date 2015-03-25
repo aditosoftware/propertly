@@ -1,6 +1,6 @@
 package de.adito.propertly.serialization.converter;
 
-import net.java.sezpoz.Indexable;
+import de.adito.picoservice.PicoService;
 
 import java.lang.annotation.*;
 
@@ -8,8 +8,8 @@ import java.lang.annotation.*;
  * @author j.boesl, 12.03.15
  */
 @Target({ElementType.TYPE})
-@Retention(RetentionPolicy.SOURCE)
-@Indexable
+@Retention(RetentionPolicy.RUNTIME)
+@PicoService
 public @interface ConverterSubTypeProvider
 {
   String value();

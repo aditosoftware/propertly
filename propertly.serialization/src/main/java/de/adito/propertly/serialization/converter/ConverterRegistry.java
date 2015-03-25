@@ -1,8 +1,8 @@
 package de.adito.propertly.serialization.converter;
 
+import de.adito.picoservice.IPicoRegistry;
 import de.adito.propertly.core.common.IFunction;
 import de.adito.propertly.serialization.converter.impl.*;
-import net.java.sezpoz.*;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -47,17 +47,18 @@ public class ConverterRegistry
 
   protected void registerProvided()
   {
-    Index<ConverterProvider, IObjectConverter> index = Index.load(ConverterProvider.class, IObjectConverter.class);
-    for (IndexItem<ConverterProvider, IObjectConverter> indexItem : index)
+    Map<Class<? extends IObjectConverter>, ConverterProvider> converterMap =
+        IPicoRegistry.INSTANCE.find(IObjectConverter.class, ConverterProvider.class);
+    for (Class<? extends IObjectConverter> converterClass : converterMap.keySet())
     {
       try
       {
-        register(indexItem.instance());
+        register(converterClass.newInstance());
       }
-      catch (InstantiationException e)
+      catch (Exception e)
       {
-        Logger.getLogger(getClass().getCanonicalName()).
-            log(Level.WARNING, "Annotated wrong element with " + ConverterProvider.class.getSimpleName(), e);
+        Logger.getLogger(getClass().getCanonicalName()).log(Level.WARNING, "Annotated wrong element with " +
+            ConverterProvider.class.getSimpleName() + " at " + converterClass, e);
       }
     }
   }

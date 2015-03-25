@@ -20,9 +20,9 @@
     </dependency>
 
     <dependency>
-      <groupId>net.java.sezpoz</groupId>
-      <artifactId>sezpoz</artifactId>
-      <version>1.9</version>
+      <groupId>de.adito.picoservice</groupId>
+      <artifactId>picoservice</artifactId>
+      <version>0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>

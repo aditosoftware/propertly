@@ -1,13 +1,10 @@
 package de.adito.propertly.serialization.converter.impl;
 
+import de.adito.picoservice.IPicoRegistry;
 import de.adito.propertly.serialization.converter.*;
-import net.java.sezpoz.*;
 
 import javax.annotation.*;
-import java.lang.annotation.ElementType;
-import java.lang.reflect.AnnotatedElement;
 import java.util.*;
-import java.util.logging.*;
 
 /**
  * @author j.boesl, 11.03.15
@@ -21,23 +18,12 @@ public abstract class AbstractSubTypeStringConverter<T> implements IObjectConver
 
   public AbstractSubTypeStringConverter()
   {
-    Index<ConverterSubTypeProvider, T> index = Index.load(ConverterSubTypeProvider.class, getCommonType());
-    for (IndexItem<ConverterSubTypeProvider, T> indexItem : index)
+    Map<Class<? extends T>, ConverterSubTypeProvider> subConverterMap =
+        IPicoRegistry.INSTANCE.find(getCommonType(), ConverterSubTypeProvider.class);
+    for (Map.Entry<Class<? extends T>, ConverterSubTypeProvider> entry : subConverterMap.entrySet())
     {
-      if (indexItem.kind() == ElementType.TYPE)
-      {
-        try
-        {
-          AnnotatedElement element = indexItem.element();
-          //noinspection unchecked
-          register((Class<? extends T>) element, indexItem.annotation().value());
-        }
-        catch (InstantiationException e)
-        {
-          Logger.getLogger(getClass().getCanonicalName()).
-              log(Level.WARNING, "Annotated wrong element with " + ConverterSubTypeProvider.class.getSimpleName(), e);
-        }
-      }
+      //noinspection unchecked
+      register(entry.getKey(), entry.getValue().value());
     }
   }
 
