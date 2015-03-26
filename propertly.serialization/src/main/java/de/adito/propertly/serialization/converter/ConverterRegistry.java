@@ -1,7 +1,6 @@
 package de.adito.propertly.serialization.converter;
 
 import de.adito.picoservice.IPicoRegistry;
-import de.adito.propertly.core.common.IFunction;
 import de.adito.propertly.serialization.converter.impl.*;
 
 import javax.annotation.Nullable;
@@ -14,7 +13,7 @@ import java.util.logging.*;
 public class ConverterRegistry
 {
 
-  private final _Registry<IObjectConverter> registry;
+  private final _Registry registry;
 
 
   public ConverterRegistry()
@@ -38,7 +37,7 @@ public class ConverterRegistry
 
   public ConverterRegistry(IObjectConverter... pProviders)
   {
-    registry = new _Registry<IObjectConverter>();
+    registry = new _Registry();
     if (pProviders != null)
       for (IObjectConverter provider : pProviders)
         register(provider);
@@ -68,63 +67,74 @@ public class ConverterRegistry
     registry.register(pProvider);
   }
 
-  public IObjectConverter findObjectStringConverter(Class pCls)
+  public <T> String valueToString(T pValue)
   {
-    IObjectConverter converter = registry.find(pCls);
-    if (converter == null)
-      throw new RuntimeException("No converter found for: " + pCls);
-    return converter;
+    if (pValue == null)
+      return "";
+    //noinspection unchecked
+    return _findObjectStringConverter((Class<T>) pValue.getClass()).valueToString(pValue);
   }
 
-  public IObjectConverter findTypeStringConverter(Class pCls)
+  public <T> T stringToValue(Class<T> pType, String pValueAsString)
   {
-    IObjectConverter converter = registry.find(pCls);
-    if (converter == null)
-      throw new RuntimeException("No converter found for: " + pCls);
-    return converter;
+    return _findObjectStringConverter(pType).stringToValue(pValueAsString, pType);
   }
 
-  public String typeToString(Class pCls)
+  public String typeToString(Class pType)
   {
     //noinspection unchecked
-    return findTypeStringConverter(pCls).typeToString(pCls);
+    return _findTypeStringConverter(pType).typeToString(pType);
   }
 
-  public Class stringToType(final String pTypeAsString)
+  public Class stringToType(Class pType, String pTypeAsString)
   {
-    IObjectConverter converter = registry.find(new IFunction<IObjectConverter, Boolean>()
-    {
-      @Override
-      public Boolean run(IObjectConverter pTypeStringConverter)
-      {
-        return pTypeStringConverter.stringToType(pTypeAsString) != null;
-      }
-    });
+    return _findTypeStringConverter(pType).stringToType(pTypeAsString);
+  }
+
+  public Class stringToType(String pTypeAsString)
+  {
+    IObjectConverter converter = registry.findByType(pTypeAsString);
     if (converter == null)
       throw new RuntimeException("No converter found for: " + pTypeAsString);
     return converter.stringToType(pTypeAsString);
   }
 
+  private <T> IObjectConverter<T> _findObjectStringConverter(Class<T> pCls)
+  {
+    IObjectConverter<T> converter = registry.find(pCls);
+    if (converter == null)
+      throw new RuntimeException("No converter found for: " + pCls);
+    return converter;
+  }
+
+  private IObjectConverter _findTypeStringConverter(Class pCls)
+  {
+    IObjectConverter converter = registry.find(pCls);
+    if (converter == null)
+      throw new RuntimeException("No converter found for: " + pCls);
+    return converter;
+  }
+
   /**
    * Registry
    */
-  private static class _Registry<T extends IObjectConverter>
+  private static class _Registry
   {
 
-    private final List<T> typeProviders;
+    private final List<IObjectConverter> typeProviders;
 
     _Registry()
     {
-      typeProviders = new ArrayList<T>();
+      typeProviders = new ArrayList<IObjectConverter>();
     }
 
-    synchronized void register(T pProvider)
+    synchronized void register(IObjectConverter<?> pProvider)
     {
       Class commonType = pProvider.getCommonType();
 
       for (int i = 0; i < typeProviders.size(); i++)
       {
-        T tp = typeProviders.get(i);
+        IObjectConverter tp = typeProviders.get(i);
         //noinspection unchecked
         if (tp.getCommonType().isAssignableFrom(commonType))
         {
@@ -138,20 +148,20 @@ public class ConverterRegistry
     }
 
     @Nullable
-    T find(Class<?> pCls)
+    <T> IObjectConverter<T> find(Class<T> pCls)
     {
-      for (T typeProvider : typeProviders)
-        //noinspection unchecked
+      for (IObjectConverter<?> typeProvider : typeProviders)
         if (typeProvider.getCommonType().isAssignableFrom(pCls))
-          return typeProvider;
+          //noinspection unchecked
+          return (IObjectConverter<T>) typeProvider;
       return null;
     }
 
     @Nullable
-    T find(IFunction<T, Boolean> pPredicate)
+    IObjectConverter<?> findByType(String pTypeName)
     {
-      for (T typeProvider : typeProviders)
-        if (pPredicate.run(typeProvider))
+      for (IObjectConverter<?> typeProvider : typeProviders)
+        if (typeProvider.stringToType(pTypeName) != null)
           return typeProvider;
       return null;
     }

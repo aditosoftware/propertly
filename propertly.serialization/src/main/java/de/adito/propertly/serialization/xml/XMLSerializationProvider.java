@@ -130,7 +130,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
   {
     final Element element = pParentOutputData.getOwnerDocument().createElement(pName);
     pParentOutputData.appendChild(element);
-    element.setTextContent(converterRegistry.findObjectStringConverter(pValue.getClass()).valueToString(pValue));
+    element.setTextContent(converterRegistry.valueToString(pValue));
   }
 
   @Override
@@ -146,7 +146,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
     if (pAnnotations != null && !pAnnotations.isEmpty())
       element.setAttribute("annotations", pAnnotations.toString());
     if (pValue != null)
-      element.setTextContent(converterRegistry.findObjectStringConverter(pValue.getClass()).valueToString(pValue));
+      element.setTextContent(converterRegistry.valueToString(pValue));
   }
 
 
@@ -183,12 +183,12 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
     {
       case FIXED_NODE:
         if (pElement.hasAttribute("type"))
-          pAppendChild.appendFixedNode(pElement, name, converterRegistry.findTypeStringConverter(childDetail.getType()).stringToType(pElement.getAttribute("type")));
+          pAppendChild.appendFixedNode(pElement, name, converterRegistry.stringToType(childDetail.getType(), pElement.getAttribute("type")));
         else
           pAppendChild.appendFixedNode(pElement, name);
         break;
       case FIXED_VALUE:
-        pAppendChild.appendFixedValue(name, converterRegistry.findObjectStringConverter(childDetail.getType()).stringToValue(pElement.getTextContent(), childDetail.getType()));
+        pAppendChild.appendFixedValue(name, converterRegistry.stringToValue(childDetail.getType(), pElement.getTextContent()));
         break;
       case DYNAMIC:
       default:
@@ -209,7 +209,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
           if (specificType == null)
             specificType = type;
           Class specificCls = converterRegistry.stringToType(specificType);
-          pAppendChild.appendDynamicValue(name, cls, converterRegistry.findObjectStringConverter(specificCls).stringToValue(pElement.getTextContent(), specificCls), null);
+          pAppendChild.appendDynamicValue(name, cls, converterRegistry.stringToValue(specificCls, pElement.getTextContent()), null);
         }
         break;
     }
