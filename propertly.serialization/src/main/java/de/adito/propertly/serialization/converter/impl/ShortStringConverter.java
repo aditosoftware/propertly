@@ -10,19 +10,37 @@ public class ShortStringConverter extends AbstractObjectStringConverter<Short>
   public ShortStringConverter()
   {
     super(Short.class);
-  }
+    registerSourceTargetConverter(new SourceTargetConverter<Short, String>(String.class)
+    {
+      @Nonnull
+      @Override
+      public String sourceToTarget(@Nonnull Short pSource)
+      {
+        return pSource.toString();
+      }
 
-  @Nullable
-  @Override
-  protected Short stringToValue(@Nonnull String pValueAsString)
-  {
-    return Short.parseShort(pValueAsString);
-  }
+      @Nullable
+      @Override
+      public Short targetToSource(@Nonnull String pTarget)
+      {
+        return Short.parseShort(pTarget);
+      }
+    });
+    registerSourceTargetConverter(new SourceTargetConverter<Short, Number>(Number.class)
+    {
+      @Nonnull
+      @Override
+      public Number sourceToTarget(@Nonnull Short pSource)
+      {
+        return pSource;
+      }
 
-  @Nonnull
-  @Override
-  public String valueToString(@Nonnull Short pValue)
-  {
-    return pValue.toString();
+      @Nullable
+      @Override
+      public Short targetToSource(@Nonnull Number pTarget)
+      {
+        return pTarget.shortValue();
+      }
+    });
   }
 }

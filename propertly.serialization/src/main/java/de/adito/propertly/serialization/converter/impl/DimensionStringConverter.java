@@ -12,22 +12,24 @@ public class DimensionStringConverter extends AbstractObjectStringConverter<Dime
   public DimensionStringConverter()
   {
     super(Dimension.class);
-  }
+    registerSourceTargetConverter(new SourceTargetConverter<Dimension, String>(String.class)
+    {
+      @Nonnull
+      @Override
+      public String sourceToTarget(@Nonnull Dimension pSource)
+      {
+        return pSource.width + ", " + pSource.height;
+      }
 
-  @Nonnull
-  @Override
-  public String valueToString(@Nonnull Dimension pValue)
-  {
-    return pValue.width + ", " + pValue.height;
-  }
-
-  @Nullable
-  @Override
-  protected Dimension stringToValue(@Nonnull String pValueAsString)
-  {
-    StringTokenizer stringTokenizer = new StringTokenizer(pValueAsString, ", ");
-    if (stringTokenizer.countTokens() != 2)
-      return null;
-    return new Dimension(Integer.parseInt(stringTokenizer.nextToken()), Integer.parseInt(stringTokenizer.nextToken()));
+      @Nullable
+      @Override
+      public Dimension targetToSource(@Nonnull String pTarget)
+      {
+        StringTokenizer stringTokenizer = new StringTokenizer(pTarget, ", ");
+        if (stringTokenizer.countTokens() != 2)
+          return null;
+        return new Dimension(Integer.parseInt(stringTokenizer.nextToken()), Integer.parseInt(stringTokenizer.nextToken()));
+      }
+    });
   }
 }

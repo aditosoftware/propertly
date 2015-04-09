@@ -10,19 +10,37 @@ public class DoubleStringConverter extends AbstractObjectStringConverter<Double>
   public DoubleStringConverter()
   {
     super(Double.class);
-  }
+    registerSourceTargetConverter(new SourceTargetConverter<Double, String>(String.class)
+    {
+      @Nonnull
+      @Override
+      public String sourceToTarget(@Nonnull Double pSource)
+      {
+        return pSource.toString();
+      }
 
-  @Nullable
-  @Override
-  protected Double stringToValue(@Nonnull String pValueAsString)
-  {
-    return Double.parseDouble(pValueAsString);
-  }
+      @Nullable
+      @Override
+      public Double targetToSource(@Nonnull String pTarget)
+      {
+        return Double.parseDouble(pTarget);
+      }
+    });
+    registerSourceTargetConverter(new SourceTargetConverter<Double, Number>(Number.class)
+    {
+      @Nonnull
+      @Override
+      public Number sourceToTarget(@Nonnull Double pSource)
+      {
+        return pSource;
+      }
 
-  @Nonnull
-  @Override
-  public String valueToString(@Nonnull Double pValue)
-  {
-    return pValue.toString();
+      @Nullable
+      @Override
+      public Double targetToSource(@Nonnull Number pTarget)
+      {
+        return pTarget.doubleValue();
+      }
+    });
   }
 }

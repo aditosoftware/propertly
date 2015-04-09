@@ -10,19 +10,37 @@ public class CharStringConverter extends AbstractObjectStringConverter<Character
   public CharStringConverter()
   {
     super(Character.class);
-  }
+    registerSourceTargetConverter(new SourceTargetConverter<Character, String>(String.class)
+    {
+      @Nonnull
+      @Override
+      public String sourceToTarget(@Nonnull Character pSource)
+      {
+        return pSource == '\0' ? "" : pSource.toString();
+      }
 
-  @Nullable
-  @Override
-  protected Character stringToValue(@Nonnull String pValueAsString)
-  {
-    return pValueAsString.length() == 0 ? '\0' : pValueAsString.charAt(0);
-  }
+      @Nullable
+      @Override
+      public Character targetToSource(@Nonnull String pTarget)
+      {
+        return pTarget.length() == 0 ? '\0' : pTarget.charAt(0);
+      }
+    });
+    registerSourceTargetConverter(new SourceTargetConverter<Character, Number>(Number.class)
+    {
+      @Nonnull
+      @Override
+      public Number sourceToTarget(@Nonnull Character pSource)
+      {
+        return (int) pSource;
+      }
 
-  @Nonnull
-  @Override
-  public String valueToString(@Nonnull Character pValue)
-  {
-    return pValue == '\0' ? "" : pValue.toString();
+      @Nullable
+      @Override
+      public Character targetToSource(@Nonnull Number pTarget)
+      {
+        return (char) pTarget.intValue();
+      }
+    });
   }
 }

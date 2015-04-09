@@ -16,15 +16,20 @@ public class EnumStringConverter extends AbstractSubTypeStringConverter<Enum>
 
   @Nullable
   @Override
-  public Enum stringToValue(@Nonnull String pValueAsString, @Nonnull Class<? extends Enum> pType)
+  public Enum targetToSource(@Nonnull Object pTarget, @Nonnull Class<? extends Enum> pSourceType)
   {
-    return Enum.valueOf(pType, pValueAsString);
+    if (pTarget instanceof String)
+      return Enum.valueOf(pSourceType, (String) pTarget);
+    throw new IllegalArgumentException(pTarget.getClass() + " is not convertible to " + pSourceType + ".");
   }
 
   @Nonnull
   @Override
-  public String valueToString(@Nonnull Enum pValue)
+  public Object sourceToTarget(@Nonnull Enum pSource, @Nonnull Class... pTargetTypes)
   {
-    return pValue.name();
+    for (Class targetType : pTargetTypes)
+      if (targetType == String.class)
+        return pSource.name();
+    throw new IllegalArgumentException("no supported target type for " + getCommonType() + ".");
   }
 }

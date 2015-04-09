@@ -67,17 +67,23 @@ public class ConverterRegistry
     registry.register(pProvider);
   }
 
-  public <T> String valueToString(T pValue)
+  public <S, T> T sourceToTarget(S pValue, Class<T> pCls)
   {
-    if (pValue == null)
-      return "";
     //noinspection unchecked
-    return _findObjectStringConverter((Class<T>) pValue.getClass()).valueToString(pValue);
+    return (T) sourceToTarget(pValue, new Class[]{pCls});
   }
 
-  public <T> T stringToValue(Class<T> pType, String pValueAsString)
+  public <S> Object sourceToTarget(S pValue, Class... pClasses)
   {
-    return _findObjectStringConverter(pType).stringToValue(pValueAsString, pType);
+    if (pValue == null)
+      return null;
+    //noinspection unchecked
+    return _findObjectStringConverter((Class<S>) pValue.getClass()).sourceToTarget(pValue, pClasses);
+  }
+
+  public <S> S targetToSource(Class<S> pType, Object pTarget)
+  {
+    return _findObjectStringConverter(pType).targetToSource(pTarget, pType);
   }
 
   public String typeToString(Class pType)
@@ -99,9 +105,9 @@ public class ConverterRegistry
     return converter.stringToType(pTypeAsString);
   }
 
-  private <T> IObjectConverter<T> _findObjectStringConverter(Class<T> pCls)
+  private <S> IObjectConverter<S> _findObjectStringConverter(Class<S> pCls)
   {
-    IObjectConverter<T> converter = registry.find(pCls);
+    IObjectConverter<S> converter = registry.find(pCls);
     if (converter == null)
       throw new RuntimeException("No converter found for: " + pCls);
     return converter;
@@ -148,12 +154,12 @@ public class ConverterRegistry
     }
 
     @Nullable
-    <T> IObjectConverter<T> find(Class<T> pCls)
+    <S> IObjectConverter<S> find(Class<S> pCls)
     {
       for (IObjectConverter<?> typeProvider : typeProviders)
         if (typeProvider.getCommonType().isAssignableFrom(pCls))
           //noinspection unchecked
-          return (IObjectConverter<T>) typeProvider;
+          return (IObjectConverter<S>) typeProvider;
       return null;
     }
 

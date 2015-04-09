@@ -10,19 +10,37 @@ public class IntegerStringConverter extends AbstractObjectStringConverter<Intege
   public IntegerStringConverter()
   {
     super(Integer.class);
-  }
+    registerSourceTargetConverter(new SourceTargetConverter<Integer, String>(String.class)
+    {
+      @Nonnull
+      @Override
+      public String sourceToTarget(@Nonnull Integer pSource)
+      {
+        return pSource.toString();
+      }
 
-  @Nullable
-  @Override
-  protected Integer stringToValue(@Nonnull String pValueAsString)
-  {
-    return Integer.parseInt(pValueAsString);
-  }
+      @Nullable
+      @Override
+      public Integer targetToSource(@Nonnull String pTarget)
+      {
+        return Integer.parseInt(pTarget);
+      }
+    });
+    registerSourceTargetConverter(new SourceTargetConverter<Integer, Number>(Number.class)
+    {
+      @Nonnull
+      @Override
+      public Number sourceToTarget(@Nonnull Integer pSource)
+      {
+        return pSource;
+      }
 
-  @Nonnull
-  @Override
-  public String valueToString(@Nonnull Integer pValue)
-  {
-    return pValue.toString();
+      @Nullable
+      @Override
+      public Integer targetToSource(@Nonnull Number pTarget)
+      {
+        return pTarget.intValue();
+      }
+    });
   }
 }

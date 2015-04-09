@@ -10,19 +10,37 @@ public class LongStringConverter extends AbstractObjectStringConverter<Long>
   public LongStringConverter()
   {
     super(Long.class);
-  }
+    registerSourceTargetConverter(new SourceTargetConverter<Long, String>(String.class)
+    {
+      @Nonnull
+      @Override
+      public String sourceToTarget(@Nonnull Long pSource)
+      {
+        return pSource.toString();
+      }
 
-  @Nullable
-  @Override
-  protected Long stringToValue(@Nonnull String pValueAsString)
-  {
-    return Long.parseLong(pValueAsString);
-  }
+      @Nullable
+      @Override
+      public Long targetToSource(@Nonnull String pTarget)
+      {
+        return Long.parseLong(pTarget);
+      }
+    });
+    registerSourceTargetConverter(new SourceTargetConverter<Long, Number>(Number.class)
+    {
+      @Nonnull
+      @Override
+      public Number sourceToTarget(@Nonnull Long pSource)
+      {
+        return pSource;
+      }
 
-  @Nonnull
-  @Override
-  public String valueToString(@Nonnull Long pValue)
-  {
-    return pValue.toString();
+      @Nullable
+      @Override
+      public Long targetToSource(@Nonnull Number pTarget)
+      {
+        return pTarget.longValue();
+      }
+    });
   }
 }

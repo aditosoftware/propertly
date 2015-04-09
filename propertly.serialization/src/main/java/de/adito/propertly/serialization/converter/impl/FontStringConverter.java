@@ -11,19 +11,21 @@ public class FontStringConverter extends AbstractObjectStringConverter<Font>
   public FontStringConverter()
   {
     super(Font.class);
-  }
+    registerSourceTargetConverter(new SourceTargetConverter<Font, String>(String.class)
+    {
+      @Nonnull
+      @Override
+      public String sourceToTarget(@Nonnull Font pSource)
+      {
+        return pSource.getName();
+      }
 
-  @Nonnull
-  @Override
-  public String valueToString(@Nonnull Font pValue)
-  {
-    return pValue.getName();
-  }
-
-  @Nullable
-  @Override
-  protected Font stringToValue(@Nonnull String pValueAsString)
-  {
-    return Font.decode(pValueAsString);
+      @Nullable
+      @Override
+      public Font targetToSource(@Nonnull String pTarget)
+      {
+        return Font.decode(pTarget);
+      }
+    });
   }
 }

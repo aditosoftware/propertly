@@ -130,7 +130,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
   {
     final Element element = pParentOutputData.getOwnerDocument().createElement(pName);
     pParentOutputData.appendChild(element);
-    element.setTextContent(converterRegistry.valueToString(pValue));
+    element.setTextContent(converterRegistry.sourceToTarget(pValue, String.class));
   }
 
   @Override
@@ -146,7 +146,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
     if (pAnnotations != null && !pAnnotations.isEmpty())
       element.setAttribute("annotations", pAnnotations.toString());
     if (pValue != null)
-      element.setTextContent(converterRegistry.valueToString(pValue));
+      element.setTextContent(converterRegistry.sourceToTarget(pValue, String.class));
   }
 
 
@@ -188,7 +188,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
           pAppendChild.appendFixedNode(pElement, name);
         break;
       case FIXED_VALUE:
-        pAppendChild.appendFixedValue(name, converterRegistry.stringToValue(childDetail.getType(), pElement.getTextContent()));
+        pAppendChild.appendFixedValue(name, converterRegistry.targetToSource(childDetail.getType(), pElement.getTextContent()));
         break;
       case DYNAMIC:
       default:
@@ -209,7 +209,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
           if (specificType == null)
             specificType = type;
           Class specificCls = converterRegistry.stringToType(specificType);
-          pAppendChild.appendDynamicValue(name, cls, converterRegistry.stringToValue(specificCls, pElement.getTextContent()), null);
+          pAppendChild.appendDynamicValue(name, cls, converterRegistry.targetToSource(specificCls, pElement.getTextContent()), null);
         }
         break;
     }

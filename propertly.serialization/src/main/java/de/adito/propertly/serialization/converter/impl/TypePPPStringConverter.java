@@ -18,15 +18,15 @@ public class TypePPPStringConverter extends AbstractSubTypeStringConverter<IProp
 
   @Nullable
   @Override
-  public IPropertyPitProvider stringToValue(@Nonnull String pValueAsString, @Nonnull Class<? extends IPropertyPitProvider> pType)
+  public IPropertyPitProvider targetToSource(@Nonnull Object pTarget, @Nonnull Class<? extends IPropertyPitProvider> pSourceType)
   {
-    throw new RuntimeException("'stringToValue' not available for " + getClass().getSimpleName());
+    throw new RuntimeException("'targetToSource' not available for " + getClass().getSimpleName());
   }
 
   @Nonnull
   @Override
-  public String valueToString(@Nonnull IPropertyPitProvider pValue)
+  public Object sourceToTarget(@Nonnull IPropertyPitProvider pSource, @Nonnull Class... pTargetTypes)
   {
-    throw new RuntimeException("'valueToString' not available for " + getClass().getSimpleName());
+    throw new RuntimeException("'sourceToTarget' not available for " + getClass().getSimpleName());
   }
 }

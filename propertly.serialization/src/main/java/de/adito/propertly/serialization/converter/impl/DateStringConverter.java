@@ -15,26 +15,44 @@ public class DateStringConverter extends AbstractObjectStringConverter<Date>
   {
     super(Date.class);
     dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S z");
-  }
-
-  @Nullable
-  @Override
-  protected Date stringToValue(@Nonnull String pValueAsString)
-  {
-    try
+    registerSourceTargetConverter(new SourceTargetConverter<Date, String>(String.class)
     {
-      return dateFormat.parse(pValueAsString);
-    }
-    catch (ParseException e)
-    {
-      throw new RuntimeException(e);
-    }
-  }
+      @Nonnull
+      @Override
+      public String sourceToTarget(@Nonnull Date pSource)
+      {
+        return dateFormat.format(pSource);
+      }
 
-  @Nonnull
-  @Override
-  public String valueToString(@Nonnull Date pValue)
-  {
-    return dateFormat.format(pValue);
+      @Nullable
+      @Override
+      public Date targetToSource(@Nonnull String pTarget)
+      {
+        try
+        {
+          return dateFormat.parse(pTarget);
+        }
+        catch (ParseException e)
+        {
+          throw new RuntimeException(e);
+        }
+      }
+    });
+    registerSourceTargetConverter(new SourceTargetConverter<Date, Number>(Number.class)
+    {
+      @Nonnull
+      @Override
+      public Number sourceToTarget(@Nonnull Date pSource)
+      {
+        return pSource.getTime();
+      }
+
+      @Nullable
+      @Override
+      public Date targetToSource(@Nonnull Number pTarget)
+      {
+        return new Date(pTarget.longValue());
+      }
+    });
   }
 }

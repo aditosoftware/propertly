@@ -5,22 +5,22 @@ import javax.annotation.*;
 /**
  * @author j.boesl, 05.03.15
  */
-public interface IObjectConverter<T>
+public interface IObjectConverter<S>
 {
 
   @Nonnull
-  Class<T> getCommonType();
+  Class<S> getCommonType();
 
   @Nullable
-  Class<? extends T> stringToType(@Nonnull String pTypeAsString);
+  Class<? extends S> stringToType(@Nonnull String pTypeAsString);
 
   @Nonnull
-  String typeToString(@Nonnull Class<? extends T> pType);
+  String typeToString(@Nonnull Class<? extends S> pType);
 
   @Nullable
-  T stringToValue(@Nonnull String pValueAsString, @Nonnull Class<? extends T> pType);
+  S targetToSource(@Nonnull Object pTarget, @Nonnull Class<? extends S> pSourceType);
 
   @Nonnull
-  String valueToString(@Nonnull T pValue);
+  Object sourceToTarget(@Nonnull S pSource, @Nonnull Class... pTargetTypes);
 
 }
