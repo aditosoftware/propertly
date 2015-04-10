@@ -5,7 +5,7 @@ import javax.annotation.*;
 /**
  * @author j.boesl, 04.03.15
  */
-public class BooleanStringConverter extends AbstractObjectStringConverter<Boolean>
+public class BooleanStringConverter extends AbstractObjectConverter<Boolean>
 {
   public BooleanStringConverter()
   {

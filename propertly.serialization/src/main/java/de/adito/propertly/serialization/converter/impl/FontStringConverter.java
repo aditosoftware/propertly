@@ -6,7 +6,7 @@ import java.awt.*;
 /**
  * @author j.boesl, 09.03.15
  */
-public class FontStringConverter extends AbstractObjectStringConverter<Font>
+public class FontStringConverter extends AbstractObjectConverter<Font>
 {
   public FontStringConverter()
   {

@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 /**
  * @author j.boesl, 05.03.15
  */
-public class DimensionStringConverter extends AbstractObjectStringConverter<Dimension>
+public class DimensionStringConverter extends AbstractObjectConverter<Dimension>
 {
   public DimensionStringConverter()
   {

@@ -6,7 +6,7 @@ import java.awt.*;
 /**
  * @author j.boesl, 05.03.15
  */
-public class ColorStringConverter extends AbstractObjectStringConverter<Color>
+public class ColorStringConverter extends AbstractObjectConverter<Color>
 {
   public ColorStringConverter()
   {

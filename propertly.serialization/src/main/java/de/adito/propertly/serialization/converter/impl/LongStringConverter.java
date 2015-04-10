@@ -5,7 +5,7 @@ import javax.annotation.*;
 /**
  * @author j.boesl, 04.03.15
  */
-public class LongStringConverter extends AbstractObjectStringConverter<Long>
+public class LongStringConverter extends AbstractObjectConverter<Long>
 {
   public LongStringConverter()
   {

@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * @author j.boesl, 04.03.15
  */
-public class DateStringConverter extends AbstractObjectStringConverter<Date>
+public class DateStringConverter extends AbstractObjectConverter<Date>
 {
   private final SimpleDateFormat dateFormat;
 

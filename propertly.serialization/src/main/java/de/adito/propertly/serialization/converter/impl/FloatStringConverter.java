@@ -5,7 +5,7 @@ import javax.annotation.*;
 /**
  * @author j.boesl, 04.03.15
  */
-public class FloatStringConverter extends AbstractObjectStringConverter<Float>
+public class FloatStringConverter extends AbstractObjectConverter<Float>
 {
   public FloatStringConverter()
   {

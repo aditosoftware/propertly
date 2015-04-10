@@ -5,7 +5,7 @@ import javax.annotation.*;
 /**
  * @author j.boesl, 04.03.15
  */
-public class DoubleStringConverter extends AbstractObjectStringConverter<Double>
+public class DoubleStringConverter extends AbstractObjectConverter<Double>
 {
   public DoubleStringConverter()
   {

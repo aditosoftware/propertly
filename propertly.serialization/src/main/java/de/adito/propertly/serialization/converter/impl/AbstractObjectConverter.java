@@ -8,18 +8,18 @@ import java.util.*;
 /**
  * @author j.boesl, 04.03.15
  */
-public abstract class AbstractObjectStringConverter<S> implements IObjectConverter<S>
+public abstract class AbstractObjectConverter<S> implements IObjectConverter<S>
 {
   private Class<S> cls;
   private String name;
   private List<SourceTargetConverter<S, ?>> sourceTargetConverters;
 
-  public AbstractObjectStringConverter(@Nonnull Class<S> pCls)
+  public AbstractObjectConverter(@Nonnull Class<S> pCls)
   {
     this(pCls, pCls.getSimpleName());
   }
 
-  public AbstractObjectStringConverter(@Nonnull Class<S> pCls, @Nonnull String pName)
+  public AbstractObjectConverter(@Nonnull Class<S> pCls, @Nonnull String pName)
   {
     cls = pCls;
     name = pName;
