@@ -3,7 +3,7 @@ package de.adito.propertly.core.common;
 
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
 import java.util.Set;
 
 /**
@@ -75,8 +75,13 @@ public class PropertlyUtility
     return strBuilder.toString();
   }
 
-  public static boolean isEqual(IPropertyPitProvider<?, ?, ?> p1, IPropertyPitProvider<?, ?, ?> p2)
+  public static boolean isEqual(@Nullable IPropertyPitProvider<?, ?, ?> p1, @Nullable IPropertyPitProvider<?, ?, ?> p2)
   {
+    if (p1 == p2)
+      return true;
+    if (p1 == null || p2 == null)
+      return false;
+
     IPropertyPit<? extends IPropertyPitProvider, ? extends IPropertyPitProvider<?, ?, ?>, ?> pit1 = p1.getPit();
     IPropertyPit<? extends IPropertyPitProvider, ? extends IPropertyPitProvider<?, ?, ?>, ?> pit2 = p2.getPit();
     Set<? extends IPropertyDescription> p1ds = pit1.getPropertyDescriptions();
