@@ -1,6 +1,8 @@
 Propertly
 =========
 
+[![Build Status](https://travis-ci.org/jboesl/propertly.svg?branch=master)](https://travis-ci.org/jboesl/propertly)
+
 Propertly is a java framework for data structures similar to java beans. As with java beans everything is defined solely with java objects.
 The project is motivated by the many shortcomings java beans have.
 
