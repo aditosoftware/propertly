@@ -1,5 +1,6 @@
 package de.adito.propertly.core.api;
 
+import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.IPropertyPath;
 
 import java.util.*;
@@ -39,5 +40,24 @@ class PropertyPath implements IPropertyPath
       stringBuilder.append(element);
     }
     return stringBuilder.toString();
+  }
+
+  @Override
+  public String toString()
+  {
+    return PropertlyUtility.asString(this, asString());
+  }
+
+  @Override
+  public boolean equals(Object o)
+  {
+    return this == o ||
+        !(o == null || getClass() != o.getClass()) && Objects.equals(elements, ((PropertyPath) o).elements);
+  }
+
+  @Override
+  public int hashCode()
+  {
+    return Objects.hash(elements);
   }
 }

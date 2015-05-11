@@ -65,6 +65,7 @@ public interface IProperty<S extends IPropertyPitProvider, T>
   /**
    * @return a path object describing the path from the root to this property.
    */
+  @Nonnull
   IPropertyPath getPath();
 
   /**
