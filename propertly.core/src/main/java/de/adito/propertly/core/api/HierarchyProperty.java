@@ -1,15 +1,11 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.ListenerList;
-import de.adito.propertly.core.common.PropertlyUtility;
-import de.adito.propertly.core.common.exception.InaccessibleException;
-import de.adito.propertly.core.common.exception.PropertlyRenameException;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyEventListener;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.common.exception.*;
+import de.adito.propertly.core.spi.*;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * @author PaL
@@ -27,7 +23,6 @@ class HierarchyProperty implements IProperty
   {
     node = pNode;
     propertyDescription = pPropertyDescription;
-    listeners = new ListenerList<IPropertyEventListener>();
   }
 
   @Nonnull
@@ -48,9 +43,9 @@ class HierarchyProperty implements IProperty
   @Override
   public Object setValue(Object pValue)
   {
-    if (!canWrite())
-      throw new InaccessibleException("IProperty '" + getDescription() + "' can't be written.");
-    return node.setValue(pValue);
+    if (canWrite())
+      return node.setValue(pValue);
+    throw new InaccessibleException("IProperty '" + getDescription() + "' can't be written.");
   }
 
   @Override
@@ -63,6 +58,12 @@ class HierarchyProperty implements IProperty
   public boolean canWrite()
   {
     return node.canWrite();
+  }
+
+  @Override
+  public boolean isValid()
+  {
+    return node.isValid();
   }
 
   @Override
@@ -99,29 +100,40 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
-  public void addWeakListener(@Nonnull IPropertyEventListener pListener)
+  public synchronized void addWeakListener(@Nonnull IPropertyEventListener pListener)
   {
+    if (listeners == null)
+      listeners = new ListenerList<IPropertyEventListener>();
     listeners.addWeakListener(pListener);
   }
 
   @Override
-  public void addStrongListener(@Nonnull IPropertyEventListener pListener)
+  public synchronized void addStrongListener(@Nonnull IPropertyEventListener pListener)
   {
+    if (listeners == null)
+      listeners = new ListenerList<IPropertyEventListener>();
     listeners.addStrongListener(pListener);
   }
 
   @Override
-  public void removeListener(@Nonnull IPropertyEventListener pListener)
+  public synchronized void removeListener(@Nonnull IPropertyEventListener pListener)
   {
-    listeners.removeListener(pListener);
+    if (listeners != null)
+      listeners.removeListener(pListener);
   }
 
   void fire(Object pOldValue, Object pNewValue)
   {
-    if (listeners != null)
-      for (IPropertyEventListener listener : listeners)
-        //noinspection unchecked
-        listener.propertyChanged(this, pOldValue, pNewValue);
+    List<IPropertyEventListener> l;
+    synchronized (this)
+    {
+      if (listeners == null)
+        return;
+      l = listeners.getListeners();
+    }
+    for (IPropertyEventListener listener : l)
+      //noinspection unchecked
+      listener.propertyChanged(this, pOldValue, pNewValue);
   }
 
   AbstractNode getNode()

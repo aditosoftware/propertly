@@ -3,10 +3,8 @@ package de.adito.propertly.core.api;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Comparator;
-import java.util.List;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * INodes are the storage structure behind IProperty objects.
@@ -82,6 +80,18 @@ public interface INode
    * @return whether the value can be written to this INode.
    */
   boolean canWrite();
+
+  /**
+   * The node is live and valid when it is connected to an IHierarchy.
+   *
+   * @return whether this INode is valid.
+   */
+  boolean isValid();
+
+  /**
+   * Removes this INode from the node hierarchy thus rendering it invalid.
+   */
+  void remove();
 
   /**
    * @return the path from the root to this INode as a string separated with slashes ('/').

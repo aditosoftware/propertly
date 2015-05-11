@@ -2,8 +2,7 @@ package de.adito.propertly.core.spi;
 
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 
 /**
  * IProperty is the access point for a value including its metadata. That means besides getting and setting its value
@@ -48,6 +47,13 @@ public interface IProperty<S extends IPropertyPitProvider, T>
    * @return whether {@link #setValue(Object)} can be used.
    */
   boolean canWrite();
+
+  /**
+   * Checks whether this IProperty is valid.
+   *
+   * @return whether this IProperty is a proper member of an IHierarchy and is valid thereby.
+   */
+  boolean isValid();
 
   /**
    * @return the parental IPropertyPitProvider object this IProperty belongs to. May only be null if this IProperty

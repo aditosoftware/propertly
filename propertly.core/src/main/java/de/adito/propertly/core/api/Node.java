@@ -1,18 +1,11 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.PPPIntrospector;
-import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
-import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * @author PaL
@@ -22,6 +15,7 @@ import java.util.Set;
 class Node extends AbstractNode
 {
 
+  @Nullable
   private Object value;
   @Nullable
   private NodeChildren children;
@@ -35,6 +29,8 @@ class Node extends AbstractNode
   @Override
   public Object setValue(Object pValue)
   {
+    ensureValid();
+
     if ((value == pValue) || (value != null && value.equals(pValue)))
       return value; // nothing changes with equal values.
 
@@ -56,8 +52,8 @@ class Node extends AbstractNode
     {
       if (children != null)
       {
-        for (INode child : children.asList())
-          child.setValue(null);
+        for (INode child : children)
+          child.remove();
       }
       HierarchyHelper.setNode((IPropertyPitProvider) oldValue, null);
     }
@@ -104,6 +100,7 @@ class Node extends AbstractNode
     return value;
   }
 
+  @Nullable
   @Override
   public Object getValue()
   {
@@ -113,13 +110,26 @@ class Node extends AbstractNode
   @Override
   public boolean canRead()
   {
-    return true;
+    return isValid();
   }
 
   @Override
   public boolean canWrite()
   {
-    return true;
+    return isValid();
+  }
+
+  @Override
+  public void remove()
+  {
+    if (isValid() && children != null)
+    {
+      for (INode child : children)
+        child.remove();
+      children = null;
+      value = null;
+    }
+    super.remove();
   }
 
   @Nullable
@@ -138,12 +148,14 @@ class Node extends AbstractNode
 
   protected INode createChild(IPropertyDescription pPropertyDescription)
   {
+    ensureValid();
     return new Node(getHierarchy(), this, PropertyDescription.create(pPropertyDescription));
   }
 
   @Override
   public void addProperty(@Nonnull IPropertyDescription pPropertyDescription)
   {
+    ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
     INode node = findNode(pPropertyDescription);
@@ -159,6 +171,7 @@ class Node extends AbstractNode
   @Override
   public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription)
   {
+    ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
     INode childNode = findNode(pPropertyDescription);
@@ -180,6 +193,7 @@ class Node extends AbstractNode
   @Override
   public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription)
   {
+    ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
     INode node = findNode(pPropertyDescription);
@@ -195,6 +209,7 @@ class Node extends AbstractNode
   @Override
   public void removeProperty(int pIndex)
   {
+    ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider) || children == null)
       throw new IllegalStateException("not mutable: " + getProperty());
     IProperty property = children.get(pIndex).getProperty();
@@ -209,6 +224,7 @@ class Node extends AbstractNode
   @Override
   public void reorder(Comparator pComparator)
   {
+    ensureValid();
     if (children != null)
       children.reorder(pComparator);
   }
@@ -216,6 +232,7 @@ class Node extends AbstractNode
   @Override
   public void rename(String pName) throws PropertlyRenameException
   {
+    ensureValid();
     IProperty property = getProperty();
     if (!property.isDynamic())
       throw new PropertlyRenameException(property, pName);

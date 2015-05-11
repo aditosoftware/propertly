@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * @author j.boesl, 09.11.14
  */
-class NodeChildren
+class NodeChildren implements Iterable<INode>
 {
 
   private Map<String, INode> childrenMap;
@@ -99,4 +99,9 @@ class NodeChildren
     return childrenList.get(pIndex);
   }
 
+  @Override
+  public Iterator<INode> iterator()
+  {
+    return asList().iterator();
+  }
 }
