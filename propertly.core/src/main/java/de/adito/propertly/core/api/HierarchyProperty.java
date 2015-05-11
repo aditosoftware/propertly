@@ -73,6 +73,12 @@ class HierarchyProperty implements IProperty
     return parent == null ? null : (IPropertyPitProvider) parent.getValue();
   }
 
+  @Override
+  public IPropertyPath getPath()
+  {
+    return node.getPath();
+  }
+
   @Nonnull
   @Override
   public Class getType()

@@ -52,12 +52,10 @@ abstract class AbstractNode implements INode
 
   @Nonnull
   @Override
-  public String getPath()
+  public IPropertyPath getPath()
   {
     ensureValid();
-    INode parentNode = getParent();
-    String name = getProperty().getName();
-    return parentNode == null ? name : parentNode.getPath() + "/" + name;
+    return new PropertyPath(this);
   }
 
   @Nonnull

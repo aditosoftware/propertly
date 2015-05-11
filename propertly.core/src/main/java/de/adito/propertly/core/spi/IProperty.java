@@ -63,6 +63,11 @@ public interface IProperty<S extends IPropertyPitProvider, T>
   S getParent();
 
   /**
+   * @return a path object describing the path from the root to this property.
+   */
+  IPropertyPath getPath();
+
+  /**
    * Like with variables this returns the class this property's value must be or must inherit from.
    *
    * @return the type for the value.

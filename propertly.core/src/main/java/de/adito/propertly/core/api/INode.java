@@ -97,7 +97,7 @@ public interface INode
    * @return the path from the root to this INode as a string separated with slashes ('/').
    */
   @Nonnull
-  String getPath();
+  IPropertyPath getPath();
 
   /**
    * @return the IProperty object for this INode.
