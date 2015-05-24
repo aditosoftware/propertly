@@ -56,7 +56,7 @@ public class StructureDescriptor
       _collect(pMap, subClasses);
   }
 
-  private class _PPPDescription implements IPPPDescription
+  private static class _PPPDescription implements IPPPDescription
   {
     private Class<? extends IPropertyPitProvider> type;
 

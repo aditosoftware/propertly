@@ -50,7 +50,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(true);
     DocumentBuilder builder = factory.newDocumentBuilder();
-    return builder.parse(new ByteArrayInputStream(pXmlString.getBytes()));
+    return builder.parse(new ByteArrayInputStream(pXmlString.getBytes("UTF-8")));
   }
 
   @Nonnull
