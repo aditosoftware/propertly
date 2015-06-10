@@ -113,6 +113,8 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
 
   public abstract List<INode> delegatingGetChildren(INode pDelegateNode, DelegatingNode pDelegatingNode);
 
+  public abstract INode findDelegatingChild(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName);
+
   public abstract INode findDelegatingChild(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription);
 
   public abstract void delegatingAddProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription);

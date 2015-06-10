@@ -141,6 +141,13 @@ class Node extends AbstractNode
 
   @Nullable
   @Override
+  public INode findNode(@Nonnull String pName)
+  {
+    return children == null ? null : children.find(pName);
+  }
+
+  @Nullable
+  @Override
   public INode findNode(@Nonnull IPropertyDescription pPropertyDescription)
   {
     return children == null ? null : children.find(pPropertyDescription);

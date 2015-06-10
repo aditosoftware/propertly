@@ -43,6 +43,15 @@ public interface INode
   /**
    * Tries to find a child node.
    *
+   * @param pName the name of the searched child.
+   * @return the found child node or <tt>null</tt> if a child node with the given description does not exist.
+   */
+  @Nullable
+  INode findNode(@Nonnull String pName);
+
+  /**
+   * Tries to find a child node.
+   *
    * @param pPropertyDescription describes the search children.
    * @return the found child node or <tt>null</tt> if a child node with the given description does not exist.
    */

@@ -58,6 +58,16 @@ public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> 
   }
 
   @Override
+  public INode findDelegatingChild(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName)
+  {
+    INode delegateChildNode = pDelegateNode.findNode(pName);
+    if (delegateChildNode == null)
+      return null;
+    return new DelegatingNode(this, pDelegatingNode, delegateChildNode.getProperty().getDescription(),
+                              PropertlyUtility.getFixedSupplier(delegateChildNode));
+  }
+
+  @Override
   public INode findDelegatingChild(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription)
   {
     INode delegateChildNode = pDelegateNode.findNode(pPropertyDescription);

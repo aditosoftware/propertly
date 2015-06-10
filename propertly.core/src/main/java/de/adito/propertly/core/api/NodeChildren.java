@@ -84,6 +84,11 @@ class NodeChildren implements Iterable<INode>
     return Collections.unmodifiableList(childrenList);
   }
 
+  public INode find(String pName)
+  {
+    return childrenMap.get(pName);
+  }
+
   public INode find(IPropertyDescription<?, ?> pPropertyDescription)
   {
     INode node = childrenMap.get(pPropertyDescription.getName());

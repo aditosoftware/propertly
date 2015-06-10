@@ -82,6 +82,13 @@ public class DelegatingNode extends AbstractNode
 
   @Nullable
   @Override
+  public INode findNode(@Nonnull String pName)
+  {
+    return getHierarchy().findDelegatingChild(delegateProvider.get(), this, pName);
+  }
+
+  @Nullable
+  @Override
   public INode findNode(@Nonnull IPropertyDescription pPropertyDescription)
   {
     return getHierarchy().findDelegatingChild(delegateProvider.get(), this, pPropertyDescription);

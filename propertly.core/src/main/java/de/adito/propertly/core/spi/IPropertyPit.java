@@ -1,9 +1,7 @@
 package de.adito.propertly.core.spi;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * IPropertyPit is the main access point for IProperty objects.
@@ -43,6 +41,15 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
    */
   @Nonnull
   IProperty<P, S> getOwnProperty();
+
+  /**
+   * Finds an IProperty at this IPropertyPit.
+   *
+   * @param pName the name of the searched IProperty.
+   * @return the IProperty if available otherwise <tt>null</tt>.
+   */
+  @Nullable
+  IProperty<S, T> findProperty(@Nonnull String pName);
 
   /**
    * Finds an IProperty at this IPropertyPit. In contrast to #getProperty this method can return <tt>null</tt> because

@@ -67,6 +67,15 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
 
   @Nullable
   @Override
+  public IProperty<S, T> findProperty(@Nonnull String pName)
+  {
+    INode childNode = getNode().findNode(pName);
+    //noinspection unchecked
+    return childNode == null ? null : childNode.getProperty();
+  }
+
+  @Nullable
+  @Override
   public <T> IProperty<S, T> findProperty(@Nonnull IPropertyDescription<?, T> pPropertyDescription)
   {
     INode childNode = getNode().findNode(pPropertyDescription);
