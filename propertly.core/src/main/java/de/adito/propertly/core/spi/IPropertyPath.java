@@ -1,5 +1,6 @@
 package de.adito.propertly.core.spi;
 
+import javax.annotation.*;
 import java.util.List;
 
 /**
@@ -10,14 +11,19 @@ import java.util.List;
 public interface IPropertyPath
 {
 
+  @Nullable
+  IProperty<?, ?> find(IHierarchy<?> pHierarchy);
+
   /**
    * @return path as elements.
    */
+  @Nonnull
   List<String> getPathElements();
 
   /**
    * @return path as string separated by slashes.
    */
+  @Nonnull
   String asString();
 
 }
