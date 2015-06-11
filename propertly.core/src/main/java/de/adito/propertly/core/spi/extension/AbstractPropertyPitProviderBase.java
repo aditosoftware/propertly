@@ -40,6 +40,12 @@ abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S
     return getPit().findProperty(pPropertyDescription);
   }
 
+  @Nullable
+  public IProperty<S, T> findProperty(@Nonnull String pName)
+  {
+    return getPit().findProperty(pName);
+  }
+
   @Nonnull
   public <E extends T> IProperty<S, E> getProperty(IPropertyDescription<? super S, E> pPropertyDescription)
   {
