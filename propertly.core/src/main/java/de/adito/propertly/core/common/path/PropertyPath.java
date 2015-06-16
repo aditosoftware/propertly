@@ -1,4 +1,4 @@
-package de.adito.propertly.core.api;
+package de.adito.propertly.core.common.path;
 
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
@@ -16,13 +16,14 @@ public class PropertyPath implements IPropertyPath
 
   private List<String> elements;
 
-  PropertyPath(INode pNode)
+  public PropertyPath(IProperty<?, ?> pProperty)
   {
     elements = new ArrayList<String>();
-    while (pNode != null)
+    while (pProperty != null)
     {
-      elements.add(0, pNode.getProperty().getName());
-      pNode = pNode.getParent();
+      elements.add(0, pProperty.getName());
+      IPropertyPitProvider parent = pProperty.getParent();
+      pProperty = parent == null ? null : parent.getPit().getOwnProperty();
     }
   }
 

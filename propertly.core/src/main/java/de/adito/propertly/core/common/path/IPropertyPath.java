@@ -1,4 +1,6 @@
-package de.adito.propertly.core.spi;
+package de.adito.propertly.core.common.path;
+
+import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
 import java.util.List;

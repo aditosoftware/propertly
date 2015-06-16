@@ -75,13 +75,6 @@ class HierarchyProperty implements IProperty
 
   @Nonnull
   @Override
-  public IPropertyPath getPath()
-  {
-    return node.getPath();
-  }
-
-  @Nonnull
-  @Override
   public Class getType()
   {
     return propertyDescription.getType();

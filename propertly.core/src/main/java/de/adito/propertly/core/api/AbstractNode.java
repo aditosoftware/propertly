@@ -1,6 +1,7 @@
 package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
@@ -48,14 +49,6 @@ abstract class AbstractNode implements INode
   public AbstractNode getParent()
   {
     return parent;
-  }
-
-  @Nonnull
-  @Override
-  public IPropertyPath getPath()
-  {
-    ensureValid();
-    return new PropertyPath(this);
   }
 
   @Nonnull
@@ -150,7 +143,7 @@ abstract class AbstractNode implements INode
   public String toString()
   {
     if (isValid())
-      return PropertlyUtility.asString(this, "path=" + getPath(), "value=" + getProperty().getValue());
+      return PropertlyUtility.asString(this, "path=" + new PropertyPath(getProperty()), "value=" + getProperty().getValue());
     return PropertlyUtility.asString(this, "invalid");
   }
 

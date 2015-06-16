@@ -103,12 +103,6 @@ public interface INode
   void remove();
 
   /**
-   * @return the path from the root to this INode as a string separated with slashes ('/').
-   */
-  @Nonnull
-  IPropertyPath getPath();
-
-  /**
    * @return the IProperty object for this INode.
    */
   @Nonnull
