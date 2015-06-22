@@ -1,6 +1,7 @@
 package de.adito.propertly.test.core.impl;
 
 import de.adito.propertly.core.common.PD;
+import de.adito.propertly.core.common.annotations.PropertlyOverride;
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.spi.extension.AbstractPPP;
 
@@ -16,8 +17,11 @@ public class TProperty extends AbstractPPP<IPropertyPitProvider, TProperty, Obje
     implements ITest<TProperty>, IComponent<IPropertyPitProvider, TProperty>
 {
 
+  @PropertlyOverride
   @IntVerifier(minValue = 0)
   public static final IPropertyDescription<TProperty, Integer> X = PD.create(TProperty.class);
+
+  @PropertlyOverride
   @IntVerifier(minValue = 0)
   public static final IPropertyDescription<TProperty, Integer> Y = PD.create(TProperty.class);
 

@@ -1,6 +1,7 @@
 package de.adito.propertly.core.common;
 
 import de.adito.propertly.core.api.PropertyDescription;
+import de.adito.propertly.core.common.annotations.PropertlyOverride;
 import de.adito.propertly.core.common.exception.WrongModifiersException;
 import de.adito.propertly.core.spi.*;
 
@@ -74,7 +75,8 @@ public class PPPIntrospector
           {
             int modifiers = field.getModifiers();
             if (!(Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)))
-              throw new WrongModifiersException("Wrong modifiers for '" + field.getName() + "'. IPropertyDescriptions must have static and final modifiers for PPPIntrospection.");
+              throw new WrongModifiersException("Wrong modifiers for '" + field.getName()
+                                                    + "'. IPropertyDescriptions must have static and final modifiers for PPPIntrospection.");
             IPropertyDescription<?, ?> propertyDescription = (IPropertyDescription) field.get(pPPPClass);
             boolean isParentalType = propertyDescription.getSourceType().isAssignableFrom(pPPPClass);
             if (isParentalType)
@@ -99,14 +101,29 @@ public class PPPIntrospector
       for (List<IPropertyDescription> descriptions : namePropertyMap.values())
       {
         IPropertyDescription firstDescription = descriptions.get(0);
+        PropertlyOverride propertlyOverride = firstDescription.getAnnotation(PropertlyOverride.class);
         if (descriptions.size() == 1)
+        {
+          if (propertlyOverride != null)
+            throw new IllegalStateException("'" + firstDescription + "' at '" + firstDescription.getSourceType()
+                                                + "' is annotated with @PropertlyOverride but does not override.");
           propertyDescriptions.add(firstDescription);
+        }
         else
         {
           Class type = firstDescription.getType();
-          for (IPropertyDescription description : descriptions)
+          boolean needsOverride = false;
+          for (IPropertyDescription<?, ?> description : descriptions)
+          {
             if (!type.equals(description.getType()))
               throw new IllegalStateException("Incompatible descriptions are used together: " + descriptions);
+            if (!needsOverride && !description.equals(firstDescription) &&
+                description.getSourceType().isAssignableFrom(firstDescription.getSourceType()))
+              needsOverride = true;
+          }
+          if (needsOverride && propertlyOverride == null)
+            throw new IllegalStateException("'" + firstDescription + "' at '" + firstDescription.getSourceType()
+                                                + "' overrides another description an thus has the be annotated with @PropertlyOverride.");
           //noinspection unchecked
           propertyDescriptions.add(PropertyDescription.create(
               pPPPClass, type, firstDescription.getName(), firstDescription.getAnnotations()));
