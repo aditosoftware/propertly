@@ -67,6 +67,24 @@ public class PropertyPath implements IPropertyPath
 
   @Nonnull
   @Override
+  public IPropertyPath getParent() throws NoParentPathForRootException
+  {
+    if (elements.isEmpty())
+      throw new NoParentPathForRootException();
+    return new PropertyPath(elements.subList(0, elements.size()-1));
+  }
+
+  @Nonnull
+  @Override
+  public IPropertyPath getChild(String pName)
+  {
+    List<String> list = new ArrayList<String>(elements);
+    list.add(pName);
+    return new PropertyPath(list);
+  }
+
+  @Nonnull
+  @Override
   public List<String> getPathElements()
   {
     return new ArrayList<String>(elements);

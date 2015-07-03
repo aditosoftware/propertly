@@ -13,8 +13,28 @@ import java.util.List;
 public interface IPropertyPath
 {
 
+  /**
+   * Tries to find an IProperty in the supplied IHierarchy for this path.
+   *
+   * @param pHierarchy the hierarchy object to search in.
+   * @return the found property or <tt>null</tt> if none was found.
+   */
   @Nullable
   IProperty<?, ?> find(IHierarchy<?> pHierarchy);
+
+  /**
+   * @return the parental IPropertyPath object.
+   * @throws NoParentPathForRootException when called on the root path.
+   */
+  @Nonnull
+  IPropertyPath getParent() throws NoParentPathForRootException;
+
+  /**
+   * @param pName the child's name.
+   * @return a new IPropertyPath for the child.
+   */
+  @Nonnull
+  IPropertyPath getChild(String pName);
 
   /**
    * @return path as elements.
