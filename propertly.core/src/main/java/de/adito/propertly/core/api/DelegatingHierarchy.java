@@ -129,6 +129,8 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
 
   public abstract void rename(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName);
 
+  public abstract int delegatingIndexOf(INode pDelegateNode, DelegatingNode pDelegatingNode, IProperty<?, ?> pProperty);
+
 
   /**
    * IFunction implementation

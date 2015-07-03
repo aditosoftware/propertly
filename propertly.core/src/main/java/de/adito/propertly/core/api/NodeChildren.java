@@ -66,6 +66,12 @@ class NodeChildren implements Iterable<INode>
     childrenMap.put(pName, node);
   }
 
+  public int indexOf(IProperty<?, ?> pProperty)
+  {
+    INode node = find(pProperty.getDescription());
+    return childrenList.indexOf(node);
+  }
+
   public void reorder(final Comparator pComparator)
   {
     Collections.sort(childrenList, new Comparator<INode>()

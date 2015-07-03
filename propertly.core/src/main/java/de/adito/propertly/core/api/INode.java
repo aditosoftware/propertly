@@ -147,6 +147,12 @@ public interface INode
   void removeProperty(int pIndex);
 
   /**
+   * @param pProperty the property for which the index is looked for.
+   * @return the index of an child property. '-1' in case the property is not a child of this node.
+   */
+  int indexOf(IProperty<?, ?> pProperty);
+
+  /**
    * Reorders the child nodes using the given comparator.
    *
    * @param pComparator the comparator used to order the children.

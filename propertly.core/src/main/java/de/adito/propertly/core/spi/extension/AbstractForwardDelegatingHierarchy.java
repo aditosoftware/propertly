@@ -112,4 +112,10 @@ public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> 
   {
     pDelegateNode.rename(pName);
   }
+
+  @Override
+  public int delegatingIndexOf(INode pDelegateNode, DelegatingNode pDelegatingNode, IProperty<?, ?> pProperty)
+  {
+    return pDelegateNode.indexOf(pProperty);
+  }
 }

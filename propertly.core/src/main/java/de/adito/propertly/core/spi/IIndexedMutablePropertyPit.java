@@ -35,7 +35,7 @@ public interface IIndexedMutablePropertyPit<P extends IPropertyPitProvider, S ex
    * @return the created IProperty.
    */
   @Nonnull
-  IProperty<S, T> addProperty(int pIndex, IPropertyDescription<S, T> pPropertyDescription);
+  IProperty<S, T> addProperty(int pIndex, @Nonnull IPropertyDescription<S, T> pPropertyDescription);
 
   /**
    * @param pIndex the index for the IProperty to be removed.
@@ -43,10 +43,18 @@ public interface IIndexedMutablePropertyPit<P extends IPropertyPitProvider, S ex
   void removeProperty(int pIndex);
 
   /**
+   * Returns the index of a property within this IIndexedMutablePropertyPit.
+   *
+   * @param pProperty the property for which the index is looked for.
+   * @return the index of an child property. '-1' in case the property is not a child of this pit.
+   */
+  int indexOf(@Nonnull IProperty<?, ?> pProperty);
+
+  /**
    * Reorders the IProperty objects in this IIndexedMutablePropertyPit.
    *
    * @param pComparator is used for oredering.
    */
-  void reorder(Comparator<IProperty<S, T>> pComparator);
+  void reorder(@Nonnull Comparator<IProperty<S, T>> pComparator);
 
 }

@@ -1,7 +1,7 @@
 package de.adito.propertly.core.spi.extension;
 
-import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.api.PitFactory;
+import de.adito.propertly.core.spi.*;
 
 import javax.annotation.Nonnull;
 import java.util.Comparator;
@@ -57,6 +57,11 @@ public abstract class AbstractIndexedMutablePPP
   public IProperty<S, T> addProperty(int pIndex, IPropertyDescription<S, T> pPropertyDescription)
   {
     return pit.addProperty(pIndex, pPropertyDescription);
+  }
+
+  public int indexOf(@Nonnull IProperty<?, ?> pProperty)
+  {
+    return pit.indexOf(pProperty);
   }
 
   public void reorder(Comparator<IProperty<S, T>> pComparator)

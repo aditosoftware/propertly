@@ -55,7 +55,7 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
 
   @Nonnull
   @Override
-  public IProperty<S, T> addProperty(int pIndex, IPropertyDescription<S, T> pPropertyDescription)
+  public IProperty<S, T> addProperty(int pIndex, @Nonnull IPropertyDescription<S, T> pPropertyDescription)
   {
     getNode().addProperty(pIndex, pPropertyDescription);
     return getProperty(pIndex);
@@ -68,7 +68,13 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
   }
 
   @Override
-  public void reorder(Comparator<IProperty<S, T>> pComparator)
+  public int indexOf(@Nonnull IProperty<?, ?> pProperty)
+  {
+    return getNode().indexOf(pProperty);
+  }
+
+  @Override
+  public void reorder(@Nonnull Comparator<IProperty<S, T>> pComparator)
   {
     getNode().reorder(pComparator);
   }

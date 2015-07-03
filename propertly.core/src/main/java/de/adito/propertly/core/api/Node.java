@@ -229,6 +229,12 @@ class Node extends AbstractNode
   }
 
   @Override
+  public int indexOf(IProperty<?, ?> pProperty)
+  {
+    return children.indexOf(pProperty);
+  }
+
+  @Override
   public void reorder(Comparator pComparator)
   {
     ensureValid();

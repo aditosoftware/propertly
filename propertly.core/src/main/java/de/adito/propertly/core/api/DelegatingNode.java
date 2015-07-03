@@ -119,6 +119,12 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
+  public int indexOf(IProperty<?, ?> pProperty)
+  {
+    return getHierarchy().delegatingIndexOf(delegateProvider.get(), this, pProperty);
+  }
+
+  @Override
   public void reorder(Comparator pComparator)
   {
     getHierarchy().delegatingReorder(delegateProvider.get(), this, pComparator);
