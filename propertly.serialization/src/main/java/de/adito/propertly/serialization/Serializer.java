@@ -1,17 +1,13 @@
 package de.adito.propertly.serialization;
 
-import de.adito.propertly.core.api.Hierarchy;
-import de.adito.propertly.core.api.PropertyDescription;
+import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * Can serialize and deserialize IPropertyPitProviders. Output format is dependent on used ISerializationProvider
@@ -160,8 +156,8 @@ public class Serializer<T>
             type = childProperty.getType();
             if (!childProperty.isDynamic())
               return new _ChildDetail(IPropertyPitProvider.class.isAssignableFrom(type) ?
-                  ISerializationProvider.EChildCategory.FIXED_NODE :
-                  ISerializationProvider.EChildCategory.FIXED_VALUE, type);
+                                          ISerializationProvider.EChildCategory.FIXED_NODE :
+                                          ISerializationProvider.EChildCategory.FIXED_VALUE, type);
           }
           else
             type = ppp.getPit().getChildType();
@@ -214,7 +210,7 @@ public class Serializer<T>
         @Nonnull String pName, @Nonnull Class<V> pPropertyType, @Nullable V pValue,
         @Nullable List<? extends Annotation> pAnnotations)
     {
-      IMutablePropertyPitProvider<?, ?, ? super V> mppp = _getMutablePropertyPitProvider();
+      IMutablePropertyPitProvider<?, ?, ? super V> mppp = _getMutablePropertyPitProvider(pPropertyType, pName);
       IProperty<?, V> prop = mppp.getPit().addProperty(pPropertyType, pName, pAnnotations);
       prop.setValue(pValue);
     }
@@ -240,7 +236,7 @@ public class Serializer<T>
       }
       else
       {
-        IMutablePropertyPitProvider<?, ?, ? super IPropertyPitProvider> mppp = _getMutablePropertyPitProvider();
+        IMutablePropertyPitProvider<?, ?, ? super IPropertyPitProvider> mppp = _getMutablePropertyPitProvider(pPropertyType, pName);
         IProperty<?, IPropertyPitProvider> prop =
             (IProperty<?, IPropertyPitProvider>) mppp.getPit().addProperty(pPropertyType, pName, pAnnotations);
         prop.setValue(ppp);
@@ -255,9 +251,14 @@ public class Serializer<T>
       return childAppender.property.getValue();
     }
 
-    private IMutablePropertyPitProvider _getMutablePropertyPitProvider()
+    private IMutablePropertyPitProvider _getMutablePropertyPitProvider(Class pPropertyType, String pName)
     {
-      return (IMutablePropertyPitProvider) _getPropertyPitProvider();
+      IPropertyPitProvider propertyPitProvider = _getPropertyPitProvider();
+      if (propertyPitProvider instanceof IMutablePropertyPitProvider)
+        return (IMutablePropertyPitProvider) propertyPitProvider;
+      throw new RuntimeException(MessageFormat.format(
+          "Cannot add ''{0}'' with type ''{1}'' to ''{2}''.",
+          pName, pPropertyType.getSimpleName(), propertyPitProvider.getClass().getSimpleName()));
     }
 
     @Nonnull
