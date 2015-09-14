@@ -2,21 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>de.adito.propertly</groupId>
     <artifactId>propertly.parent</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
   </parent>
 
-  <modelVersion>4.0.0</modelVersion>
   <artifactId>propertly.serialization</artifactId>
 
   <dependencies>
     <dependency>
       <groupId>de.adito.propertly</groupId>
       <artifactId>propertly.core</artifactId>
-      <version>0.3-SNAPSHOT</version>
+      <version>0.3</version>
     </dependency>
 
     <dependency>
@@ -28,7 +28,7 @@
     <dependency>
       <groupId>de.adito.propertly</groupId>
       <artifactId>propertly.core</artifactId>
-      <version>0.3-SNAPSHOT</version>
+      <version>0.3</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
