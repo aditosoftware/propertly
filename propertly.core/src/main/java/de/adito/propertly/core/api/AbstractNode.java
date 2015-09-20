@@ -5,6 +5,7 @@ import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
+import java.util.List;
 
 /**
  * Abstract class for INode implementations.
@@ -92,51 +93,71 @@ abstract class AbstractNode implements INode
   @Override
   public void removeListener(@Nonnull IPropertyPitEventListener pListener)
   {
+    ensureValid();
     listeners.removeListener(pListener);
   }
 
-  protected void fireValueChange(Object pOldValue, Object pNewValue)
+  protected void fireValueChange(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nullable List<Object> pAttributes)
   {
     ensureValid();
-    getHierarchy().fireNodeChanged(getProperty(), pOldValue, pNewValue);
+    getHierarchy().fireNodeChanged(getProperty(), pOldValue, pNewValue, pAttributes);
     AbstractNode p = getParent();
     if (p != null)
     {
       for (IPropertyPitEventListener eventListener : p.listeners)
         //noinspection unchecked
-        eventListener.propertyChanged(getProperty(), pOldValue, pNewValue);
+        eventListener.propertyChanged(getProperty(), pOldValue, pNewValue, pAttributes);
     }
-    property.fire(pOldValue, pNewValue);
+    property.fire(pOldValue, pNewValue, pAttributes);
   }
 
-  protected void fireNodeAdded(IPropertyDescription pPropertyDescription)
+  protected void fireNodeAdded(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
     ensureValid();
-    getHierarchy().firePropertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription);
-    if (listeners != null)
-      for (IPropertyPitEventListener listener : listeners)
-        //noinspection unchecked
-        listener.propertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription);
+    getHierarchy().firePropertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
+    for (IPropertyPitEventListener listener : listeners)
+      //noinspection unchecked,ConstantConditions
+      listener.propertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
   }
 
-  protected void fireNodeWillBeRemoved(IPropertyDescription pPropertyDescription)
+  protected void fireNodeWillBeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
     ensureValid();
-    getHierarchy().firePropertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
-    if (listeners != null)
-      for (IPropertyPitEventListener listener : listeners)
-        //noinspection unchecked
-        listener.propertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
+    getHierarchy().firePropertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
+    for (IPropertyPitEventListener listener : listeners)
+      //noinspection unchecked,ConstantConditions
+      listener.propertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
   }
 
-  protected void fireNodeRemoved(IPropertyDescription pPropertyDescription)
+  protected void fireNodeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
     ensureValid();
-    getHierarchy().firePropertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
+    getHierarchy().firePropertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
     if (listeners != null)
       for (IPropertyPitEventListener listener : listeners)
-        //noinspection unchecked
-        listener.propertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription);
+        //noinspection unchecked,ConstantConditions
+        listener.propertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
+  }
+
+  protected void firePropertyOrderChanged(@Nonnull List<Object> pAttributes)
+  {
+    ensureValid();
+    getHierarchy().fireChildrenOrderChanged((IPropertyPitProvider) getValue(), pAttributes);
+    if (listeners != null)
+      for (IPropertyPitEventListener listener : listeners)
+        //noinspection unchecked,ConstantConditions
+        listener.propertyOrderChanged((IPropertyPitProvider) getValue(), pAttributes);
+  }
+
+  protected void firePropertyNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull List<Object> pAttributes)
+  {
+    ensureValid();
+    getHierarchy().fireNodeRenamed(getProperty(), pOldName, pNewName, pAttributes);
+    if (listeners != null)
+      for (IPropertyPitEventListener listener : listeners)
+        //noinspection unchecked,ConstantConditions
+        listener.propertyNameChanged(getProperty(), pOldName, pNewName, pAttributes);
+    property.firePropertyNameChanged(pOldName, pNewName, pAttributes);
   }
 
   @Override

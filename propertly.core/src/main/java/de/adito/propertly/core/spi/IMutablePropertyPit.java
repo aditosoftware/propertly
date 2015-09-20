@@ -43,10 +43,11 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    *
    * @param pPropertyDescription the IPropertyDescription describing the new IProperty.
    * @param <E>                  the created IProperty's type.
+   * @param pAttributes additional attributes describing this change.
    * @return the created IProperty.
    */
   @Nonnull
-  <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription);
+  <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription, @Nullable Object ... pAttributes);
 
   /**
    * Adds a new IProperty to this IMutablePropertyPit.
@@ -78,9 +79,10 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    * Removes a dynamic IProperty. Static IProperty objects can't be removed.
    *
    * @param pPropertyDescription describes the IProperty that shall be removed.
+   * @param pAttributes additional attributes describing this change.
    * @return <tt>true</tt> when an IProperty was removed <tt>false</tt> otherwise.
    */
-  boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription);
+  boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription, @Nullable Object ... pAttributes);
 
   /**
    * Removes a dynamic IProperty. Static IProperty objects can't be removed.

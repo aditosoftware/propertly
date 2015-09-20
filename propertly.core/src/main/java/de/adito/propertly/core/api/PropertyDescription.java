@@ -88,9 +88,9 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
     return getAnnotations();
   }
 
-  void setName(String name)
+  void setName(String pName)
   {
-    this.name = name;
+    name = pName;
   }
 
   @Nonnull

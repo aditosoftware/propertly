@@ -6,6 +6,9 @@ import de.adito.propertly.core.api.INode;
 import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.spi.extension.AbstractForwardDelegatingHierarchy;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+
 /**
  * @author PaL
  *         Date: 09.02.13
@@ -20,7 +23,7 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Abstract
   }
 
   @Override
-  public Object delegatingSetValue(INode pDelegateNode, DelegatingNode pDelegatingNode, Object pValue)
+  public Object delegatingSetValue(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, Object pValue, @Nonnull List<Object> pAttributes)
   {
     if (pValue instanceof Number)
     {
@@ -32,18 +35,18 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Abstract
           throw new IllegalArgumentException(value.toString() + " for " + pDelegateNode.getProperty());
       }
     }
-    return pDelegateNode.setValue(pValue);
+    return pDelegateNode.setValue(pValue, pAttributes);
   }
 
   @Override
-  public boolean canRead(INode pDelegateNode, DelegatingNode pDelegatingNode)
+  public boolean canRead(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode)
   {
     AccessModifier mod = pDelegateNode.getProperty().getDescription().getAnnotation(AccessModifier.class);
     return mod == null || mod.canRead();
   }
 
   @Override
-  public boolean canWrite(INode pDelegateNode, DelegatingNode pDelegatingNode)
+  public boolean canWrite(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode)
   {
     AccessModifier mod = pDelegateNode.getProperty().getDescription().getAnnotation(AccessModifier.class);
     return mod == null || mod.canWrite();

@@ -1,9 +1,9 @@
 package de.adito.propertly.core.api;
 
+import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.lang.annotation.Annotation;
 import java.util.UUID;
 
@@ -65,9 +65,9 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
 
   @Nonnull
   @Override
-  public <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription)
+  public <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription, @Nullable Object... pAttributes)
   {
-    getNode().addProperty(pPropertyDescription);
+    getNode().addProperty(pPropertyDescription, PropertlyUtility.toNonnullList(pAttributes));
     return getProperty(pPropertyDescription);
   }
 
@@ -90,15 +90,15 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
   }
 
   @Override
-  public boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription)
+  public boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription, @Nullable Object... pAttributes)
   {
-    return getNode().removeProperty(pPropertyDescription);
+    return getNode().removeProperty(pPropertyDescription, PropertlyUtility.toNonnullList(pAttributes));
   }
 
   @Override
   public boolean removeProperty(@Nonnull IProperty<S, T> pProperty)
   {
-    return getNode().removeProperty(pProperty.getDescription());
+    return removeProperty(pProperty.getDescription());
   }
 
   @Override

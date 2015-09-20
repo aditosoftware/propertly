@@ -1,15 +1,10 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.IFunction;
-import de.adito.propertly.core.common.PropertlyUtility;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitEventListener;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nullable;
-import java.util.Comparator;
-import java.util.List;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * @author PaL
@@ -29,7 +24,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
     propertyPitEventListener = new IPropertyPitEventListener()
     {
       @Override
-      public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
+      public void propertyChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull List pAttributes)
       {
         IProperty prop = _findDelegatingProperty(pProperty);
         if (prop != null)
@@ -37,41 +32,63 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
           AbstractNode node = ((HierarchyProperty) prop).getNode();
           AbstractNode parent = node.getParent();
           if (parent != null)
-            parent.fireValueChange(pOldValue, pNewValue); // TODO: translate value to DelegatingNode
-          node.fireValueChange(pOldValue, pNewValue); // TODO: translate value to DelegatingNode
+            parent.fireValueChange(pOldValue, pNewValue, pAttributes); // TODO: translate value to DelegatingNode
+          node.fireValueChange(pOldValue, pNewValue, pAttributes); // TODO: translate value to DelegatingNode
         }
       }
 
       @Override
-      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
+      public void propertyAdded(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
       {
         IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
         if (prop != null)
         {
           AbstractNode node = ((HierarchyProperty) prop).getNode();
-          node.fireNodeAdded(prop.getDescription());
+          node.fireNodeAdded(prop.getDescription(), pAttributes);
         }
       }
 
       @Override
-      public void propertyWillBeRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
+      public void propertyWillBeRemoved(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
       {
         IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
         if (prop != null)
         {
           AbstractNode node = ((HierarchyProperty) prop).getNode();
-          node.fireNodeWillBeRemoved(prop.getDescription());
+          node.fireNodeWillBeRemoved(prop.getDescription(), pAttributes);
         }
       }
 
       @Override
-      public void propertyRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
+      public void propertyRemoved(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
       {
         IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
         if (prop != null)
         {
           AbstractNode node = ((HierarchyProperty) prop).getNode();
-          node.fireNodeRemoved(prop.getDescription());
+          node.fireNodeRemoved(prop.getDescription(), pAttributes);
+        }
+      }
+
+      @Override
+      public void propertyNameChanged(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull List pAttributes)
+      {
+        IProperty prop = _findDelegatingProperty(pProperty);
+        if (prop != null)
+        {
+          AbstractNode node = ((HierarchyProperty) prop).getNode();
+          node.firePropertyNameChanged(pOldName, pNewName, pAttributes);
+        }
+      }
+
+      @Override
+      public void propertyOrderChanged(@Nonnull IPropertyPitProvider pSource, @Nonnull List pAttributes)
+      {
+        IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
+        if (prop != null)
+        {
+          AbstractNode node = ((HierarchyProperty) prop).getNode();
+          node.firePropertyOrderChanged(pAttributes);
         }
       }
     };
@@ -103,33 +120,33 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
   }
 
 
-  public abstract Object delegatingSetValue(INode pDelegateNode, DelegatingNode pDelegatingNode, Object pValue);
+  public abstract Object delegatingSetValue(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nullable Object pValue, @Nonnull List<Object> pAttributes);
 
-  public abstract Object delegatingGetValue(INode pDelegateNode, DelegatingNode pDelegatingNode);
+  public abstract Object delegatingGetValue(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode);
 
-  public abstract boolean canRead(INode pDelegateNode, DelegatingNode pDelegatingNode);
+  public abstract boolean canRead(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode);
 
-  public abstract boolean canWrite(INode pDelegateNode, DelegatingNode pDelegatingNode);
+  public abstract boolean canWrite(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode);
 
-  public abstract List<INode> delegatingGetChildren(INode pDelegateNode, DelegatingNode pDelegatingNode);
+  public abstract List<INode> delegatingGetChildren(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode);
 
-  public abstract INode findDelegatingChild(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName);
+  public abstract INode findDelegatingChild(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull String pName);
 
-  public abstract INode findDelegatingChild(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription);
+  public abstract INode findDelegatingChild(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription);
 
-  public abstract void delegatingAddProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription);
+  public abstract void delegatingAddProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes);
 
-  public abstract boolean delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription);
+  public abstract boolean delegatingRemoveProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes);
 
-  public abstract void delegatingAddProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pIndex, IPropertyDescription pPropertyDescription);
+  public abstract void delegatingAddProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes);
 
-  public abstract void delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pIndex);
+  public abstract void delegatingRemoveProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, int pIndex, @Nonnull List<Object> pAttributes);
 
-  public abstract void delegatingReorder(INode pDelegateNode, DelegatingNode pDelegatingNode, Comparator pComparator);
+  public abstract void delegatingReorder(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull Comparator pComparator, @Nonnull List<Object> pAttributes);
 
-  public abstract void rename(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName);
+  public abstract void rename(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull String pName, @Nonnull List<Object> pAttributes);
 
-  public abstract int delegatingIndexOf(INode pDelegateNode, DelegatingNode pDelegatingNode, IProperty<?, ?> pProperty);
+  public abstract int delegatingIndexOf(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IProperty<?, ?> pProperty);
 
 
   /**
@@ -149,7 +166,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
     {
       INode sourceNode = sourceHierarchy.getNode();
       return new DelegatingNode((DelegatingHierarchy) pHierarchy, null, sourceNode.getProperty().getDescription(),
-          PropertlyUtility.getFixedSupplier(sourceNode));
+                                PropertlyUtility.getFixedSupplier(sourceNode));
     }
   }
 

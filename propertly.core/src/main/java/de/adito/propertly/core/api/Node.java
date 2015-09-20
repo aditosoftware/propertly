@@ -27,7 +27,7 @@ class Node extends AbstractNode
   }
 
   @Override
-  public Object setValue(Object pValue)
+  public Object setValue(Object pValue, @Nonnull List<Object> pAttributes)
   {
     ensureValid();
 
@@ -77,7 +77,7 @@ class Node extends AbstractNode
           IPropertyDescription description = remoteChild.getProperty().getDescription();
           INode newChild = createChild(description);
           children.add(newChild);
-          newChild.setValue(remoteChild.getValue());
+          newChild.setValue(remoteChild.getValue(), pAttributes);
         }
       }
       else
@@ -96,7 +96,7 @@ class Node extends AbstractNode
       value = pValue;
       children = null;
     }
-    fireValueChange(oldValue, pValue);
+    fireValueChange(oldValue, pValue, pAttributes);
     return value;
   }
 
@@ -160,7 +160,7 @@ class Node extends AbstractNode
   }
 
   @Override
-  public void addProperty(@Nonnull IPropertyDescription pPropertyDescription)
+  public void addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
@@ -172,11 +172,11 @@ class Node extends AbstractNode
       children = new NodeChildren();
     INode child = createChild(pPropertyDescription);
     children.add(child);
-    fireNodeAdded(child.getProperty().getDescription());
+    fireNodeAdded(child.getProperty().getDescription(), pAttributes);
   }
 
   @Override
-  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription)
+  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
@@ -188,17 +188,17 @@ class Node extends AbstractNode
       if (!property.isDynamic())
         throw new IllegalStateException("can't remove: " + getProperty());
       IPropertyDescription description = property.getDescription();
-      fireNodeWillBeRemoved(description);
+      fireNodeWillBeRemoved(description, pAttributes);
       assert children != null;
       children.remove(childNode);
-      fireNodeRemoved(description);
+      fireNodeRemoved(description, pAttributes);
       return true;
     }
     return false;
   }
 
   @Override
-  public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription)
+  public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
@@ -210,11 +210,11 @@ class Node extends AbstractNode
       children = new NodeChildren();
     INode child = createChild(pPropertyDescription);
     children.add(pIndex, child);
-    fireNodeAdded(child.getProperty().getDescription());
+    fireNodeAdded(child.getProperty().getDescription(), pAttributes);
   }
 
   @Override
-  public void removeProperty(int pIndex)
+  public void removeProperty(int pIndex, @Nonnull List<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider) || children == null)
@@ -223,27 +223,30 @@ class Node extends AbstractNode
     if (!property.isDynamic())
       throw new IllegalStateException("can't remove: " + getProperty());
     IPropertyDescription description = property.getDescription();
-    fireNodeWillBeRemoved(description);
+    fireNodeWillBeRemoved(description, pAttributes);
     children.remove(pIndex);
-    fireNodeRemoved(description);
+    fireNodeRemoved(description, pAttributes);
   }
 
   @Override
-  public int indexOf(IProperty<?, ?> pProperty)
+  public int indexOf(@Nonnull IProperty<?, ?> pProperty)
   {
-    return children.indexOf(pProperty);
+    return children == null ? -1 : children.indexOf(pProperty);
   }
 
   @Override
-  public void reorder(Comparator pComparator)
+  public void reorder(@Nonnull Comparator pComparator, @Nonnull List<Object> pAttributes)
   {
     ensureValid();
     if (children != null)
+    {
       children.reorder(pComparator);
+      firePropertyOrderChanged(pAttributes);
+    }
   }
 
   @Override
-  public void rename(String pName) throws PropertlyRenameException
+  public void rename(@Nonnull String pName, @Nonnull List<Object> pAttributes) throws PropertlyRenameException
   {
     ensureValid();
     IProperty property = getProperty();
@@ -252,6 +255,7 @@ class Node extends AbstractNode
 
     try
     {
+      String oldName = property.getName();
       Node parent = (Node) getParent();
       if (parent != null)
       {
@@ -259,6 +263,7 @@ class Node extends AbstractNode
         parent.children.rename(property.getDescription(), pName);
       }
       ((PropertyDescription) property.getDescription()).setName(pName);
+      firePropertyNameChanged(oldName, pName, pAttributes);
     }
     catch (Exception e)
     {

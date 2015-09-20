@@ -4,7 +4,7 @@ package de.adito.propertly.core.common;
 import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
-import java.util.Set;
+import java.util.*;
 
 /**
  * An Utility class with common functions.
@@ -53,6 +53,11 @@ public class PropertlyUtility
     {
       throw new RuntimeException("can't instantiate: " + pClass, e);
     }
+  }
+
+  public static <T> List<T> toNonnullList(T... pTs)
+  {
+    return pTs == null || pTs.length == 0 ? Collections.<T>emptyList() : Collections.unmodifiableList(Arrays.asList(pTs));
   }
 
   public static String asString(@Nonnull Object pObj, String... pDetails)

@@ -3,7 +3,8 @@ package de.adito.propertly.core.api;
 import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * @author PaL
@@ -41,7 +42,7 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
   {
     node = pNodeSupplier.run(this);
     listeners = new ListenerList<IPropertyPitEventListener>();
-    node.setValue(pPPP);
+    node.setValue(pPPP, Collections.emptyList());
   }
 
   @Override
@@ -80,32 +81,46 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
     return node;
   }
 
-  protected void fireNodeChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
+  protected void fireNodeChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull List<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
-      listener.propertyChanged(pProperty, pOldValue, pNewValue);
+      listener.propertyChanged(pProperty, pOldValue, pNewValue, pAttributes);
   }
 
-  protected void firePropertyAdded(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
+  protected void firePropertyAdded(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription, @Nonnull List<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
-      listener.propertyAdded(pPropertyPitProvider, pDescription);
+      listener.propertyAdded(pPropertyPitProvider, pDescription, pAttributes);
   }
 
-  protected void firePropertyWillBeRemoved(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
+  protected void firePropertyWillBeRemoved(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription, @Nonnull List<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
-      listener.propertyWillBeRemoved(pPropertyPitProvider, pDescription);
+      listener.propertyWillBeRemoved(pPropertyPitProvider, pDescription, pAttributes);
   }
 
-  protected void firePropertyRemoved(IPropertyPitProvider pPropertyPitProvider, IPropertyDescription pDescription)
+  protected void firePropertyRemoved(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription, @Nonnull List<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
-      listener.propertyRemoved(pPropertyPitProvider, pDescription);
+      listener.propertyRemoved(pPropertyPitProvider, pDescription, pAttributes);
+  }
+
+  public void fireChildrenOrderChanged(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull List<Object> pAttributes)
+  {
+    for (IPropertyPitEventListener listener : listeners)
+      //noinspection unchecked
+      listener.propertyOrderChanged(pPropertyPitProvider, pAttributes);
+  }
+
+  public void fireNodeRenamed(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull List<Object> pAttributes)
+  {
+    for (IPropertyPitEventListener listener : listeners)
+      //noinspection unchecked
+      listener.propertyNameChanged(pProperty, pOldName, pNewName, pAttributes);
   }
 
 }

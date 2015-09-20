@@ -1,6 +1,6 @@
 package de.adito.propertly.core.spi;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
 import java.util.Comparator;
 
 /**
@@ -32,15 +32,17 @@ public interface IIndexedMutablePropertyPit<P extends IPropertyPitProvider, S ex
    *
    * @param pIndex               the index where the IProperty shall be inserted.
    * @param pPropertyDescription the IPropertyDescription describing the new IProperty.
+   * @param pAttributes          additional attributes describing this change.
    * @return the created IProperty.
    */
   @Nonnull
-  IProperty<S, T> addProperty(int pIndex, @Nonnull IPropertyDescription<S, T> pPropertyDescription);
+  IProperty<S, T> addProperty(int pIndex, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nullable Object... pAttributes);
 
   /**
-   * @param pIndex the index for the IProperty to be removed.
+   * @param pIndex      the index for the IProperty to be removed.
+   * @param pAttributes additional attributes describing this change.
    */
-  void removeProperty(int pIndex);
+  void removeProperty(int pIndex, @Nullable Object... pAttributes);
 
   /**
    * Returns the index of a property within this IIndexedMutablePropertyPit.
@@ -54,7 +56,8 @@ public interface IIndexedMutablePropertyPit<P extends IPropertyPitProvider, S ex
    * Reorders the IProperty objects in this IIndexedMutablePropertyPit.
    *
    * @param pComparator is used for oredering.
+   * @param pAttributes additional attributes describing this change.
    */
-  void reorder(@Nonnull Comparator<IProperty<S, T>> pComparator);
+  void reorder(@Nonnull Comparator<IProperty<S, T>> pComparator, @Nullable Object... pAttributes);
 
 }

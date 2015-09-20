@@ -70,11 +70,12 @@ public interface INode
    * Sets the current value. The value that is set afterwards is returned thus one shall proceed with the returned
    * value.
    *
-   * @param pValue the value to be set.
+   * @param pValue      the value to be set.
+   * @param pAttributes additional attributes describing this change.
    * @return the value that is set.
    */
   @Nullable
-  Object setValue(@Nullable Object pValue);
+  Object setValue(@Nullable Object pValue, @Nonnull List<Object> pAttributes);
 
   /**
    * In some cases it might happen that the value can not be read.
@@ -112,52 +113,58 @@ public interface INode
    * Tries to rename this INode. This usually is only possible nodes with an dynamic IProperty.
    *
    * @param pName the new name for this node.
+   * @param pAttributes additional attributes describing this change.
    * @throws PropertlyRenameException in case renaming fails.
    */
-  void rename(String pName) throws PropertlyRenameException;
+  void rename(@Nonnull String pName, @Nonnull List<Object> pAttributes) throws PropertlyRenameException;
 
   /**
    * Adds a new child with a dynamic property to this node.
    *
    * @param pPropertyDescription the description for the new node.
+   * @param pAttributes additional attributes describing this change.
    */
-  void addProperty(@Nonnull IPropertyDescription pPropertyDescription);
+  void addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes);
 
   /**
    * Removes a child from this node.
    *
    * @param pPropertyDescription describes the node to be removed.
+   * @param pAttributes additional attributes describing this change.
    * @return whether something was removed.
    */
-  boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription);
+  boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes);
 
   /**
    * Add a new child with a dynamic property at a specified index to this node.
    *
    * @param pIndex               the index where the new child node shall be inserted.
+   * @param pAttributes additional attributes describing this change.
    * @param pPropertyDescription the description for the new node.
    */
-  void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription);
+  void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes);
 
   /**
    * Removes a property at a specified index. If no exception occurs the removal was successful.
    *
    * @param pIndex the index at which the child node shall be removed.
+   * @param pAttributes additional attributes describing this change.
    */
-  void removeProperty(int pIndex);
+  void removeProperty(int pIndex, @Nonnull List<Object> pAttributes);
 
   /**
    * @param pProperty the property for which the index is looked for.
    * @return the index of an child property. '-1' in case the property is not a child of this node.
    */
-  int indexOf(IProperty<?, ?> pProperty);
+  int indexOf(@Nonnull IProperty<?, ?> pProperty);
 
   /**
    * Reorders the child nodes using the given comparator.
    *
    * @param pComparator the comparator used to order the children.
+   * @param pAttributes additional attributes describing this change.
    */
-  void reorder(Comparator pComparator);
+  void reorder(@Nonnull Comparator pComparator, @Nonnull List<Object> pAttributes);
 
   /**
    * Adds a weak listener.

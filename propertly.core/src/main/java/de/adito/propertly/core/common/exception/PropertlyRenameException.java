@@ -1,8 +1,10 @@
 package de.adito.propertly.core.common.exception;
 
+import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.IProperty;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
+import java.util.List;
 
 /**
  * Occurs when renaming failed.
@@ -14,17 +16,19 @@ public class PropertlyRenameException extends RuntimeException
 
   private IProperty<?, ?> property;
   private String name;
+  private List<Object> attributes;
 
-  public PropertlyRenameException(@Nonnull IProperty<?, ?> pProperty, @Nonnull String pName)
+  public PropertlyRenameException(@Nonnull IProperty<?, ?> pProperty, @Nonnull String pName, @Nullable Object... pAttributes)
   {
-    this(null, pProperty, pName);
+    this(null, pProperty, pName, pAttributes);
   }
 
-  public PropertlyRenameException(Throwable cause, IProperty<?, ?> pProperty, String pName)
+  public PropertlyRenameException(@Nullable Throwable cause, @Nonnull IProperty<?, ?> pProperty, @Nonnull String pName, @Nullable Object... pAttributes)
   {
     super(cause);
     property = pProperty;
     name = pName;
+    attributes = PropertlyUtility.toNonnullList(pAttributes);
   }
 
   @Override
@@ -47,5 +51,13 @@ public class PropertlyRenameException extends RuntimeException
   public String getName()
   {
     return name;
+  }
+
+  /**
+   * @return additional attributes describing the failed rename request.
+   */
+  public List<Object> getAttributes()
+  {
+    return attributes;
   }
 }

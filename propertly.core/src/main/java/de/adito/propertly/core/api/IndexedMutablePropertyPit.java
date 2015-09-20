@@ -1,8 +1,9 @@
 package de.adito.propertly.core.api;
 
+import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
 import java.util.Comparator;
 import java.util.List;
 
@@ -55,16 +56,16 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
 
   @Nonnull
   @Override
-  public IProperty<S, T> addProperty(int pIndex, @Nonnull IPropertyDescription<S, T> pPropertyDescription)
+  public IProperty<S, T> addProperty(int pIndex, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nullable Object... pAttributes)
   {
-    getNode().addProperty(pIndex, pPropertyDescription);
+    getNode().addProperty(pIndex, pPropertyDescription, PropertlyUtility.toNonnullList(pAttributes));
     return getProperty(pIndex);
   }
 
   @Override
-  public void removeProperty(int pIndex)
+  public void removeProperty(int pIndex, @Nullable Object... pAttributes)
   {
-    getNode().removeProperty(pIndex);
+    getNode().removeProperty(pIndex, PropertlyUtility.toNonnullList(pAttributes));
   }
 
   @Override
@@ -74,8 +75,8 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
   }
 
   @Override
-  public void reorder(@Nonnull Comparator<IProperty<S, T>> pComparator)
+  public void reorder(@Nonnull Comparator<IProperty<S, T>> pComparator, @Nullable Object... pAttributes)
   {
-    getNode().reorder(pComparator);
+    getNode().reorder(pComparator, PropertlyUtility.toNonnullList(pAttributes));
   }
 }

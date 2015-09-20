@@ -33,9 +33,10 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public Object setValue(Object pValue)
+  @Nullable
+  public Object setValue(@Nullable Object pValue, @Nonnull List<Object> pAttributes)
   {
-    return getHierarchy().delegatingSetValue(delegateProvider.get(), this, pValue);
+    return getHierarchy().delegatingSetValue(delegateProvider.get(), this, pValue, pAttributes);
   }
 
   @Override
@@ -95,44 +96,44 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public void addProperty(@Nonnull IPropertyDescription pPropertyDescription)
+  public void addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
-    getHierarchy().delegatingAddProperty(delegateProvider.get(), this, pPropertyDescription);
+    getHierarchy().delegatingAddProperty(delegateProvider.get(), this, pPropertyDescription, pAttributes);
   }
 
   @Override
-  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription)
+  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
-    return getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pPropertyDescription);
+    return getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pPropertyDescription, pAttributes);
   }
 
   @Override
-  public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription)
+  public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
-    getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pIndex);
+    getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pIndex, pAttributes);
   }
 
   @Override
-  public void removeProperty(int pIndex)
+  public void removeProperty(int pIndex, @Nonnull List<Object> pAttributes)
   {
-    getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pIndex);
+    getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pIndex, pAttributes);
   }
 
   @Override
-  public int indexOf(IProperty<?, ?> pProperty)
+  public int indexOf(@Nonnull IProperty<?, ?> pProperty)
   {
     return getHierarchy().delegatingIndexOf(delegateProvider.get(), this, pProperty);
   }
 
   @Override
-  public void reorder(Comparator pComparator)
+  public void reorder(@Nonnull Comparator pComparator, @Nonnull List<Object> pAttributes)
   {
-    getHierarchy().delegatingReorder(delegateProvider.get(), this, pComparator);
+    getHierarchy().delegatingReorder(delegateProvider.get(), this, pComparator, pAttributes);
   }
 
   @Override
-  public void rename(String pName) throws PropertlyRenameException
+  public void rename(@Nonnull String pName, @Nonnull List<Object> pAttributes) throws PropertlyRenameException
   {
-    getHierarchy().rename(delegateProvider.get(), this, pName);
+    getHierarchy().rename(delegateProvider.get(), this, pName, pAttributes);
   }
 }

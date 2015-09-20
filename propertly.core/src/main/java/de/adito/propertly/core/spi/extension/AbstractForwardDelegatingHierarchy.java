@@ -4,6 +4,7 @@ import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -20,31 +21,31 @@ public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> 
   }
 
   @Override
-  public Object delegatingSetValue(INode pDelegateNode, DelegatingNode pDelegatingNode, Object pValue)
+  public Object delegatingSetValue(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, Object pValue, @Nonnull List<Object> pAttributes)
   {
-    return pDelegateNode.setValue(pValue);
+    return pDelegateNode.setValue(pValue, pAttributes);
   }
 
   @Override
-  public Object delegatingGetValue(INode pDelegateNode, DelegatingNode pDelegatingNode)
+  public Object delegatingGetValue(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode)
   {
     return pDelegateNode.getValue();
   }
 
   @Override
-  public boolean canRead(INode pDelegateNode, DelegatingNode pDelegatingNode)
+  public boolean canRead(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode)
   {
     return pDelegateNode.canRead();
   }
 
   @Override
-  public boolean canWrite(INode pDelegateNode, DelegatingNode pDelegatingNode)
+  public boolean canWrite(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode)
   {
     return pDelegateNode.canWrite();
   }
 
   @Override
-  public List<INode> delegatingGetChildren(INode pDelegateNode, DelegatingNode pDelegatingNode)
+  public List<INode> delegatingGetChildren(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode)
   {
     List<INode> children = new ArrayList<INode>();
     List<INode> delegateChildren = pDelegateNode.getChildren();
@@ -58,7 +59,7 @@ public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> 
   }
 
   @Override
-  public INode findDelegatingChild(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName)
+  public INode findDelegatingChild(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull String pName)
   {
     INode delegateChildNode = pDelegateNode.findNode(pName);
     if (delegateChildNode == null)
@@ -68,7 +69,7 @@ public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> 
   }
 
   @Override
-  public INode findDelegatingChild(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription)
+  public INode findDelegatingChild(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription)
   {
     INode delegateChildNode = pDelegateNode.findNode(pPropertyDescription);
     if (delegateChildNode == null)
@@ -78,43 +79,43 @@ public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> 
   }
 
   @Override
-  public void delegatingAddProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription)
+  public void delegatingAddProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
-    pDelegateNode.addProperty(pPropertyDescription);
+    pDelegateNode.addProperty(pPropertyDescription, pAttributes);
   }
 
   @Override
-  public boolean delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, IPropertyDescription pPropertyDescription)
+  public boolean delegatingRemoveProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
-    return pDelegateNode.removeProperty(pPropertyDescription);
+    return pDelegateNode.removeProperty(pPropertyDescription, pAttributes);
   }
 
   @Override
-  public void delegatingAddProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pIndex, IPropertyDescription pPropertyDescription)
+  public void delegatingAddProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
   {
-    pDelegateNode.addProperty(pIndex, pPropertyDescription);
+    pDelegateNode.addProperty(pIndex, pPropertyDescription, pAttributes);
   }
 
   @Override
-  public void delegatingRemoveProperty(INode pDelegateNode, DelegatingNode pDelegatingNode, int pindex)
+  public void delegatingRemoveProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, int pindex, @Nonnull List<Object> pAttributes)
   {
-    pDelegateNode.removeProperty(pindex);
+    pDelegateNode.removeProperty(pindex, pAttributes);
   }
 
   @Override
-  public void delegatingReorder(INode pDelegateNode, DelegatingNode pDelegatingNode, Comparator pComparator)
+  public void delegatingReorder(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull Comparator pComparator, @Nonnull List<Object> pAttributes)
   {
-    pDelegateNode.reorder(pComparator);
+    pDelegateNode.reorder(pComparator, pAttributes);
   }
 
   @Override
-  public void rename(INode pDelegateNode, DelegatingNode pDelegatingNode, String pName)
+  public void rename(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull String pName, @Nonnull List<Object> pAttributes)
   {
-    pDelegateNode.rename(pName);
+    pDelegateNode.rename(pName, pAttributes);
   }
 
   @Override
-  public int delegatingIndexOf(INode pDelegateNode, DelegatingNode pDelegatingNode, IProperty<?, ?> pProperty)
+  public int delegatingIndexOf(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IProperty<?, ?> pProperty)
   {
     return pDelegateNode.indexOf(pProperty);
   }

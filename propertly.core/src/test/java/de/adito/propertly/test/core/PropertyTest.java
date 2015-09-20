@@ -4,14 +4,12 @@ import de.adito.propertly.core.api.Hierarchy;
 import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.common.exception.InaccessibleException;
 import de.adito.propertly.core.spi.*;
-import de.adito.propertly.test.core.impl.ColoredPitProvider;
-import de.adito.propertly.test.core.impl.PropertyTestChildren;
-import de.adito.propertly.test.core.impl.TProperty;
-import de.adito.propertly.test.core.impl.VerifyingHierarchy;
-import org.junit.Assert;
-import org.junit.Test;
+import de.adito.propertly.test.core.impl.*;
+import org.junit.*;
 
+import javax.annotation.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * @author PaL
@@ -30,27 +28,39 @@ public class PropertyTest
     hierarchy.addStrongListener(new IPropertyPitEventListener()
     {
       @Override
-      public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
+      public void propertyChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull List pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyChanged", pOldValue, pNewValue, pProperty.getName(), pProperty);
       }
 
       @Override
-      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
+      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyAdded", pSource, pPropertyDescription);
       }
 
       @Override
-      public void propertyWillBeRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
+      public void propertyWillBeRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyWillBeRemoved", pSource, pPropertyDescription);
       }
 
       @Override
-      public void propertyRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
+      public void propertyRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyRemoved", pSource, pPropertyDescription);
+      }
+
+      @Override
+      public void propertyNameChanged(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull List pAttributes)
+      {
+        _append(resultStringBuild, "hierarchy propertyNameChanged", pOldName, pNewName, pProperty.getName(), pProperty);
+      }
+
+      @Override
+      public void propertyOrderChanged(@Nonnull IPropertyPitProvider pSource, @Nonnull List pAttributes)
+      {
+        _append(resultStringBuild, "hierarchy propertyOrderChanged", pSource);
       }
     });
     TProperty tProperty = hierarchy.getValue();
@@ -58,7 +68,7 @@ public class PropertyTest
     tProperty.getPit().addStrongListener(new PropertyPitEventAdapter()
     {
       @Override
-      public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
+      public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue, @Nonnull List pAttributes)
       {
         _append(resultStringBuild, "tProperty propertyChanged", pProperty);
       }
@@ -67,7 +77,7 @@ public class PropertyTest
     children.addStrongListener(new PropertyPitEventAdapter()
     {
       @Override
-      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription)
+      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
       {
         _append(resultStringBuild, "tProperty propertyAdded", pPropertyDescription);
       }
@@ -133,7 +143,7 @@ public class PropertyTest
         "tProperty property: property(DESCRIPTION, String, null)";
 
     Assert.assertEquals(expected,
-        resultStringBuild.toString());
+                        resultStringBuild.toString());
 
     expected = "/root\n" +
         "\t X : 123\n" +

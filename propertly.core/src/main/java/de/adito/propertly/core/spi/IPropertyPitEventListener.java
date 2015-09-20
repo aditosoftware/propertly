@@ -1,5 +1,8 @@
 package de.adito.propertly.core.spi;
 
+import javax.annotation.*;
+import java.util.List;
+
 /**
  * @author PaL
  *         Date: 13.11.12
@@ -9,10 +12,11 @@ public interface IPropertyPitEventListener<P extends IPropertyPitProvider, S ext
   extends IPropertyEventListener<S, T>
 {
 
-  void propertyAdded(IPropertyPitProvider<P, S, T> pSource, IPropertyDescription<S, T> pPropertyDescription);
+  void propertyAdded(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull List<Object> pAttributes);
 
-  void propertyWillBeRemoved(IPropertyPitProvider<P, S, T> pSource, IPropertyDescription<S, T> pPropertyDescription);
+  void propertyWillBeRemoved(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull List<Object> pAttributes);
 
-  void propertyRemoved(IPropertyPitProvider<P, S, T> pSource, IPropertyDescription<S, T> pPropertyDescription);
+  void propertyRemoved(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull List<Object> pAttributes);
 
+  void propertyOrderChanged(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull List<Object> pAttributes);
 }
