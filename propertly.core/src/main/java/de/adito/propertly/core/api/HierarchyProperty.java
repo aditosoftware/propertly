@@ -5,7 +5,7 @@ import de.adito.propertly.core.common.exception.*;
 import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author PaL
@@ -57,7 +57,7 @@ class HierarchyProperty implements IProperty
   public Object setValue(Object pValue, @Nullable Object... pAttributes)
   {
     if (canWrite())
-      return node.setValue(pValue, PropertlyUtility.toNonnullList(pAttributes));
+      return node.setValue(pValue, PropertlyUtility.toNonnullSet(pAttributes));
     throw new InaccessibleException("IProperty '" + getDescription() + "' can't be written.");
   }
 
@@ -135,7 +135,7 @@ class HierarchyProperty implements IProperty
       listeners.removeListener(pListener);
   }
 
-  void fire(Object pOldValue, Object pNewValue, @Nonnull List<Object> pAttributes)
+  void fire(Object pOldValue, Object pNewValue, @Nonnull Set<Object> pAttributes)
   {
     List<IPropertyEventListener> l;
     synchronized (this)
@@ -149,7 +149,7 @@ class HierarchyProperty implements IProperty
       listener.propertyChanged(this, pOldValue, pNewValue, pAttributes);
   }
 
-  protected void firePropertyNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull List<Object> pAttributes)
+  protected void firePropertyNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
   {
     List<IPropertyEventListener> l;
     synchronized (this)

@@ -24,7 +24,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
     propertyPitEventListener = new IPropertyPitEventListener()
     {
       @Override
-      public void propertyChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull List pAttributes)
+      public void propertyChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set pAttributes)
       {
         IProperty prop = _findDelegatingProperty(pProperty);
         if (prop != null)
@@ -38,7 +38,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       }
 
       @Override
-      public void propertyAdded(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
+      public void propertyAdded(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
         IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
         if (prop != null)
@@ -49,7 +49,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       }
 
       @Override
-      public void propertyWillBeRemoved(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
+      public void propertyWillBeRemoved(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
         IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
         if (prop != null)
@@ -60,7 +60,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       }
 
       @Override
-      public void propertyRemoved(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
+      public void propertyRemoved(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
         IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
         if (prop != null)
@@ -71,7 +71,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       }
 
       @Override
-      public void propertyNameChanged(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull List pAttributes)
+      public void propertyNameChanged(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set pAttributes)
       {
         IProperty prop = _findDelegatingProperty(pProperty);
         if (prop != null)
@@ -82,7 +82,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       }
 
       @Override
-      public void propertyOrderChanged(@Nonnull IPropertyPitProvider pSource, @Nonnull List pAttributes)
+      public void propertyOrderChanged(@Nonnull IPropertyPitProvider pSource, @Nonnull Set pAttributes)
       {
         IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
         if (prop != null)
@@ -120,7 +120,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
   }
 
 
-  public abstract Object delegatingSetValue(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nullable Object pValue, @Nonnull List<Object> pAttributes);
+  public abstract Object delegatingSetValue(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nullable Object pValue, @Nonnull Set<Object> pAttributes);
 
   public abstract Object delegatingGetValue(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode);
 
@@ -134,17 +134,17 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
 
   public abstract INode findDelegatingChild(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription);
 
-  public abstract void delegatingAddProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes);
+  public abstract void delegatingAddProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
 
-  public abstract boolean delegatingRemoveProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes);
+  public abstract boolean delegatingRemoveProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
 
-  public abstract void delegatingAddProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes);
+  public abstract void delegatingAddProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
 
-  public abstract void delegatingRemoveProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, int pIndex, @Nonnull List<Object> pAttributes);
+  public abstract void delegatingRemoveProperty(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, int pIndex, @Nonnull Set<Object> pAttributes);
 
-  public abstract void delegatingReorder(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull Comparator pComparator, @Nonnull List<Object> pAttributes);
+  public abstract void delegatingReorder(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull Comparator pComparator, @Nonnull Set<Object> pAttributes);
 
-  public abstract void rename(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull String pName, @Nonnull List<Object> pAttributes);
+  public abstract void rename(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull String pName, @Nonnull Set<Object> pAttributes);
 
   public abstract int delegatingIndexOf(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IProperty<?, ?> pProperty);
 

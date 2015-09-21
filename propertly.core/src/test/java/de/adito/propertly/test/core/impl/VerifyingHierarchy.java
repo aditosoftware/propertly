@@ -1,13 +1,11 @@
 package de.adito.propertly.test.core.impl;
 
-import de.adito.propertly.core.api.DelegatingNode;
-import de.adito.propertly.core.api.Hierarchy;
-import de.adito.propertly.core.api.INode;
+import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.spi.extension.AbstractForwardDelegatingHierarchy;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author PaL
@@ -23,7 +21,7 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Abstract
   }
 
   @Override
-  public Object delegatingSetValue(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, Object pValue, @Nonnull List<Object> pAttributes)
+  public Object delegatingSetValue(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, Object pValue, @Nonnull Set<Object> pAttributes)
   {
     if (pValue instanceof Number)
     {

@@ -55,9 +55,13 @@ public class PropertlyUtility
     }
   }
 
-  public static <T> List<T> toNonnullList(T... pTs)
+  public static <T> Set<T> toNonnullSet(T... pTs)
   {
-    return pTs == null || pTs.length == 0 ? Collections.<T>emptyList() : Collections.unmodifiableList(Arrays.asList(pTs));
+    if (pTs == null || pTs.length == 0)
+      return Collections.emptySet();
+    if (pTs.length == 1)
+      return Collections.singleton(pTs[0]);
+    return Collections.unmodifiableSet(new HashSet<T>(Arrays.asList(pTs)));
   }
 
   public static String asString(@Nonnull Object pObj, String... pDetails)

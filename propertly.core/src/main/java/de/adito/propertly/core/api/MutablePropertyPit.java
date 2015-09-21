@@ -67,7 +67,7 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
   @Override
   public <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription, @Nullable Object... pAttributes)
   {
-    getNode().addProperty(pPropertyDescription, PropertlyUtility.toNonnullList(pAttributes));
+    getNode().addProperty(pPropertyDescription, PropertlyUtility.toNonnullSet(pAttributes));
     return getProperty(pPropertyDescription);
   }
 
@@ -92,7 +92,7 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
   @Override
   public boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription, @Nullable Object... pAttributes)
   {
-    return getNode().removeProperty(pPropertyDescription, PropertlyUtility.toNonnullList(pAttributes));
+    return getNode().removeProperty(pPropertyDescription, PropertlyUtility.toNonnullSet(pAttributes));
   }
 
   @Override

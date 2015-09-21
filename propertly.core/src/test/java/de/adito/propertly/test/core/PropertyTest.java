@@ -9,7 +9,7 @@ import org.junit.*;
 
 import javax.annotation.*;
 import java.awt.*;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author PaL
@@ -28,37 +28,37 @@ public class PropertyTest
     hierarchy.addStrongListener(new IPropertyPitEventListener()
     {
       @Override
-      public void propertyChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull List pAttributes)
+      public void propertyChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyChanged", pOldValue, pNewValue, pProperty.getName(), pProperty);
       }
 
       @Override
-      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
+      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyAdded", pSource, pPropertyDescription);
       }
 
       @Override
-      public void propertyWillBeRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
+      public void propertyWillBeRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyWillBeRemoved", pSource, pPropertyDescription);
       }
 
       @Override
-      public void propertyRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
+      public void propertyRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyRemoved", pSource, pPropertyDescription);
       }
 
       @Override
-      public void propertyNameChanged(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull List pAttributes)
+      public void propertyNameChanged(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyNameChanged", pOldName, pNewName, pProperty.getName(), pProperty);
       }
 
       @Override
-      public void propertyOrderChanged(@Nonnull IPropertyPitProvider pSource, @Nonnull List pAttributes)
+      public void propertyOrderChanged(@Nonnull IPropertyPitProvider pSource, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyOrderChanged", pSource);
       }
@@ -68,7 +68,7 @@ public class PropertyTest
     tProperty.getPit().addStrongListener(new PropertyPitEventAdapter()
     {
       @Override
-      public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue, @Nonnull List pAttributes)
+      public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "tProperty propertyChanged", pProperty);
       }
@@ -77,7 +77,7 @@ public class PropertyTest
     children.addStrongListener(new PropertyPitEventAdapter()
     {
       @Override
-      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull List pAttributes)
+      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "tProperty propertyAdded", pPropertyDescription);
       }

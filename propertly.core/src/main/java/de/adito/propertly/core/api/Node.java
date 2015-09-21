@@ -27,7 +27,7 @@ class Node extends AbstractNode
   }
 
   @Override
-  public Object setValue(Object pValue, @Nonnull List<Object> pAttributes)
+  public Object setValue(Object pValue, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
 
@@ -160,7 +160,7 @@ class Node extends AbstractNode
   }
 
   @Override
-  public void addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
+  public void addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
@@ -176,7 +176,7 @@ class Node extends AbstractNode
   }
 
   @Override
-  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
+  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
@@ -198,7 +198,7 @@ class Node extends AbstractNode
   }
 
   @Override
-  public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
+  public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
@@ -214,7 +214,7 @@ class Node extends AbstractNode
   }
 
   @Override
-  public void removeProperty(int pIndex, @Nonnull List<Object> pAttributes)
+  public void removeProperty(int pIndex, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider) || children == null)
@@ -235,7 +235,7 @@ class Node extends AbstractNode
   }
 
   @Override
-  public void reorder(@Nonnull Comparator pComparator, @Nonnull List<Object> pAttributes)
+  public void reorder(@Nonnull Comparator pComparator, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     if (children != null)
@@ -246,7 +246,7 @@ class Node extends AbstractNode
   }
 
   @Override
-  public void rename(@Nonnull String pName, @Nonnull List<Object> pAttributes) throws PropertlyRenameException
+  public void rename(@Nonnull String pName, @Nonnull Set<Object> pAttributes) throws PropertlyRenameException
   {
     ensureValid();
     IProperty property = getProperty();

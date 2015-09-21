@@ -34,7 +34,7 @@ public class DelegatingNode extends AbstractNode
 
   @Override
   @Nullable
-  public Object setValue(@Nullable Object pValue, @Nonnull List<Object> pAttributes)
+  public Object setValue(@Nullable Object pValue, @Nonnull Set<Object> pAttributes)
   {
     return getHierarchy().delegatingSetValue(delegateProvider.get(), this, pValue, pAttributes);
   }
@@ -96,25 +96,25 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public void addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
+  public void addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     getHierarchy().delegatingAddProperty(delegateProvider.get(), this, pPropertyDescription, pAttributes);
   }
 
   @Override
-  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
+  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     return getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pPropertyDescription, pAttributes);
   }
 
   @Override
-  public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
+  public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pIndex, pAttributes);
   }
 
   @Override
-  public void removeProperty(int pIndex, @Nonnull List<Object> pAttributes)
+  public void removeProperty(int pIndex, @Nonnull Set<Object> pAttributes)
   {
     getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pIndex, pAttributes);
   }
@@ -126,13 +126,13 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public void reorder(@Nonnull Comparator pComparator, @Nonnull List<Object> pAttributes)
+  public void reorder(@Nonnull Comparator pComparator, @Nonnull Set<Object> pAttributes)
   {
     getHierarchy().delegatingReorder(delegateProvider.get(), this, pComparator, pAttributes);
   }
 
   @Override
-  public void rename(@Nonnull String pName, @Nonnull List<Object> pAttributes) throws PropertlyRenameException
+  public void rename(@Nonnull String pName, @Nonnull Set<Object> pAttributes) throws PropertlyRenameException
   {
     getHierarchy().rename(delegateProvider.get(), this, pName, pAttributes);
   }

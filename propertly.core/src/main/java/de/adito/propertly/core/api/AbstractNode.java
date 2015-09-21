@@ -5,7 +5,7 @@ import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Abstract class for INode implementations.
@@ -97,7 +97,7 @@ abstract class AbstractNode implements INode
     listeners.removeListener(pListener);
   }
 
-  protected void fireValueChange(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nullable List<Object> pAttributes)
+  protected void fireValueChange(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     getHierarchy().fireNodeChanged(getProperty(), pOldValue, pNewValue, pAttributes);
@@ -111,7 +111,7 @@ abstract class AbstractNode implements INode
     property.fire(pOldValue, pNewValue, pAttributes);
   }
 
-  protected void fireNodeAdded(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
+  protected void fireNodeAdded(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     getHierarchy().firePropertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
@@ -120,7 +120,7 @@ abstract class AbstractNode implements INode
       listener.propertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
   }
 
-  protected void fireNodeWillBeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
+  protected void fireNodeWillBeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     getHierarchy().firePropertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
@@ -129,7 +129,7 @@ abstract class AbstractNode implements INode
       listener.propertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
   }
 
-  protected void fireNodeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull List<Object> pAttributes)
+  protected void fireNodeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     getHierarchy().firePropertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
@@ -139,7 +139,7 @@ abstract class AbstractNode implements INode
         listener.propertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
   }
 
-  protected void firePropertyOrderChanged(@Nonnull List<Object> pAttributes)
+  protected void firePropertyOrderChanged(@Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     getHierarchy().fireChildrenOrderChanged((IPropertyPitProvider) getValue(), pAttributes);
@@ -149,7 +149,7 @@ abstract class AbstractNode implements INode
         listener.propertyOrderChanged((IPropertyPitProvider) getValue(), pAttributes);
   }
 
-  protected void firePropertyNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull List<Object> pAttributes)
+  protected void firePropertyNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     getHierarchy().fireNodeRenamed(getProperty(), pOldName, pNewName, pAttributes);

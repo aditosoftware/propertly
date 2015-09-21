@@ -20,7 +20,7 @@ class DynamicHierarchyProperty extends HierarchyProperty
   @Override
   public void rename(@Nonnull String pName, @Nullable Object... pAttributes) throws PropertlyRenameException
   {
-    getNode().rename(pName, PropertlyUtility.toNonnullList(pAttributes));
+    getNode().rename(pName, PropertlyUtility.toNonnullSet(pAttributes));
   }
 
   @Override

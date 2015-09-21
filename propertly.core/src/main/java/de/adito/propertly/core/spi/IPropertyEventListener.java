@@ -1,7 +1,7 @@
 package de.adito.propertly.core.spi;
 
 import javax.annotation.*;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author PaL
@@ -11,8 +11,8 @@ import java.util.List;
 public interface IPropertyEventListener<S extends IPropertyPitProvider<?, S, T>, T>
 {
 
-  void propertyChanged(@Nonnull IProperty<S, T> pProperty, @Nullable T pOldValue, @Nullable T pNewValue, @Nonnull List<Object> pAttributes);
+  void propertyChanged(@Nonnull IProperty<S, T> pProperty, @Nullable T pOldValue, @Nullable T pNewValue, @Nonnull Set<Object> pAttributes);
 
-  void propertyNameChanged(@Nonnull IProperty<S, T> pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull List<Object> pAttributes);
+  void propertyNameChanged(@Nonnull IProperty<S, T> pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes);
 
 }
