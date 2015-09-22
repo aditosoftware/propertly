@@ -110,7 +110,7 @@ public class DelegatingNode extends AbstractNode
   @Override
   public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
-    getHierarchy().delegatingRemoveProperty(delegateProvider.get(), this, pIndex, pAttributes);
+    getHierarchy().delegatingAddProperty(delegateProvider.get(), this, pIndex, pPropertyDescription, pAttributes);
   }
 
   @Override
