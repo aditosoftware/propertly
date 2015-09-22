@@ -40,7 +40,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       @Override
       public void propertyAdded(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
-        IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
+        IProperty prop = _findDelegatingProperty(pSource.getPit().getOwnProperty());
         if (prop != null)
         {
           AbstractNode node = ((HierarchyProperty) prop).getNode();
@@ -51,7 +51,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       @Override
       public void propertyWillBeRemoved(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
-        IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
+        IProperty prop = _findDelegatingProperty(pSource.getPit().getOwnProperty());
         if (prop != null)
         {
           AbstractNode node = ((HierarchyProperty) prop).getNode();
@@ -62,7 +62,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       @Override
       public void propertyRemoved(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
-        IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
+        IProperty prop = _findDelegatingProperty(pSource.getPit().getOwnProperty());
         if (prop != null)
         {
           AbstractNode node = ((HierarchyProperty) prop).getNode();
@@ -84,7 +84,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
       @Override
       public void propertyOrderChanged(@Nonnull IPropertyPitProvider pSource, @Nonnull Set pAttributes)
       {
-        IProperty prop = _findDelegatingProperty(HierarchyHelper.getNode(pSource).getProperty());
+        IProperty prop = _findDelegatingProperty(pSource.getPit().getOwnProperty());
         if (prop != null)
         {
           AbstractNode node = ((HierarchyProperty) prop).getNode();
