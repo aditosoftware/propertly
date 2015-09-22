@@ -66,9 +66,9 @@ class NodeChildren implements Iterable<INode>
     childrenMap.put(pName, node);
   }
 
-  public int indexOf(IProperty<?, ?> pProperty)
+  public int indexOf(IPropertyDescription pPropertyDescription)
   {
-    INode node = find(pProperty.getDescription());
+    INode node = find(pPropertyDescription);
     return childrenList.indexOf(node);
   }
 

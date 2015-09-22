@@ -120,9 +120,9 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public int indexOf(@Nonnull IProperty<?, ?> pProperty)
+  public int indexOf(@Nonnull IPropertyDescription pPropertyDescription)
   {
-    return getHierarchy().delegatingIndexOf(delegateProvider.get(), this, pProperty);
+    return getHierarchy().delegatingIndexOf(delegateProvider.get(), this, pPropertyDescription);
   }
 
   @Override

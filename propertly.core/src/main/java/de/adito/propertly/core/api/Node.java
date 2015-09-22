@@ -229,9 +229,9 @@ class Node extends AbstractNode
   }
 
   @Override
-  public int indexOf(@Nonnull IProperty<?, ?> pProperty)
+  public int indexOf(@Nonnull IPropertyDescription pPropertyDescription)
   {
-    return children == null ? -1 : children.indexOf(pProperty);
+    return children == null ? -1 : children.indexOf(pPropertyDescription);
   }
 
   @Override

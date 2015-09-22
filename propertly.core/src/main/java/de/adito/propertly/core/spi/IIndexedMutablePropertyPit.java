@@ -47,10 +47,10 @@ public interface IIndexedMutablePropertyPit<P extends IPropertyPitProvider, S ex
   /**
    * Returns the index of a property within this IIndexedMutablePropertyPit.
    *
-   * @param pProperty the property for which the index is looked for.
+   * @param pPropertyDescription the description for the property for which the index is looked for.
    * @return the index of an child property. '-1' in case the property is not a child of this pit.
    */
-  int indexOf(@Nonnull IProperty<?, ?> pProperty);
+  int indexOf(@Nonnull IPropertyDescription<?, ?> pPropertyDescription);
 
   /**
    * Reorders the IProperty objects in this IIndexedMutablePropertyPit.

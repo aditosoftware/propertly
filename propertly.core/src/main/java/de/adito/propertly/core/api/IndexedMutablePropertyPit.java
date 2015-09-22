@@ -69,9 +69,9 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
   }
 
   @Override
-  public int indexOf(@Nonnull IProperty<?, ?> pProperty)
+  public int indexOf(@Nonnull IPropertyDescription<?, ?> pPropertyDescription)
   {
-    return getNode().indexOf(pProperty);
+    return getNode().indexOf(pPropertyDescription);
   }
 
   @Override

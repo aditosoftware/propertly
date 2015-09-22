@@ -59,9 +59,9 @@ public abstract class AbstractIndexedMutablePPP
     return pit.addProperty(pIndex, pPropertyDescription);
   }
 
-  public int indexOf(@Nonnull IProperty<?, ?> pProperty)
+  public int indexOf(@Nonnull IPropertyDescription<?, ?> pPropertyDescription)
   {
-    return pit.indexOf(pProperty);
+    return pit.indexOf(pPropertyDescription);
   }
 
   public void reorder(Comparator<IProperty<S, T>> pComparator)

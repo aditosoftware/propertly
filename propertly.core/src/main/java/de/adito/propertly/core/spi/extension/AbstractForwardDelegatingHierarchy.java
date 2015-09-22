@@ -115,8 +115,8 @@ public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> 
   }
 
   @Override
-  public int delegatingIndexOf(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IProperty<?, ?> pProperty)
+  public int delegatingIndexOf(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription)
   {
-    return pDelegateNode.indexOf(pProperty);
+    return pDelegateNode.indexOf(pPropertyDescription);
   }
 }
