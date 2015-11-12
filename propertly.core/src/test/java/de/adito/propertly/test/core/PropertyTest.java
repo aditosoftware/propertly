@@ -34,19 +34,19 @@ public class PropertyTest
       }
 
       @Override
-      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
+      public void propertyAdded(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyAdded", pSource, pPropertyDescription);
       }
 
       @Override
-      public void propertyWillBeRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
+      public void propertyWillBeRemoved(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyWillBeRemoved", pSource, pPropertyDescription);
       }
 
       @Override
-      public void propertyRemoved(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
+      public void propertyRemoved(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "hierarchy propertyRemoved", pSource, pPropertyDescription);
       }
@@ -68,7 +68,7 @@ public class PropertyTest
     tProperty.getPit().addStrongListener(new PropertyPitEventAdapter()
     {
       @Override
-      public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue, @Nonnull Set pAttributes)
+      public void propertyChanged(@Nonnull IProperty pProperty, Object pOldValue, Object pNewValue, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "tProperty propertyChanged", pProperty);
       }
@@ -77,7 +77,7 @@ public class PropertyTest
     children.addStrongListener(new PropertyPitEventAdapter()
     {
       @Override
-      public void propertyAdded(IPropertyPitProvider pSource, IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
+      public void propertyAdded(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
       {
         _append(resultStringBuild, "tProperty propertyAdded", pPropertyDescription);
       }
