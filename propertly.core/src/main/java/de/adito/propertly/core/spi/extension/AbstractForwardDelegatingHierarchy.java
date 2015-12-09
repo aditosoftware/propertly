@@ -15,6 +15,9 @@ import java.util.*;
 public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> extends DelegatingHierarchy<T>
 {
 
+  private Map<INode, INode> delegateMap = new WeakHashMap<INode, INode>();
+
+
   protected AbstractForwardDelegatingHierarchy(Hierarchy<T> pHierarchy)
   {
     super(pHierarchy);
@@ -50,11 +53,8 @@ public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> 
     List<INode> children = new ArrayList<INode>();
     List<INode> delegateChildren = pDelegateNode.getChildren();
     if (delegateChildren != null)
-    {
       for (final INode delegateChildNode : delegateChildren)
-        children.add(new DelegatingNode(this, pDelegatingNode, delegateChildNode.getProperty().getDescription(),
-                                        PropertlyUtility.getFixedSupplier(delegateChildNode)));
-    }
+        children.add(getDelegatingNode(delegateChildNode, pDelegatingNode));
     return children;
   }
 
@@ -64,8 +64,7 @@ public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> 
     INode delegateChildNode = pDelegateNode.findNode(pName);
     if (delegateChildNode == null)
       return null;
-    return new DelegatingNode(this, pDelegatingNode, delegateChildNode.getProperty().getDescription(),
-                              PropertlyUtility.getFixedSupplier(delegateChildNode));
+    return getDelegatingNode(delegateChildNode, pDelegatingNode);
   }
 
   @Override
@@ -118,5 +117,17 @@ public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> 
   public int delegatingIndexOf(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode, @Nonnull IPropertyDescription pPropertyDescription)
   {
     return pDelegateNode.indexOf(pPropertyDescription);
+  }
+
+  protected INode getDelegatingNode(INode pDelegateChildNode, DelegatingNode pDelegatingParent)
+  {
+    INode node = delegateMap.get(pDelegateChildNode);
+    if (node == null)
+    {
+      node = new DelegatingNode(this, pDelegatingParent, pDelegateChildNode.getProperty().getDescription(),
+                                PropertlyUtility.getFixedSupplier(pDelegateChildNode));
+      delegateMap.put(pDelegateChildNode, node);
+    }
+    return node;
   }
 }
