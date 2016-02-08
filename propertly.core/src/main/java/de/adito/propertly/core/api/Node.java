@@ -45,7 +45,7 @@ class Node extends AbstractNode
     IPropertyPitProvider pppProvider = null;
     if (pValue instanceof IPropertyPitProvider)
       pppProvider = (IPropertyPitProvider) pValue;
-    if (pppProvider != null && HierarchyHelper.hasNode(pppProvider) &&
+    if (pppProvider != null && pppProvider.getPit().isValid() &&
         getHierarchy().equals(HierarchyHelper.getNode(pppProvider).getHierarchy()))
       throw new IllegalStateException("can't set PPP from my own hierarchy.");
     if (oldValue instanceof IPropertyPitProvider)
@@ -63,7 +63,7 @@ class Node extends AbstractNode
       value = pppCopy;
       HierarchyHelper.setNode(pppCopy, this);
 
-      if (HierarchyHelper.hasNode(pppProvider))
+      if (pppProvider.getPit().isValid())
       {
         INode node = HierarchyHelper.getNode(pppProvider);
         List<INode> childNodes = node.getChildren();
@@ -96,7 +96,7 @@ class Node extends AbstractNode
       value = pValue;
       children = null;
     }
-    fireValueChange(oldValue, pValue, pAttributes);
+    fireValueChange(oldValue, value, pAttributes);
     return value;
   }
 

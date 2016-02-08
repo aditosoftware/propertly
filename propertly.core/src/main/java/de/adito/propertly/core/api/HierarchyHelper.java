@@ -14,11 +14,6 @@ class HierarchyHelper
   {
   }
 
-  static boolean hasNode(@Nonnull IPropertyPitProvider pPropertyPitProvider)
-  {
-    return _getPropertyPit(pPropertyPitProvider).isValid();
-  }
-
   @Nonnull
   static INode getNode(@Nonnull IPropertyPitProvider pPropertyPitProvider)
   {
