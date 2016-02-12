@@ -26,7 +26,7 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
   public static <P extends IPropertyPitProvider, S extends IIndexedMutablePropertyPitProvider<P, S, T>, T>
   IndexedMutablePropertyPit<P, S, T> create(S pCreateFor, Class<T> pAllowedChildType)
   {
-    return new IndexedMutablePropertyPit<P, S, T>(pCreateFor, pAllowedChildType);
+    return new IndexedMutablePropertyPit<>(pCreateFor, pAllowedChildType);
   }
 
   @Nonnull

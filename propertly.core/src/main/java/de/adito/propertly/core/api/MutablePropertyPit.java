@@ -29,7 +29,7 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
   public static <P extends IPropertyPitProvider, S extends IMutablePropertyPitProvider<P, S, T>, T>
   MutablePropertyPit<P, S, T> create(S pCreateFor, Class<T> pAllowedChildType)
   {
-    return new MutablePropertyPit<P, S, T>(pCreateFor, pAllowedChildType);
+    return new MutablePropertyPit<>(pCreateFor, pAllowedChildType);
   }
 
   @Nonnull

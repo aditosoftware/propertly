@@ -18,8 +18,8 @@ import java.util.*;
 public class PPPIntrospector
 {
 
-  private static final Map<Class, Set<IPropertyDescription>> ALREADY_KNOWN = new LinkedHashMap<Class, Set<IPropertyDescription>>();
-  private static final Map<Class<? extends IPropertyPitProvider>, Class> CHILD_TYPES = new HashMap<Class<? extends IPropertyPitProvider>, Class>();
+  private static final Map<Class, Set<IPropertyDescription>> ALREADY_KNOWN = new LinkedHashMap<>();
+  private static final Map<Class<? extends IPropertyPitProvider>, Class> CHILD_TYPES = new HashMap<>();
 
   private PPPIntrospector()
   {
@@ -65,7 +65,7 @@ public class PPPIntrospector
     Set<IPropertyDescription> propertyDescriptions = ALREADY_KNOWN.get(pPPPClass);
     if (propertyDescriptions == null)
     {
-      LinkedHashMap<String, List<IPropertyDescription>> namePropertyMap = new LinkedHashMap<String, List<IPropertyDescription>>();
+      LinkedHashMap<String, List<IPropertyDescription>> namePropertyMap = new LinkedHashMap<>();
       for (Field field : _getAllFields(pPPPClass))
       {
         try
@@ -84,7 +84,7 @@ public class PPPIntrospector
               List<IPropertyDescription> list = namePropertyMap.get(propertyDescription.getName());
               if (list == null)
               {
-                list = new ArrayList<IPropertyDescription>();
+                list = new ArrayList<>();
                 namePropertyMap.put(propertyDescription.getName(), list);
               }
               list.add(propertyDescription);
@@ -97,7 +97,7 @@ public class PPPIntrospector
           // skip
         }
       }
-      propertyDescriptions = new LinkedHashSet<IPropertyDescription>();
+      propertyDescriptions = new LinkedHashSet<>();
       for (List<IPropertyDescription> descriptions : namePropertyMap.values())
       {
         IPropertyDescription firstDescription = descriptions.get(0);
@@ -137,8 +137,8 @@ public class PPPIntrospector
 
   private static List<Field> _getAllFields(Class pCls)
   {
-    ArrayList<Field> result = new ArrayList<Field>();
-    HashSet<Class> processed = new HashSet<Class>();
+    ArrayList<Field> result = new ArrayList<>();
+    HashSet<Class> processed = new HashSet<>();
     processed.add(Object.class); // shall not be processed.
     _addFields(result, processed, Arrays.asList(pCls));
     return result;
@@ -149,7 +149,7 @@ public class PPPIntrospector
     if (pClasses == null || pClasses.isEmpty())
       return;
 
-    List<Class> superClasses = new ArrayList<Class>();
+    List<Class> superClasses = new ArrayList<>();
     for (Class cls : pClasses)
     {
       if (_addCurrentFields(pResult, pProcessed, cls))

@@ -15,8 +15,8 @@ class NodeChildren implements Iterable<INode>
 
   public NodeChildren()
   {
-    childrenMap = new HashMap<String, INode>();
-    childrenList = new ArrayList<INode>();
+    childrenMap = new HashMap<>();
+    childrenList = new ArrayList<>();
   }
 
   public void clear()
@@ -74,14 +74,9 @@ class NodeChildren implements Iterable<INode>
 
   public void reorder(final Comparator pComparator)
   {
-    Collections.sort(childrenList, new Comparator<INode>()
-    {
-      @Override
-      public int compare(INode o1, INode o2)
-      {
-        //noinspection unchecked
-        return pComparator.compare(o1.getProperty(), o2.getProperty());
-      }
+    Collections.sort(childrenList, (o1, o2) -> {
+      //noinspection unchecked
+      return pComparator.compare(o1.getProperty(), o2.getProperty());
     });
   }
 

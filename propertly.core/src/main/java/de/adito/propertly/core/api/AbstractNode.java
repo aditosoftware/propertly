@@ -33,7 +33,7 @@ abstract class AbstractNode implements INode
       property = new DynamicHierarchyProperty(this, pPropertyDescription);
     else
       property = new HierarchyProperty(this, pPropertyDescription);
-    listeners = new ListenerList<IPropertyPitEventListener>();
+    listeners = new ListenerList<>();
   }
 
   @Nonnull

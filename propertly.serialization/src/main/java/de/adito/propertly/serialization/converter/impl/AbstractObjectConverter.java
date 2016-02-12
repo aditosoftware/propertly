@@ -23,7 +23,7 @@ public abstract class AbstractObjectConverter<S> implements IObjectConverter<S>
   {
     cls = pCls;
     name = pName;
-    sourceTargetConverters = new ArrayList<SourceTargetConverter<S, ?>>();
+    sourceTargetConverters = new ArrayList<>();
 
     registerSourceTargetConverter(new SourceTargetConverter<S, S>(cls)
     {

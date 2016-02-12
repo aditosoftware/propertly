@@ -25,7 +25,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
 
   public static <P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T> PropertyPit<P, S, T> create(S pCreateFor)
   {
-    return new PropertyPit<P, S, T>(pCreateFor);
+    return new PropertyPit<>(pCreateFor);
   }
 
   @Override
@@ -112,7 +112,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
   @Override
   public final Set<IPropertyDescription<S, T>> getPropertyDescriptions()
   {
-    Set<IPropertyDescription<S, T>> set = new LinkedHashSet<IPropertyDescription<S, T>>();
+    Set<IPropertyDescription<S, T>> set = new LinkedHashSet<>();
     List<INode> children = getNode().getChildren();
     if (children != null)
       for (INode childNode : children)
@@ -125,7 +125,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
   @Nonnull
   public List<IProperty<S, T>> getProperties()
   {
-    List<IProperty<S, T>> properties = new ArrayList<IProperty<S, T>>();
+    List<IProperty<S, T>> properties = new ArrayList<>();
     List<INode> children = getNode().getChildren();
     if (children != null)
       for (INode childNode : children)
@@ -138,7 +138,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
   @Override
   public List<T> getValues()
   {
-    List<T> values = new ArrayList<T>();
+    List<T> values = new ArrayList<>();
     List<INode> children = getNode().getChildren();
     if (children != null)
       for (INode childNode : children)

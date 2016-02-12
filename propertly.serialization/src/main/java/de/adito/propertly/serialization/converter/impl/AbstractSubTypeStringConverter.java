@@ -12,8 +12,8 @@ import java.util.*;
 public abstract class AbstractSubTypeStringConverter<T> implements IObjectConverter<T>
 {
 
-  private Map<Class<? extends T>, String> map = new HashMap<Class<? extends T>, String>();
-  private Map<String, Class<? extends T>> reverseMap = new HashMap<String, Class<? extends T>>();
+  private Map<Class<? extends T>, String> map = new HashMap<>();
+  private Map<String, Class<? extends T>> reverseMap = new HashMap<>();
 
 
   public AbstractSubTypeStringConverter()

@@ -15,7 +15,7 @@ import java.util.*;
 public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> extends DelegatingHierarchy<T>
 {
 
-  private Map<INode, INode> delegateMap = new WeakHashMap<INode, INode>();
+  private Map<INode, INode> delegateMap = new WeakHashMap<>();
 
 
   protected AbstractForwardDelegatingHierarchy(Hierarchy<T> pHierarchy)
@@ -50,7 +50,7 @@ public class AbstractForwardDelegatingHierarchy<T extends IPropertyPitProvider> 
   @Override
   public List<INode> delegatingGetChildren(@Nonnull INode pDelegateNode, @Nonnull DelegatingNode pDelegatingNode)
   {
-    List<INode> children = new ArrayList<INode>();
+    List<INode> children = new ArrayList<>();
     List<INode> delegateChildren = pDelegateNode.getChildren();
     if (delegateChildren != null)
       for (final INode delegateChildNode : delegateChildren)

@@ -21,7 +21,7 @@ public class StructureDescriptor
   public String getStructureDescription(Iterable<Class<? extends IPropertyPitProvider>> pPPPClasses)
   {
     Map<Class<? extends IPropertyPitProvider>, IPPPDescription> map =
-        new LinkedHashMap<Class<? extends IPropertyPitProvider>, IPPPDescription>();
+        new LinkedHashMap<>();
     _collect(map, pPPPClasses);
     return descriptionProvider.getSerializationDescription(map);
   }
@@ -29,7 +29,7 @@ public class StructureDescriptor
   private void _collect(Map<Class<? extends IPropertyPitProvider>, IPPPDescription> pMap,
                         Iterable<Class<? extends IPropertyPitProvider>> pPPPClasses)
   {
-    Set<Class<? extends IPropertyPitProvider>> subClasses = new LinkedHashSet<Class<? extends IPropertyPitProvider>>();
+    Set<Class<? extends IPropertyPitProvider>> subClasses = new LinkedHashSet<>();
     for (Class<? extends IPropertyPitProvider> cls : pPPPClasses)
     {
       if (!pMap.containsKey(cls))

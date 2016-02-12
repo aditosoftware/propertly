@@ -24,7 +24,7 @@ public class SerializationTest
   @Test
   public void simple() throws ParserConfigurationException, TransformerException
   {
-    IHierarchy<TProperty> hierarchy = new VerifyingHierarchy<TProperty>(new Hierarchy<TProperty>("root", new TProperty()));
+    IHierarchy<TProperty> hierarchy = new VerifyingHierarchy<>(new Hierarchy<>("root", new TProperty()));
     TProperty tProperty = hierarchy.getValue();
 
     PropertyTestChildren children = tProperty.setCHILD(new PropertyTestChildren());

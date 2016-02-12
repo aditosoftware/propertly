@@ -20,7 +20,7 @@ public class Serializer<T>
 
   public static <T> Serializer<T> create(ISerializationProvider<T, ?> pSerializationProvider)
   {
-    return new Serializer<T>(pSerializationProvider);
+    return new Serializer<>(pSerializationProvider);
   }
 
 
@@ -148,7 +148,7 @@ public class Serializer<T>
         IPropertyPitProvider<?, ?, ?> ppp = property.getValue();
         if (ppp != null)
         {
-          IProperty<? extends IPropertyPitProvider<?, ?, ?>, ?> childProperty =
+          IProperty<?, Object> childProperty =
               ppp.getPit().findProperty(PropertyDescription.create(IPropertyPitProvider.class, Object.class, pName));
 
           if (childProperty != null)
@@ -219,7 +219,8 @@ public class Serializer<T>
         @Nonnull F pInputData, @Nonnull String pName, @Nullable Class<? extends IPropertyPitProvider> pType)
     {
       IProperty<?, IPropertyPitProvider> prop = _getProperty(pName, IPropertyPitProvider.class);
-      prop.setValue(PropertlyUtility.create(pType == null ? prop.getType() : pType));
+      Class<? extends IPropertyPitProvider> pppType = pType == null ? prop.getType() : pType;
+      prop.setValue(PropertlyUtility.create(pppType));
       _deserialize(pInputData, prop);
     }
 
@@ -227,10 +228,11 @@ public class Serializer<T>
         @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
         @Nullable Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations)
     {
-      IPropertyPitProvider<?, ?, IPropertyPitProvider> ppp = PropertlyUtility.create(pType == null ? pPropertyType : pType);
+      Class<? extends IPropertyPitProvider> pppType = pType == null ? pPropertyType : pType;
+      IPropertyPitProvider<?, ?, IPropertyPitProvider> ppp = PropertlyUtility.create(pppType);
       if (property == null)
       {
-        Hierarchy<IPropertyPitProvider> hierarchy = new Hierarchy<IPropertyPitProvider>(pName, ppp);
+        Hierarchy<IPropertyPitProvider> hierarchy = new Hierarchy<>(pName, ppp);
         property = hierarchy.getProperty();
         _deserialize(pInputData, property);
       }
@@ -246,7 +248,7 @@ public class Serializer<T>
 
     private <F> IPropertyPitProvider _deserialize(F pData, IProperty<?, IPropertyPitProvider> pProperty)
     {
-      _ChildAppender<F> childAppender = new _ChildAppender<F>(pProperty);
+      _ChildAppender<F> childAppender = new _ChildAppender<>(pProperty);
       ((ISerializationProvider<T, F>) sp).deserializeChild(pData, childAppender);
       return childAppender.property.getValue();
     }

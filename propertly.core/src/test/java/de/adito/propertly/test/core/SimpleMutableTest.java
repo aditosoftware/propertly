@@ -22,9 +22,9 @@ public class SimpleMutableTest
   public void TestMutable()
   {
     DynamicTestPropertyPitProvider root =
-        new Hierarchy<DynamicTestPropertyPitProvider>("root", new DynamicTestPropertyPitProvider()).getValue();
+        new Hierarchy<>("root", new DynamicTestPropertyPitProvider()).getValue();
 
-    List<IProperty<DynamicTestPropertyPitProvider, Color>> propertyList = new ArrayList<IProperty<DynamicTestPropertyPitProvider, Color>>();
+    List<IProperty<DynamicTestPropertyPitProvider, Color>> propertyList = new ArrayList<>();
 
 
     IProperty<DynamicTestPropertyPitProvider, Color> property;
@@ -54,14 +54,7 @@ public class SimpleMutableTest
     Assert.assertEquals(propertyList, root.getProperties());
 
 
-    Comparator<IProperty<DynamicTestPropertyPitProvider, Color>> comparator = new Comparator<IProperty<DynamicTestPropertyPitProvider, Color>>()
-    {
-      @Override
-      public int compare(IProperty<DynamicTestPropertyPitProvider, Color> o1, IProperty<DynamicTestPropertyPitProvider, Color> o2)
-      {
-        return o1.getName().compareTo(o2.getName());
-      }
-    };
+    Comparator<IProperty<DynamicTestPropertyPitProvider, Color>> comparator = (o1, o2) -> o1.getName().compareTo(o2.getName());
     Collections.sort(propertyList, comparator);
     root.reorder(comparator);
 

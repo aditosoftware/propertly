@@ -5,6 +5,7 @@ import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * An Utility class with common functions.
@@ -20,16 +21,9 @@ public class PropertlyUtility
   {
   }
 
-  public static <T> ISupplier<T> getFixedSupplier(final T pInstance)
+  public static <T> Supplier<T> getFixedSupplier(final T pInstance)
   {
-    return new ISupplier<T>()
-    {
-      @Override
-      public T get()
-      {
-        return pInstance;
-      }
-    };
+    return () -> pInstance;
   }
 
   public static <T extends IPropertyPitProvider> T create(@Nonnull T pPropertyPitProvider)
@@ -55,13 +49,14 @@ public class PropertlyUtility
     }
   }
 
+  @SafeVarargs
   public static <T> Set<T> toNonnullSet(T... pTs)
   {
     if (pTs == null || pTs.length == 0)
       return Collections.emptySet();
     if (pTs.length == 1)
       return Collections.singleton(pTs[0]);
-    return Collections.unmodifiableSet(new HashSet<T>(Arrays.asList(pTs)));
+    return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(pTs)));
   }
 
   public static String asString(@Nonnull Object pObj, String... pDetails)

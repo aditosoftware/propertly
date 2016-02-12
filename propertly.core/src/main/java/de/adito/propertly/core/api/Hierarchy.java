@@ -1,10 +1,11 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.common.ListenerList;
 import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author PaL
@@ -26,22 +27,17 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
    */
   public Hierarchy(final String pName, final T pPPP)
   {
-    this(new IFunction<Hierarchy, INode>()
-    {
-      @Override
-      public INode run(Hierarchy pHierarchy)
-      {
-        return new Node(pHierarchy, null, PropertyDescription.create(
-            IPropertyPitProvider.class, pPPP.getClass(), pName));
-      }
+    this(pHierarchy -> {
+      return new Node(pHierarchy, null, PropertyDescription.create(
+          IPropertyPitProvider.class, pPPP.getClass(), pName));
     }, pPPP);
 
   }
 
-  protected Hierarchy(IFunction<Hierarchy, INode> pNodeSupplier, T pPPP)
+  protected Hierarchy(Function<Hierarchy, INode> pNodeSupplier, T pPPP)
   {
-    node = pNodeSupplier.run(this);
-    listeners = new ListenerList<IPropertyPitEventListener>();
+    node = pNodeSupplier.apply(this);
+    listeners = new ListenerList<>();
     node.setValue(pPPP, Collections.emptySet());
   }
 

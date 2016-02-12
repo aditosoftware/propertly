@@ -116,7 +116,7 @@ class HierarchyProperty implements IProperty
   public synchronized void addWeakListener(@Nonnull IPropertyEventListener pListener)
   {
     if (listeners == null)
-      listeners = new ListenerList<IPropertyEventListener>();
+      listeners = new ListenerList<>();
     listeners.addWeakListener(pListener);
   }
 
@@ -124,7 +124,7 @@ class HierarchyProperty implements IProperty
   public synchronized void addStrongListener(@Nonnull IPropertyEventListener pListener)
   {
     if (listeners == null)
-      listeners = new ListenerList<IPropertyEventListener>();
+      listeners = new ListenerList<>();
     listeners.addStrongListener(pListener);
   }
 

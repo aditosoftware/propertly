@@ -20,8 +20,8 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
       @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
       @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
   {
-    LinkedHashMap<String, Object> root = new LinkedHashMap<String, Object>();
-    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    LinkedHashMap<String, Object> root = new LinkedHashMap<>();
+    Map<String, Object> map = new LinkedHashMap<>();
     root.put(pName, new Property(pPropertyType, null, map, null));
     pChildRunner.run(map);
     return root;
@@ -32,7 +32,7 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
       @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
       @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
   {
-    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    Map<String, Object> map = new LinkedHashMap<>();
     pParentOutputData.put(pName, map);
     pChildRunner.run(map);
   }
@@ -42,7 +42,7 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
       @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
       @Nonnull Class<? extends IPropertyPitProvider> pType, @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
   {
-    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    Map<String, Object> map = new LinkedHashMap<>();
     pParentOutputData.put(pName, new Property(null, pType, map, null));
     pChildRunner.run(map);
   }
@@ -53,7 +53,7 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
       @Nonnull Class<? extends IPropertyPitProvider> pPropertyType, @Nullable List<? extends Annotation> pAnnotations,
       @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
   {
-    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    Map<String, Object> map = new LinkedHashMap<>();
     pParentOutputData.put(pName, new Property(pPropertyType, null, map, pAnnotations));
     pChildRunner.run(map);
   }
@@ -64,7 +64,7 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
       @Nonnull Class<? extends IPropertyPitProvider> pPropertyType, @Nonnull Class<? extends IPropertyPitProvider> pType,
       @Nullable List<? extends Annotation> pAnnotations, @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
   {
-    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    Map<String, Object> map = new LinkedHashMap<>();
     pParentOutputData.put(pName, new Property(pPropertyType, pType, map, pAnnotations));
     pChildRunner.run(map);
   }

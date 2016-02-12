@@ -1,10 +1,11 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author PaL
@@ -152,7 +153,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
   /**
    * IFunction implementation
    */
-  private static class _INodeFunction implements IFunction<Hierarchy, INode>
+  private static class _INodeFunction implements Function<Hierarchy, INode>
   {
     Hierarchy sourceHierarchy;
 
@@ -162,7 +163,7 @@ public abstract class DelegatingHierarchy<T extends IPropertyPitProvider> extend
     }
 
     @Override
-    public INode run(Hierarchy pHierarchy)
+    public INode apply(Hierarchy pHierarchy)
     {
       INode sourceNode = sourceHierarchy.getNode();
       return new DelegatingNode((DelegatingHierarchy) pHierarchy, null, sourceNode.getProperty().getDescription(),

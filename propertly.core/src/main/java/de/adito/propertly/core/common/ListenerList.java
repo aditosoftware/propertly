@@ -26,7 +26,7 @@ public class ListenerList<T> implements Iterable<T>
 
   public List<T> getListeners()
   {
-    List<T> l = new ArrayList<T>();
+    List<T> l = new ArrayList<>();
     if (listeners != null)
     {
       for (Object o : listeners)
@@ -45,15 +45,15 @@ public class ListenerList<T> implements Iterable<T>
   public void addWeakListener(@Nonnull T pListener)
   {
     if (listeners == null)
-      listeners = new ArrayList<Object>();
-    listeners.add(new WeakReference<T>(pListener));
+      listeners = new ArrayList<>();
+    listeners.add(new WeakReference<>(pListener));
     _cleanUp();
   }
 
   public void addStrongListener(@Nonnull T pListener)
   {
     if (listeners == null)
-      listeners = new ArrayList<Object>();
+      listeners = new ArrayList<>();
     listeners.add(pListener);
     _cleanUp();
   }

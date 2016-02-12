@@ -6,6 +6,7 @@ import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * @author PaL
@@ -14,12 +15,12 @@ import java.util.*;
  */
 public class DelegatingNode extends AbstractNode
 {
-  private final ISupplier<INode> delegateProvider;
+  private final Supplier<INode> delegateProvider;
   private IPropertyPitProvider pitProvider;
 
   public DelegatingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
                         @Nonnull IPropertyDescription pPropertyDescription,
-                        @Nonnull ISupplier<INode> pDelegateSupplier)
+                        @Nonnull Supplier<INode> pDelegateSupplier)
   {
     super(pHierarchy, pParent, pPropertyDescription);
     delegateProvider = pDelegateSupplier;

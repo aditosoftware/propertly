@@ -24,7 +24,7 @@ public class PropertyTest
   {
     final StringBuilder resultStringBuild = new StringBuilder();
 
-    IHierarchy<TProperty> hierarchy = new VerifyingHierarchy<TProperty>(new Hierarchy<TProperty>("root", new TProperty()));
+    IHierarchy<TProperty> hierarchy = new VerifyingHierarchy<>(new Hierarchy<>("root", new TProperty()));
     hierarchy.addStrongListener(new IPropertyPitEventListener()
     {
       @Override
@@ -200,7 +200,7 @@ public class PropertyTest
   @Test
   public void readWriteTest()
   {
-    IHierarchy<ColoredPitProvider> hierarchy = new VerifyingHierarchy<ColoredPitProvider>(new Hierarchy<ColoredPitProvider>("root", new ColoredPitProvider()));
+    IHierarchy<ColoredPitProvider> hierarchy = new VerifyingHierarchy<>(new Hierarchy<>("root", new ColoredPitProvider()));
     IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> pit = hierarchy.getValue().getPit();
 
 

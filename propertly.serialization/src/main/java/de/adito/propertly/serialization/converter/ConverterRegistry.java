@@ -131,7 +131,7 @@ public class ConverterRegistry
 
     _Registry()
     {
-      typeProviders = new ArrayList<IObjectConverter>();
+      typeProviders = new ArrayList<>();
     }
 
     synchronized void register(IObjectConverter<?> pProvider)

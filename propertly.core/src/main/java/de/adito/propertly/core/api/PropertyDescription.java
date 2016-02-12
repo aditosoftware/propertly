@@ -35,7 +35,7 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
       annotations = Collections.emptyMap();
     else
     {
-      annotations = new HashMap<Class<? extends Annotation>, Annotation>();
+      annotations = new HashMap<>();
       for (Annotation annotation : pAnnotations)
         annotations.put(annotation.annotationType(), annotation);
     }
@@ -98,8 +98,8 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
       @Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType, @Nonnull String pName,
       @Nullable Annotation... pAnnotations)
   {
-    return new PropertyDescription<S, T>(pSourceType, pType, pName,
-        pAnnotations == null ? Collections.<Annotation>emptyList() : Arrays.asList(pAnnotations));
+    return new PropertyDescription<>(pSourceType, pType, pName,
+                                     pAnnotations == null ? Collections.<Annotation>emptyList() : Arrays.asList(pAnnotations));
   }
 
   @Nonnull
@@ -107,22 +107,22 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
       @Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType, @Nonnull String pName,
       @Nullable Iterable<? extends Annotation> pAnnotations)
   {
-    return new PropertyDescription<S, T>(pSourceType, pType, pName, pAnnotations);
+    return new PropertyDescription<>(pSourceType, pType, pName, pAnnotations);
   }
 
   @Nonnull
   public static <S extends IPropertyPitProvider, T> IPropertyDescription<S, T> create(
       @Nonnull Class<S> pSourceType, @Nonnull Class<T> pType, @Nonnull String pName)
   {
-    return new PropertyDescription<S, T>(pSourceType, pType, pName, null);
+    return new PropertyDescription<>(pSourceType, pType, pName, null);
   }
 
   @Nonnull
   public static <S extends IPropertyPitProvider, T> IPropertyDescription<S, T> create(
       @Nonnull IPropertyDescription<S, T> pPropertyDescription)
   {
-    return new PropertyDescription<S, T>(pPropertyDescription.getSourceType(), pPropertyDescription.getType(),
-        pPropertyDescription.getName(), Arrays.asList(pPropertyDescription.getAnnotations()));
+    return new PropertyDescription<>(pPropertyDescription.getSourceType(), pPropertyDescription.getType(),
+                                     pPropertyDescription.getName(), Arrays.asList(pPropertyDescription.getAnnotations()));
   }
 
   @Override

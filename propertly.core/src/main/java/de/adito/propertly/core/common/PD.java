@@ -30,7 +30,7 @@ import java.util.*;
  */
 public class PD
 {
-  private static final Map<Class, List<Field>> FIELD_CACHE = new LinkedHashMap<Class, List<Field>>();
+  private static final Map<Class, List<Field>> FIELD_CACHE = new LinkedHashMap<>();
 
   private PD()
   {
@@ -52,7 +52,7 @@ public class PD
     List<Field> fields = FIELD_CACHE.get(pSource);
     if (fields == null)
     {
-      fields = new ArrayList<Field>(Arrays.asList(pSource.getDeclaredFields()));
+      fields = new ArrayList<>(Arrays.asList(pSource.getDeclaredFields()));
       FIELD_CACHE.put(pSource, fields);
     }
     Iterator<Field> iterator = fields.iterator();

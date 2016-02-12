@@ -18,7 +18,7 @@ public class PropertyPath implements IPropertyPath
 
   public PropertyPath(IProperty<?, ?> pProperty)
   {
-    elements = new ArrayList<String>();
+    elements = new ArrayList<>();
     while (pProperty != null)
     {
       elements.add(0, pProperty.getName());
@@ -34,7 +34,7 @@ public class PropertyPath implements IPropertyPath
 
   public PropertyPath(@Nonnull Iterable<String> pPathElements)
   {
-    elements = new ArrayList<String>();
+    elements = new ArrayList<>();
     for (String pathElement : pPathElements)
       elements.add(pathElement);
   }
@@ -78,7 +78,7 @@ public class PropertyPath implements IPropertyPath
   @Override
   public IPropertyPath getChild(String pName)
   {
-    List<String> list = new ArrayList<String>(elements);
+    List<String> list = new ArrayList<>(elements);
     list.add(pName);
     return new PropertyPath(list);
   }
@@ -87,7 +87,7 @@ public class PropertyPath implements IPropertyPath
   @Override
   public List<String> getPathElements()
   {
-    return new ArrayList<String>(elements);
+    return new ArrayList<>(elements);
   }
 
   @Nonnull
