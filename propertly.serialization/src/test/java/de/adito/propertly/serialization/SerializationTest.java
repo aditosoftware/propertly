@@ -1,6 +1,5 @@
 package de.adito.propertly.serialization;
 
-import de.adito.propertly.core.api.Hierarchy;
 import de.adito.propertly.core.common.PropertlyDebug;
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.serialization.converter.ConverterRegistry;
@@ -24,7 +23,7 @@ public class SerializationTest
   @Test
   public void simple() throws ParserConfigurationException, TransformerException
   {
-    IHierarchy<TProperty> hierarchy = new VerifyingHierarchy<>(new Hierarchy<>("root", new TProperty()));
+    IHierarchy<TProperty> hierarchy = new VerifyingHierarchy<>("root", new TProperty());
     TProperty tProperty = hierarchy.getValue();
 
     PropertyTestChildren children = tProperty.setCHILD(new PropertyTestChildren());

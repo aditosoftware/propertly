@@ -1,6 +1,5 @@
 package de.adito.propertly.test.core;
 
-import de.adito.propertly.core.api.Hierarchy;
 import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.common.exception.InaccessibleException;
 import de.adito.propertly.core.spi.*;
@@ -24,7 +23,7 @@ public class PropertyTest
   {
     final StringBuilder resultStringBuild = new StringBuilder();
 
-    IHierarchy<TProperty> hierarchy = new VerifyingHierarchy<>(new Hierarchy<>("root", new TProperty()));
+    IHierarchy<TProperty> hierarchy = new VerifyingHierarchy<>("root", new TProperty());
     hierarchy.addStrongListener(new IPropertyPitEventListener()
     {
       @Override
@@ -64,6 +63,8 @@ public class PropertyTest
       }
     });
     TProperty tProperty = hierarchy.getValue();
+    PropertyTestChildren children = tProperty.setCHILD(new PropertyTestChildren());
+    tProperty = children.addProperty("DynamicChildProperty", new TProperty()).getValue();
     //GetterSetterGen.run(tProperty);
     tProperty.getPit().addStrongListener(new PropertyPitEventAdapter()
     {
@@ -73,7 +74,7 @@ public class PropertyTest
         _append(resultStringBuild, "tProperty propertyChanged", pProperty);
       }
     });
-    PropertyTestChildren children = tProperty.setCHILD(new PropertyTestChildren());
+    children = tProperty.setCHILD(new PropertyTestChildren());
     children.addStrongListener(new PropertyPitEventAdapter()
     {
       @Override
@@ -110,29 +111,25 @@ public class PropertyTest
     Assert.assertNotNull(ex);
 
 
-    String expected = "hierarchy propertyChanged: null, MutablePropertyPit, root, property(root, TProperty, PropertyPit)\n" +
+    String expected = "hierarchy propertyChanged: null, MutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
+        "hierarchy propertyAdded: MutablePropertyPit, description(DynamicChildProperty, class de.adito.propertly.test.core.impl.TProperty)\n" +
+        "hierarchy propertyChanged: null, PropertyPit, DynamicChildProperty, property(DynamicChildProperty, TProperty, PropertyPit)\n" +
         "hierarchy propertyChanged: null, MutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
         "tProperty propertyChanged: property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
-        "hierarchy propertyChanged: null, 123, root, property(root, TProperty, PropertyPit)\n" +
         "hierarchy propertyChanged: null, 123, X, property(X, Integer, 123)\n" +
         "tProperty propertyChanged: property(X, Integer, 123)\n" +
-        "hierarchy propertyChanged: null, java.awt.Dimension[width=123,height=456], root, property(root, TProperty, PropertyPit)\n" +
         "hierarchy propertyChanged: null, java.awt.Dimension[width=123,height=456], FF, property(FF, Dimension, java.awt.Dimension[width=123,height=456])\n" +
         "tProperty propertyChanged: property(FF, Dimension, java.awt.Dimension[width=123,height=456])\n" +
-        "hierarchy propertyAdded: MutablePropertyPit, description(CHILD, class de.adito.propertly.test.core.impl.PropertyTestChildren)\n" +
+        "hierarchy propertyAdded: MutablePropertyPit, description(color1, class java.awt.Color)\n" +
         "tProperty propertyAdded: description(color1, class java.awt.Color)\n" +
-        "hierarchy propertyChanged: null, java.awt.Color[r=0,g=0,b=0], CHILD, property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
-        "tProperty propertyChanged: property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
         "hierarchy propertyChanged: null, java.awt.Color[r=0,g=0,b=0], color1, property(color1, Color, java.awt.Color[r=0,g=0,b=0])\n" +
-        "hierarchy propertyAdded: MutablePropertyPit, description(CHILD, class de.adito.propertly.test.core.impl.PropertyTestChildren)\n" +
+        "hierarchy propertyAdded: MutablePropertyPit, description(color2, class java.awt.Color)\n" +
         "tProperty propertyAdded: description(color2, class java.awt.Color)\n" +
-        "hierarchy propertyChanged: null, java.awt.Color[r=255,g=0,b=0], CHILD, property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
-        "tProperty propertyChanged: property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
         "hierarchy propertyChanged: null, java.awt.Color[r=255,g=0,b=0], color2, property(color2, Color, java.awt.Color[r=255,g=0,b=0])\n" +
         "child parent: PropertyPit\n" +
         "tProperty child property: property(color1, Color, java.awt.Color[r=0,g=0,b=0])\n" +
         "tProperty child property: property(color2, Color, java.awt.Color[r=255,g=0,b=0])\n" +
-        "tProperty parent: null\n" +
+        "tProperty parent: MutablePropertyPit\n" +
         "tProperty property: property(X, Integer, 123)\n" +
         "tProperty property: property(Y, Integer, null)\n" +
         "tProperty property: property(FF, Dimension, java.awt.Dimension[width=123,height=456])\n" +
@@ -146,13 +143,22 @@ public class PropertyTest
                         resultStringBuild.toString());
 
     expected = "/root\n" +
-        "\t X : 123\n" +
+        "\t X : null\n" +
         "\t Y : null\n" +
-        "\t FF : java.awt.Dimension[width=123,height=456]\n" +
+        "\t FF : null\n" +
         "\t MAP : null\n" +
         "\t/CHILD\n" +
-        "\t\t color1 : java.awt.Color[r=0,g=0,b=0]\n" +
-        "\t\t color2 : java.awt.Color[r=255,g=0,b=0]\n" +
+        "\t\t/DynamicChildProperty\n" +
+        "\t\t\t X : 123\n" +
+        "\t\t\t Y : null\n" +
+        "\t\t\t FF : java.awt.Dimension[width=123,height=456]\n" +
+        "\t\t\t MAP : null\n" +
+        "\t\t\t/CHILD\n" +
+        "\t\t\t\t color1 : java.awt.Color[r=0,g=0,b=0]\n" +
+        "\t\t\t\t color2 : java.awt.Color[r=255,g=0,b=0]\n" +
+        "\t\t\t WIDTH : null\n" +
+        "\t\t\t HEIGHT : null\n" +
+        "\t\t\t DESCRIPTION : null\n" +
         "\t WIDTH : null\n" +
         "\t HEIGHT : null\n" +
         "\t DESCRIPTION : null\n";
@@ -200,7 +206,7 @@ public class PropertyTest
   @Test
   public void readWriteTest()
   {
-    IHierarchy<ColoredPitProvider> hierarchy = new VerifyingHierarchy<>(new Hierarchy<>("root", new ColoredPitProvider()));
+    IHierarchy<ColoredPitProvider> hierarchy = new VerifyingHierarchy<>("root", new ColoredPitProvider());
     IPropertyPit<IPropertyPitProvider, ColoredPitProvider, Color> pit = hierarchy.getValue().getPit();
 
 

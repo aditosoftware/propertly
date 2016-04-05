@@ -12,7 +12,7 @@ import java.util.*;
  *         Date: 29.01.13
  *         Time: 23:13
  */
-class Node extends AbstractNode
+public class Node extends AbstractNode
 {
 
   @Nullable
@@ -21,7 +21,7 @@ class Node extends AbstractNode
   private NodeChildren children;
 
 
-  protected Node(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull IPropertyDescription pPropertyDescription)
+  public Node(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull IPropertyDescription pPropertyDescription)
   {
     super(pHierarchy, pParent, pPropertyDescription);
   }

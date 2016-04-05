@@ -14,7 +14,7 @@ import java.util.Set;
  *         Date: 09.02.13
  *         Time: 19:36
  */
-abstract class AbstractNode implements INode
+public abstract class AbstractNode implements INode
 {
 
   private Hierarchy hierarchy;
