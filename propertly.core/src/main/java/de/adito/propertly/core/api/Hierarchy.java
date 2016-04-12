@@ -31,14 +31,18 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
       return new Node(pHierarchy, null, PropertyDescription.create(
           IPropertyPitProvider.class, pPPP.getClass(), pName));
     }, pPPP);
-
   }
 
   protected Hierarchy(Function<Hierarchy, INode> pNodeSupplier, T pPPP)
   {
+    this(pNodeSupplier);
+    node.setValue(pPPP, Collections.emptySet());
+  }
+
+  Hierarchy(Function<Hierarchy, INode> pNodeSupplier)
+  {
     node = pNodeSupplier.apply(this);
     listeners = new ListenerList<>();
-    node.setValue(pPPP, Collections.emptySet());
   }
 
   @Override
@@ -81,7 +85,7 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
-      listener.propertyChanged(pProperty, pOldValue, pNewValue, pAttributes);
+      listener.propertyValueChanged(pProperty, pOldValue, pNewValue, pAttributes);
   }
 
   protected void firePropertyAdded(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription, @Nonnull Set<Object> pAttributes)
@@ -91,11 +95,11 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
       listener.propertyAdded(pPropertyPitProvider, pDescription, pAttributes);
   }
 
-  protected void firePropertyWillBeRemoved(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription, @Nonnull Set<Object> pAttributes)
+  protected void firePropertyWillBeRemoved(@Nonnull IProperty pProperty, @Nonnull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
-      listener.propertyWillBeRemoved(pPropertyPitProvider, pDescription, pAttributes);
+      listener.propertyWillBeRemoved(pProperty, pAttributes);
   }
 
   protected void firePropertyRemoved(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription, @Nonnull Set<Object> pAttributes)

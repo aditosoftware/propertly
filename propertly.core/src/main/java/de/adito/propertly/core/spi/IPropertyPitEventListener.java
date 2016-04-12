@@ -12,11 +12,10 @@ public interface IPropertyPitEventListener<P extends IPropertyPitProvider, S ext
     extends IPropertyEventListener<S, T>
 {
 
-  void propertyAdded(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes);
-
-  void propertyWillBeRemoved(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes);
-
   void propertyRemoved(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes);
 
+  void propertyAdded(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes);
+
   void propertyOrderChanged(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull Set<Object> pAttributes);
+
 }

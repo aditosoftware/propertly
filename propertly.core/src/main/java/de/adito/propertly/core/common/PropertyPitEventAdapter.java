@@ -3,7 +3,7 @@ package de.adito.propertly.core.common;
 import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
-import java.util.*;
+import java.util.Set;
 
 /**
  * An adapter implementation for IPropertyPitEventListener implementations.
@@ -16,27 +16,29 @@ public abstract class PropertyPitEventAdapter<P extends IPropertyPitProvider, S 
     implements IPropertyPitEventListener<P, S, T>
 {
   @Override
-  public void propertyChanged(@Nonnull IProperty<S, T> pProperty, @Nullable T pOldValue, @Nullable T pNewValue, @Nonnull Set<Object> pAttributes)
-  {
-  }
-
-  @Override
-  public void propertyAdded(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes)
-  {
-  }
-
-  @Override
-  public void propertyWillBeRemoved(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes)
-  {
-  }
-
-  @Override
-  public void propertyRemoved(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  public void propertyValueChanged(@Nonnull IProperty<S, T> pProperty, @Nullable T pOldValue, @Nullable T pNewValue, @Nonnull Set<Object> pAttributes)
   {
   }
 
   @Override
   public void propertyNameChanged(@Nonnull IProperty<S, T> pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
+  {
+  }
+
+  @Override
+  public void propertyWillBeRemoved(@Nonnull IProperty<S, T> pProperty, @Nonnull Set<Object> pAttributes)
+  {
+
+  }
+
+  @Override
+  public void propertyRemoved(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  {
+
+  }
+
+  @Override
+  public void propertyAdded(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
   }
 

@@ -11,8 +11,14 @@ import java.util.Set;
 public class PropertyEventAdapter<S extends IPropertyPitProvider, T> implements IPropertyEventListener<S, T>
 {
   @Override
-  public void propertyChanged(@Nonnull IProperty<S, T> pProperty, @Nullable T pOldValue, @Nullable T pNewValue, @Nonnull Set<Object> pAttributes)
+  public void propertyValueChanged(@Nonnull IProperty<S, T> pProperty, @Nullable T pOldValue, @Nullable T pNewValue, @Nonnull Set<Object> pAttributes)
   {
+  }
+
+  @Override
+  public void propertyWillBeRemoved(@Nonnull IProperty<S, T> pProperty, @Nonnull Set<Object> pAttributes)
+  {
+
   }
 
   @Override

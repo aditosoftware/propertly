@@ -123,8 +123,9 @@ public interface INode
    *
    * @param pPropertyDescription the description for the new node.
    * @param pAttributes          additional attributes describing this change.
+   * @return the created property's node.
    */
-  void addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
+  INode addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
 
   /**
    * Removes a child from this node.
@@ -141,8 +142,9 @@ public interface INode
    * @param pIndex               the index where the new child node shall be inserted.
    * @param pPropertyDescription the description for the new node.
    * @param pAttributes          additional attributes describing this change.
+   * @return the created property's node.
    */
-  void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
+  INode addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
 
   /**
    * Removes a property at a specified index. If no exception occurs the removal was successful.

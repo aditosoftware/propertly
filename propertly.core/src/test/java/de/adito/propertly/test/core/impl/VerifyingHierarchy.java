@@ -1,7 +1,7 @@
 package de.adito.propertly.test.core.impl;
 
 import de.adito.propertly.core.api.*;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
 import javax.annotation.*;
 import java.util.Set;
@@ -11,26 +11,23 @@ import java.util.Set;
  *         Date: 09.02.13
  *         Time: 20:07
  */
-public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Hierarchy<T>
+public class VerifyingHierarchy<T extends IPropertyPitProvider> extends DelegatingHierarchy<T>
 {
 
-  public VerifyingHierarchy(String pName, T pPPP)
+  public VerifyingHierarchy(Hierarchy<T> pSourceHierarchy)
   {
-    super(pHierarchy -> {
-      return new _VerifyingNode(pHierarchy, null, PropertyDescription.create(
-          IPropertyPitProvider.class, pPPP.getClass(), pName));
-    }, pPPP);
+    super(pSourceHierarchy, (pHierarchy, pSourceNode) -> new _VerifyingNode(pHierarchy, null, pSourceNode));
   }
 
 
   /**
    * Node-Impl
    */
-  private static class _VerifyingNode extends Node
+  private static class _VerifyingNode extends DelegatingNode
   {
-    _VerifyingNode(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull IPropertyDescription pPropertyDescription)
+    _VerifyingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull INode pDelegate)
     {
-      super(pHierarchy, pParent, pPropertyDescription);
+      super(pHierarchy, pParent, pDelegate);
     }
 
     @Override
@@ -64,10 +61,9 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Hierarch
     }
 
     @Override
-    protected INode createChild(IPropertyDescription pPropertyDescription)
+    protected DelegatingNode createChild(INode pDelegate)
     {
-      ensureValid();
-      return new _VerifyingNode(getHierarchy(), this, PropertyDescription.create(pPropertyDescription));
+      return new _VerifyingNode(getHierarchy(), this, pDelegate);
     }
   }
 

@@ -100,64 +100,72 @@ public abstract class AbstractNode implements INode
   protected void fireValueChange(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
-    getHierarchy().fireNodeChanged(getProperty(), pOldValue, pNewValue, pAttributes);
-    AbstractNode p = getParent();
-    if (p != null)
+    HierarchyProperty localProperty = (HierarchyProperty) getProperty();
+    getHierarchy().fireNodeChanged(localProperty, pOldValue, pNewValue, pAttributes);
+    AbstractNode localParent = getParent();
+    if (localParent != null)
     {
-      for (IPropertyPitEventListener eventListener : p.listeners)
+      for (IPropertyPitEventListener eventListener : localParent.listeners)
         //noinspection unchecked
-        eventListener.propertyChanged(getProperty(), pOldValue, pNewValue, pAttributes);
+        eventListener.propertyValueChanged(localProperty, pOldValue, pNewValue, pAttributes);
     }
-    property.fire(pOldValue, pNewValue, pAttributes);
+    localProperty.fireValueChanged(pOldValue, pNewValue, pAttributes);
   }
 
   protected void fireNodeAdded(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
-    getHierarchy().firePropertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
+    IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
+    getHierarchy().firePropertyAdded(ppp, pPropertyDescription, pAttributes);
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked,ConstantConditions
-      listener.propertyAdded((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
+      listener.propertyAdded(ppp, pPropertyDescription, pAttributes);
   }
 
   protected void fireNodeWillBeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
-    getHierarchy().firePropertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
+    HierarchyProperty localProperty = (HierarchyProperty) getProperty();
+    IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
+    getHierarchy().firePropertyWillBeRemoved(localProperty, pAttributes);
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked,ConstantConditions
-      listener.propertyWillBeRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
+      listener.propertyWillBeRemoved(localProperty, pAttributes);
+    localProperty.fireWillBeRemoved(pAttributes);
   }
 
   protected void fireNodeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
-    getHierarchy().firePropertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
+    IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
+    getHierarchy().firePropertyRemoved(ppp, pPropertyDescription, pAttributes);
     if (listeners != null)
       for (IPropertyPitEventListener listener : listeners)
         //noinspection unchecked,ConstantConditions
-        listener.propertyRemoved((IPropertyPitProvider) getValue(), pPropertyDescription, pAttributes);
+        listener.propertyRemoved(ppp, pPropertyDescription, pAttributes);
   }
 
   protected void firePropertyOrderChanged(@Nonnull Set<Object> pAttributes)
   {
     ensureValid();
-    getHierarchy().fireChildrenOrderChanged((IPropertyPitProvider) getValue(), pAttributes);
+    IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
+    getHierarchy().fireChildrenOrderChanged(ppp, pAttributes);
     if (listeners != null)
       for (IPropertyPitEventListener listener : listeners)
         //noinspection unchecked,ConstantConditions
-        listener.propertyOrderChanged((IPropertyPitProvider) getValue(), pAttributes);
+        listener.propertyOrderChanged(ppp, pAttributes);
   }
 
   protected void firePropertyNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
-    getHierarchy().fireNodeRenamed(getProperty(), pOldName, pNewName, pAttributes);
+    HierarchyProperty localProperty = (HierarchyProperty) getProperty();
+    getHierarchy().fireNodeRenamed(localProperty, pOldName, pNewName, pAttributes);
     if (listeners != null)
       for (IPropertyPitEventListener listener : listeners)
         //noinspection unchecked,ConstantConditions
-        listener.propertyNameChanged(getProperty(), pOldName, pNewName, pAttributes);
-    property.firePropertyNameChanged(pOldName, pNewName, pAttributes);
+        listener.propertyNameChanged(localProperty, pOldName, pNewName, pAttributes);
+    localProperty.fireNameChanged(pOldName, pNewName, pAttributes);
   }
 
   @Override

@@ -135,7 +135,7 @@ class HierarchyProperty implements IProperty
       listeners.removeListener(pListener);
   }
 
-  void fire(Object pOldValue, Object pNewValue, @Nonnull Set<Object> pAttributes)
+  void fireValueChanged(Object pOldValue, Object pNewValue, @Nonnull Set<Object> pAttributes)
   {
     List<IPropertyEventListener> l;
     synchronized (this)
@@ -146,10 +146,10 @@ class HierarchyProperty implements IProperty
     }
     for (IPropertyEventListener listener : l)
       //noinspection unchecked
-      listener.propertyChanged(this, pOldValue, pNewValue, pAttributes);
+      listener.propertyValueChanged(this, pOldValue, pNewValue, pAttributes);
   }
 
-  protected void firePropertyNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
+  protected void fireNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
   {
     List<IPropertyEventListener> l;
     synchronized (this)
@@ -161,6 +161,20 @@ class HierarchyProperty implements IProperty
     for (IPropertyEventListener listener : l)
       //noinspection unchecked
       listener.propertyNameChanged(this, pOldName, pNewName, pAttributes);
+  }
+  
+  protected void fireWillBeRemoved(@Nonnull Set<Object> pAttributes)
+  {
+    List<IPropertyEventListener> l;
+    synchronized (this)
+    {
+      if (listeners == null)
+        return;
+      l = listeners.getListeners();
+    }
+    for (IPropertyEventListener listener : l)
+      //noinspection unchecked
+      listener.propertyWillBeRemoved(this, pAttributes);
   }
 
   AbstractNode getNode()

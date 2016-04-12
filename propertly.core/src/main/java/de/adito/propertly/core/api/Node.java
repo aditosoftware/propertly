@@ -160,7 +160,7 @@ public class Node extends AbstractNode
   }
 
   @Override
-  public void addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  public INode addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
@@ -173,6 +173,7 @@ public class Node extends AbstractNode
     INode child = createChild(pPropertyDescription);
     children.add(child);
     fireNodeAdded(child.getProperty().getDescription(), pAttributes);
+    return child;
   }
 
   @Override
@@ -198,7 +199,7 @@ public class Node extends AbstractNode
   }
 
   @Override
-  public void addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  public INode addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
@@ -211,6 +212,7 @@ public class Node extends AbstractNode
     INode child = createChild(pPropertyDescription);
     children.add(pIndex, child);
     fireNodeAdded(child.getProperty().getDescription(), pAttributes);
+    return child;
   }
 
   @Override

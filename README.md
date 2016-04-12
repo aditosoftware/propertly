@@ -75,10 +75,10 @@ public class Sample
     // The created student can be accessed from the hierarchy.
     StudentPropertyPitProvider student = hierarchy.getValue();
     // Listeners can be added.
-    student.addPropertyEventListener(new PropertyPitEventAdapter()
+    student.addStrongListener(new PropertyPitEventAdapter()
     {
       @Override
-      public void propertyChanged(IProperty pProperty, Object pOldValue, Object pNewValue)
+      public void propertyValueChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set pAttributes)
       {
         System.out.println(pProperty.getName() + "=" + pNewValue);
       }
