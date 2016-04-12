@@ -1,6 +1,7 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
 
 import java.util.*;
 
@@ -27,17 +28,18 @@ class NodeChildren implements Iterable<INode>
 
   public void add(INode pNode)
   {
-    INode existingNode = childrenMap.put(pNode.getProperty().getName(), pNode);
-    if (existingNode == null)
-      childrenList.add(pNode);
+    add(null, pNode);
   }
 
-  public void add(int pIndex, INode pNode)
+  public void add(Integer pIndex, INode pNode)
   {
     String name = pNode.getProperty().getName();
     if (!childrenMap.containsKey(name))
     {
-      childrenList.add(pIndex, pNode);
+      if (pIndex == null)
+        childrenList.add(pNode);
+      else
+        childrenList.add(pIndex, pNode);
       childrenMap.put(name, pNode);
     }
   }

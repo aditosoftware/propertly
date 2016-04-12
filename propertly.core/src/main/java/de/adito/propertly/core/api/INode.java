@@ -1,10 +1,16 @@
 package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IHierarchy;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitEventListener;
 
-import javax.annotation.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * INodes are the storage structure behind IProperty objects.
@@ -119,13 +125,15 @@ public interface INode
   void rename(@Nonnull String pName, @Nonnull Set<Object> pAttributes) throws PropertlyRenameException;
 
   /**
-   * Adds a new child with a dynamic property to this node.
+   * Adds a new child with a dynamic property at a specified index to this node. If the index is <tt>null</tt> the child
+   * is appended.
    *
+   * @param pIndex               the index where the new child node shall be inserted or <tt>null</tt>.
    * @param pPropertyDescription the description for the new node.
    * @param pAttributes          additional attributes describing this change.
    * @return the created property's node.
    */
-  INode addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
+  INode addProperty(@Nullable Integer pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
 
   /**
    * Removes a child from this node.
@@ -135,16 +143,6 @@ public interface INode
    * @return whether something was removed.
    */
   boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
-
-  /**
-   * Add a new child with a dynamic property at a specified index to this node.
-   *
-   * @param pIndex               the index where the new child node shall be inserted.
-   * @param pPropertyDescription the description for the new node.
-   * @param pAttributes          additional attributes describing this change.
-   * @return the created property's node.
-   */
-  INode addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
 
   /**
    * Removes a property at a specified index. If no exception occurs the removal was successful.

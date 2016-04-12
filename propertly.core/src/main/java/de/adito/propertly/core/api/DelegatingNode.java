@@ -2,10 +2,16 @@ package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
-import javax.annotation.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author PaL
@@ -135,7 +141,7 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public INode addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  public INode addProperty(@Nullable Integer pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(pitProvider instanceof IMutablePropertyPitProvider))
@@ -144,11 +150,11 @@ public class DelegatingNode extends AbstractNode
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
 
-    INode delegateChild = delegate.addProperty(pPropertyDescription, pAttributes);
+    INode delegateChild = delegate.addProperty(pIndex, pPropertyDescription, pAttributes);
     DelegatingNode child = createChild(delegateChild);
     if (children == null)
       children = new NodeChildren();
-    children.add(child);
+    children.add(pIndex, child);
     fireNodeAdded(child.getProperty().getDescription(), pAttributes);
     return child;
   }
@@ -177,25 +183,6 @@ public class DelegatingNode extends AbstractNode
       return true;
     }
     return false;
-  }
-
-  @Override
-  public INode addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
-  {
-    ensureValid();
-    if (!(pitProvider instanceof IMutablePropertyPitProvider))
-      throw new IllegalStateException("not mutable: " + getProperty());
-    INode node = findNode(pPropertyDescription);
-    if (node != null)
-      throw new IllegalStateException("name already exists: " + pPropertyDescription);
-
-    INode delegateChild = delegate.addProperty(pIndex, pPropertyDescription, pAttributes);
-    DelegatingNode child = createChild(delegateChild);
-    if (children == null)
-      children = new NodeChildren();
-    children.add(pIndex, child);
-    fireNodeAdded(child.getProperty().getDescription(), pAttributes);
-    return child;
   }
 
   @Override

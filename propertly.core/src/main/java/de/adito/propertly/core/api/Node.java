@@ -1,13 +1,21 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.common.ListenerList;
+import de.adito.propertly.core.common.PPPIntrospector;
+import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
 import de.adito.propertly.core.common.path.PropertyPath;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author PaL
@@ -180,7 +188,7 @@ public class Node extends AbstractNode
   }
 
   @Override
-  public INode addProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  public INode addProperty(@Nullable Integer pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
@@ -190,8 +198,8 @@ public class Node extends AbstractNode
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
     if (children == null)
       children = new NodeChildren();
-    INode child = createChild(PropertyDescription.create(pPropertyDescription));
-    children.add(child);
+    INode child = createChild(pPropertyDescription);
+    children.add(pIndex, child);
     fireNodeAdded(child.getProperty().getDescription(), pAttributes);
     return child;
   }
@@ -219,23 +227,6 @@ public class Node extends AbstractNode
       return true;
     }
     return false;
-  }
-
-  @Override
-  public INode addProperty(int pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
-  {
-    ensureValid();
-    if (!(value instanceof IMutablePropertyPitProvider))
-      throw new IllegalStateException("not mutable: " + getProperty());
-    INode node = findNode(pPropertyDescription);
-    if (node != null)
-      throw new IllegalStateException("name already exists: " + pPropertyDescription);
-    if (children == null)
-      children = new NodeChildren();
-    INode child = createChild(PropertyDescription.create(pPropertyDescription));
-    children.add(pIndex, child);
-    fireNodeAdded(child.getProperty().getDescription(), pAttributes);
-    return child;
   }
 
   @Override

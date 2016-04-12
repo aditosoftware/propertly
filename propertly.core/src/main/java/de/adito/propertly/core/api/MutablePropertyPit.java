@@ -3,7 +3,8 @@ package de.adito.propertly.core.api;
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.util.UUID;
 
@@ -67,8 +68,9 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
   @Override
   public <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription, @Nullable Object... pAttributes)
   {
-    getNode().addProperty(pPropertyDescription, PropertlyUtility.toNonnullSet(pAttributes));
-    return getProperty(pPropertyDescription);
+    INode n = getNode().addProperty(null, pPropertyDescription, PropertlyUtility.toNonnullSet(pAttributes));
+    //noinspection unchecked
+    return n.getProperty();
   }
 
   @Nonnull
