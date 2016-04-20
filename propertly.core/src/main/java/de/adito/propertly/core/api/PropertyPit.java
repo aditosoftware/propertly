@@ -141,9 +141,15 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
     List<T> values = new ArrayList<>();
     List<INode> children = getNode().getChildren();
     if (children != null)
+    {
       for (INode childNode : children)
+      {
         //noinspection unchecked
-        values.add((T) childNode.getValue());
+        T value = (T) childNode.getValue();
+        if (value != null)
+          values.add(value);
+      }
+    }
     return values;
   }
 
