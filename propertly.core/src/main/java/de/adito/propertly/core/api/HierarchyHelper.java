@@ -25,6 +25,13 @@ class HierarchyHelper
     _getPropertyPit(pPropertyPitProvider).setNode(pNode);
   }
 
+  static INode getNode(@Nonnull IProperty pProperty)
+  {
+    if (pProperty instanceof HierarchyProperty)
+      return ((HierarchyProperty) pProperty).getNode();
+    throw new IllegalStateException("only 'HierarchyProperty' is supported at hierarchy.");
+  }
+
   @Nonnull
   private static PropertyPit _getPropertyPit(@Nonnull IPropertyPitProvider pPropertyPitProvider)
   {

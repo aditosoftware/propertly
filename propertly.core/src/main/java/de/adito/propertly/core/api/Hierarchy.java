@@ -81,6 +81,11 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
     return node;
   }
 
+  protected INode getNode(IProperty pProperty)
+  {
+    return equals(pProperty.getHierarchy()) ? HierarchyHelper.getNode(pProperty) : null;
+  }
+
   protected void fireNodeChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
