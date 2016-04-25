@@ -20,10 +20,17 @@ public class DelegatingNode extends AbstractNode
   private NodeChildren children;
 
 
-  public DelegatingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
-                        @Nonnull INode pDelegate)
+  protected DelegatingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
+                           @Nonnull INode pDelegate)
   {
-    super(pHierarchy, pParent, pDelegate.getProperty().getDescription());
+    this(pHierarchy, pParent, pDelegate.getProperty().getDescription(), pDelegate);
+  }
+
+  protected DelegatingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
+                           @Nonnull IPropertyDescription pPropertyDescription,
+                           @Nonnull INode pDelegate)
+  {
+    super(pHierarchy, pParent, pPropertyDescription);
     delegate = pDelegate;
     _alignToDelegate();
   }
