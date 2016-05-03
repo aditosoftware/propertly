@@ -92,6 +92,10 @@ public class PropertyTest
     children.addProperty(Color.class, "color1").setValue(Color.BLACK);
     children.addProperty(Color.class, "color2").setValue(Color.RED);
 
+    IProperty<PropertyTestChildren, Color> color3Property = children.addProperty(Color.class, "color3");
+    children.removeProperty(1);
+    children.removeProperty((IPropertyDescription) color3Property.getDescription());
+
     _append(resultStringBuild, "child parent", tProperty.getCHILD().getParent());
     for (IProperty property : tProperty.getCHILD())
       _append(resultStringBuild, "tProperty child property", property);
@@ -113,30 +117,35 @@ public class PropertyTest
     Assert.assertNotNull(ex);
 
 
-    String expected = "hierarchy propertyValueChanged: null, MutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
-        "hierarchy propertyAdded: MutablePropertyPit, description(DynamicChildProperty, class de.adito.propertly.test.core.impl.TProperty)\n" +
+    String expected = "hierarchy propertyValueChanged: null, IndexedMutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
+        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(DynamicChildProperty, class de.adito.propertly.test.core.impl.TProperty)\n" +
         "hierarchy propertyValueChanged: null, PropertyPit, DynamicChildProperty, property(DynamicChildProperty, TProperty, PropertyPit)\n" +
-        "hierarchy propertyValueChanged: null, MutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
-        "tProperty propertyValueChanged: property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
+        "hierarchy propertyValueChanged: null, IndexedMutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
+        "tProperty propertyValueChanged: property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
         "hierarchy propertyValueChanged: null, 123, X, property(X, Integer, 123)\n" +
         "tProperty propertyValueChanged: property(X, Integer, 123)\n" +
         "hierarchy propertyValueChanged: null, java.awt.Dimension[width=123,height=456], FF, property(FF, Dimension, java.awt.Dimension[width=123,height=456])\n" +
         "tProperty propertyValueChanged: property(FF, Dimension, java.awt.Dimension[width=123,height=456])\n" +
-        "hierarchy propertyAdded: MutablePropertyPit, description(color1, class java.awt.Color)\n" +
+        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(color1, class java.awt.Color)\n" +
         "tProperty propertyAdded: description(color1, class java.awt.Color)\n" +
         "hierarchy propertyValueChanged: null, java.awt.Color[r=0,g=0,b=0], color1, property(color1, Color, java.awt.Color[r=0,g=0,b=0])\n" +
-        "hierarchy propertyAdded: MutablePropertyPit, description(color2, class java.awt.Color)\n" +
+        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(color2, class java.awt.Color)\n" +
         "tProperty propertyAdded: description(color2, class java.awt.Color)\n" +
         "hierarchy propertyValueChanged: null, java.awt.Color[r=255,g=0,b=0], color2, property(color2, Color, java.awt.Color[r=255,g=0,b=0])\n" +
+        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(color3, class java.awt.Color)\n" +
+        "tProperty propertyAdded: description(color3, class java.awt.Color)\n" +
+        "hierarchy propertyWillBeRemoved: property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
+        "hierarchy propertyRemoved: IndexedMutablePropertyPit, description(color2, class java.awt.Color)\n" +
+        "hierarchy propertyWillBeRemoved: property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
+        "hierarchy propertyRemoved: IndexedMutablePropertyPit, description(color3, class java.awt.Color)\n" +
         "child parent: PropertyPit\n" +
         "tProperty child property: property(color1, Color, java.awt.Color[r=0,g=0,b=0])\n" +
-        "tProperty child property: property(color2, Color, java.awt.Color[r=255,g=0,b=0])\n" +
-        "tProperty parent: MutablePropertyPit\n" +
+        "tProperty parent: IndexedMutablePropertyPit\n" +
         "tProperty property: property(X, Integer, 123)\n" +
         "tProperty property: property(Y, Integer, null)\n" +
         "tProperty property: property(FF, Dimension, java.awt.Dimension[width=123,height=456])\n" +
         "tProperty property: property(MAP, Map, null)\n" +
-        "tProperty property: property(CHILD, PropertyTestChildren, MutablePropertyPit)\n" +
+        "tProperty property: property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
         "tProperty property: property(WIDTH, Integer, null)\n" +
         "tProperty property: property(HEIGHT, Integer, null)\n" +
         "tProperty property: property(DESCRIPTION, String, null)";
@@ -157,7 +166,6 @@ public class PropertyTest
         "\t\t\t MAP : null\n" +
         "\t\t\t/CHILD\n" +
         "\t\t\t\t color1 : java.awt.Color[r=0,g=0,b=0]\n" +
-        "\t\t\t\t color2 : java.awt.Color[r=255,g=0,b=0]\n" +
         "\t\t\t WIDTH : null\n" +
         "\t\t\t HEIGHT : null\n" +
         "\t\t\t DESCRIPTION : null\n" +

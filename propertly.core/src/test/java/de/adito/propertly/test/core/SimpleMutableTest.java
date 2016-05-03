@@ -1,12 +1,9 @@
 package de.adito.propertly.test.core;
 
-import de.adito.propertly.core.api.Hierarchy;
-import de.adito.propertly.core.api.PropertyDescription;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.spi.*;
 import de.adito.propertly.test.core.impl.DynamicTestPropertyPitProvider;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.*;
 
 import java.awt.*;
 import java.util.*;
@@ -36,7 +33,7 @@ public class SimpleMutableTest
     propertyList.add(property);
 
     IPropertyDescription<DynamicTestPropertyPitProvider, Color> pinkDescription =
-        PropertyDescription.create(DynamicTestPropertyPitProvider.class, Color.class, "pink" /*annotations*/);
+        PropertyDescription.create(DynamicTestPropertyPitProvider.class, Color.class, "pink");
     property = root.addProperty(0, pinkDescription);
     property.setValue(Color.PINK);
     propertyList.add(0, property);
@@ -46,7 +43,7 @@ public class SimpleMutableTest
     propertyList.add(property);
 
     IPropertyDescription<DynamicTestPropertyPitProvider, Color> blackDescription =
-        PropertyDescription.create(DynamicTestPropertyPitProvider.class, Color.class, "black" /*annotations*/);
+        PropertyDescription.create(DynamicTestPropertyPitProvider.class, Color.class, "black");
     property = root.addProperty(3, blackDescription);
     property.setValue(Color.black);
     propertyList.add(3, property);

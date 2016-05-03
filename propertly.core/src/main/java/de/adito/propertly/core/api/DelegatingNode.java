@@ -165,6 +165,7 @@ public class DelegatingNode extends AbstractNode
       IPropertyDescription description = property.getDescription();
       fireNodeWillBeRemoved(description, pAttributes);
       assert children != null;
+      delegate.removeProperty(pPropertyDescription, pAttributes);
       children.remove(childNode);
       fireNodeRemoved(description, pAttributes);
       return true;
@@ -202,6 +203,7 @@ public class DelegatingNode extends AbstractNode
       throw new IllegalStateException("can't remove: " + getProperty());
     IPropertyDescription description = property.getDescription();
     fireNodeWillBeRemoved(description, pAttributes);
+    delegate.removeProperty(pIndex, pAttributes);
     children.remove(pIndex);
     fireNodeRemoved(description, pAttributes);
   }
