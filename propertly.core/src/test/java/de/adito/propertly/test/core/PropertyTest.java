@@ -134,9 +134,9 @@ public class PropertyTest
         "hierarchy propertyValueChanged: null, java.awt.Color[r=255,g=0,b=0], color2, property(color2, Color, java.awt.Color[r=255,g=0,b=0])\n" +
         "hierarchy propertyAdded: IndexedMutablePropertyPit, description(color3, class java.awt.Color)\n" +
         "tProperty propertyAdded: description(color3, class java.awt.Color)\n" +
-        "hierarchy propertyWillBeRemoved: property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
+        "hierarchy propertyWillBeRemoved: property(color2, Color, java.awt.Color[r=255,g=0,b=0])\n" +
         "hierarchy propertyRemoved: IndexedMutablePropertyPit, description(color2, class java.awt.Color)\n" +
-        "hierarchy propertyWillBeRemoved: property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
+        "hierarchy propertyWillBeRemoved: property(color3, Color, null)\n" +
         "hierarchy propertyRemoved: IndexedMutablePropertyPit, description(color3, class java.awt.Color)\n" +
         "child parent: PropertyPit\n" +
         "tProperty child property: property(color1, Color, java.awt.Color[r=0,g=0,b=0])\n" +

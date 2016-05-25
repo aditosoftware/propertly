@@ -125,13 +125,13 @@ public abstract class AbstractNode implements INode
   protected void fireNodeWillBeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
-    HierarchyProperty localProperty = (HierarchyProperty) getProperty();
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
-    getHierarchy().firePropertyWillBeRemoved(localProperty, pAttributes);
+    HierarchyProperty property = (HierarchyProperty) ppp.getPit().getProperty(pPropertyDescription);
+    getHierarchy().firePropertyWillBeRemoved(property, pAttributes);
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked,ConstantConditions
-      listener.propertyWillBeRemoved(localProperty, pAttributes);
-    localProperty.fireWillBeRemoved(pAttributes);
+      listener.propertyWillBeRemoved(property, pAttributes);
+    property.fireWillBeRemoved(pAttributes);
   }
 
   protected void fireNodeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
