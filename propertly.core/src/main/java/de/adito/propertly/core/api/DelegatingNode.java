@@ -30,7 +30,7 @@ public class DelegatingNode extends AbstractNode
                            @Nonnull IPropertyDescription pPropertyDescription,
                            @Nonnull INode pDelegate)
   {
-    super(pHierarchy, pParent, pPropertyDescription);
+    super(pHierarchy, pParent, PropertyDescription.create(pPropertyDescription));
     delegate = pDelegate;
     _alignToDelegate();
   }

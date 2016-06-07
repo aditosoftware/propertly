@@ -55,7 +55,7 @@ public class PropertyTest
       @Override
       public void propertyNameChanged(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set pAttributes)
       {
-        _append(resultStringBuild, "hierarchy propertyNameChanged", pOldName, pNewName, pProperty.getName(), pProperty);
+        _append(resultStringBuild, "hierarchy propertyNameChanged", pOldName, pNewName, pProperty);
       }
 
       @Override
@@ -95,6 +95,8 @@ public class PropertyTest
     IProperty<PropertyTestChildren, Color> color3Property = children.addProperty(Color.class, "color3");
     children.removeProperty(1);
     children.removeProperty((IPropertyDescription) color3Property.getDescription());
+
+    children.getProperty(0).rename("black");
 
     _append(resultStringBuild, "child parent", tProperty.getCHILD().getParent());
     for (IProperty property : tProperty.getCHILD())
@@ -138,8 +140,9 @@ public class PropertyTest
         "hierarchy propertyRemoved: IndexedMutablePropertyPit, description(color2, class java.awt.Color)\n" +
         "hierarchy propertyWillBeRemoved: property(color3, Color, null)\n" +
         "hierarchy propertyRemoved: IndexedMutablePropertyPit, description(color3, class java.awt.Color)\n" +
+        "hierarchy propertyNameChanged: color1, black, property(black, Color, java.awt.Color[r=0,g=0,b=0])\n" +
         "child parent: PropertyPit\n" +
-        "tProperty child property: property(color1, Color, java.awt.Color[r=0,g=0,b=0])\n" +
+        "tProperty child property: property(black, Color, java.awt.Color[r=0,g=0,b=0])\n" +
         "tProperty parent: IndexedMutablePropertyPit\n" +
         "tProperty property: property(X, Integer, 123)\n" +
         "tProperty property: property(Y, Integer, null)\n" +
@@ -165,7 +168,7 @@ public class PropertyTest
         "\t\t\t FF : java.awt.Dimension[width=123,height=456]\n" +
         "\t\t\t MAP : null\n" +
         "\t\t\t/CHILD\n" +
-        "\t\t\t\t color1 : java.awt.Color[r=0,g=0,b=0]\n" +
+        "\t\t\t\t black : java.awt.Color[r=0,g=0,b=0]\n" +
         "\t\t\t WIDTH : null\n" +
         "\t\t\t HEIGHT : null\n" +
         "\t\t\t DESCRIPTION : null\n" +
