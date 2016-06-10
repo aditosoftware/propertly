@@ -6,6 +6,7 @@ import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author PaL
@@ -135,7 +136,22 @@ class HierarchyProperty implements IProperty
       listeners.removeListener(pListener);
   }
 
-  void fireValueChanged(Object pOldValue, Object pNewValue, @Nonnull Set<Object> pAttributes)
+  void fireValueWillBeChanged(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Consumer<Runnable> pOnRemoved,
+                              @Nonnull Set<Object> pAttributes)
+  {
+    List<IPropertyEventListener> l;
+    synchronized (this)
+    {
+      if (listeners == null)
+        return;
+      l = listeners.getListeners();
+    }
+    for (IPropertyEventListener listener : l)
+      //noinspection unchecked
+      listener.propertyValueWillBeChanged(this, pOldValue, pNewValue, pOnRemoved, pAttributes);
+  }
+
+  void fireValueChanged(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set<Object> pAttributes)
   {
     List<IPropertyEventListener> l;
     synchronized (this)
@@ -149,7 +165,7 @@ class HierarchyProperty implements IProperty
       listener.propertyValueChanged(this, pOldValue, pNewValue, pAttributes);
   }
 
-  protected void fireNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
+  void fireNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
   {
     List<IPropertyEventListener> l;
     synchronized (this)
@@ -162,8 +178,8 @@ class HierarchyProperty implements IProperty
       //noinspection unchecked
       listener.propertyNameChanged(this, pOldName, pNewName, pAttributes);
   }
-  
-  protected void fireWillBeRemoved(@Nonnull Set<Object> pAttributes)
+
+  void fireWillBeRemoved(@Nonnull Consumer<Runnable> pOnRemoved, @Nonnull Set<Object> pAttributes)
   {
     List<IPropertyEventListener> l;
     synchronized (this)
@@ -174,7 +190,7 @@ class HierarchyProperty implements IProperty
     }
     for (IPropertyEventListener listener : l)
       //noinspection unchecked
-      listener.propertyWillBeRemoved(this, pAttributes);
+      listener.propertyWillBeRemoved(this, pOnRemoved, pAttributes);
   }
 
   AbstractNode getNode()

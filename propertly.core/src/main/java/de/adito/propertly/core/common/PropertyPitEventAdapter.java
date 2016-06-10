@@ -2,8 +2,9 @@ package de.adito.propertly.core.common;
 
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * An adapter implementation for IPropertyPitEventListener implementations.
@@ -12,38 +13,26 @@ import java.util.Set;
  *         Date: 25.11.12
  *         Time: 14:38
  */
-public abstract class PropertyPitEventAdapter<P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
-    implements IPropertyPitEventListener<P, S, T>
+public abstract class PropertyPitEventAdapter<S extends IPropertyPitProvider, T> extends PropertyEventAdapter<S, T>
+    implements IPropertyPitEventListener<S, T>
 {
   @Override
-  public void propertyValueChanged(@Nonnull IProperty<S, T> pProperty, @Nullable T pOldValue, @Nullable T pNewValue, @Nonnull Set<Object> pAttributes)
+  public void propertyRemoved(@Nonnull S pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
   }
 
   @Override
-  public void propertyNameChanged(@Nonnull IProperty<S, T> pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
+  public void propertyAdded(@Nonnull S pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes)
   {
   }
 
   @Override
-  public void propertyWillBeRemoved(@Nonnull IProperty<S, T> pProperty, @Nonnull Set<Object> pAttributes)
-  {
-
-  }
-
-  @Override
-  public void propertyRemoved(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes)
-  {
-
-  }
-
-  @Override
-  public void propertyAdded(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  public void propertyOrderWillBeChanged(@Nonnull S pSource, @Nonnull Consumer<Runnable> pOnChanged, @Nonnull Set<Object> pAttributes)
   {
   }
 
   @Override
-  public void propertyOrderChanged(@Nonnull IPropertyPitProvider<P, S, T> pSource, @Nonnull Set<Object> pAttributes)
+  public void propertyOrderChanged(@Nonnull S pSource, @Nonnull Set<Object> pAttributes)
   {
   }
 }

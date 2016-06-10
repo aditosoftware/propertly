@@ -48,6 +48,10 @@ public class Node extends AbstractNode
     if (pppProvider != null && pppProvider.getPit().isValid() &&
         getHierarchy().equals(HierarchyHelper.getNode(pppProvider).getHierarchy()))
       throw new IllegalStateException("can't set PPP from my own hierarchy.");
+
+    ListenerList<Runnable> onFinish = new ListenerList<>();
+    fireValueWillBeChange(oldValue, pValue, onFinish::addStrongListener, pAttributes);
+
     if (oldValue instanceof IPropertyPitProvider)
     {
       if (children != null)
@@ -97,6 +101,7 @@ public class Node extends AbstractNode
       children = null;
     }
     fireValueChange(oldValue, value, pAttributes);
+    onFinish.forEach(Runnable::run);
     return value;
   }
 
@@ -189,10 +194,13 @@ public class Node extends AbstractNode
       if (!property.isDynamic())
         throw new IllegalStateException("can't remove: " + getProperty());
       IPropertyDescription description = property.getDescription();
-      fireNodeWillBeRemoved(description, pAttributes);
+      ListenerList<Runnable> onFinish = new ListenerList<>();
+      fireNodeWillBeRemoved(description, onFinish::addStrongListener, pAttributes);
       assert children != null;
       children.remove(childNode);
+      HierarchyHelper.getNode(property).remove();
       fireNodeRemoved(description, pAttributes);
+      onFinish.forEach(Runnable::run);
       return true;
     }
     return false;
@@ -225,9 +233,12 @@ public class Node extends AbstractNode
     if (!property.isDynamic())
       throw new IllegalStateException("can't remove: " + getProperty());
     IPropertyDescription description = property.getDescription();
-    fireNodeWillBeRemoved(description, pAttributes);
+    ListenerList<Runnable> onFinish = new ListenerList<>();
+    fireNodeWillBeRemoved(description, onFinish::addStrongListener, pAttributes);
     children.remove(pIndex);
+    HierarchyHelper.getNode(property).remove();
     fireNodeRemoved(description, pAttributes);
+    onFinish.forEach(Runnable::run);
   }
 
   @Override
@@ -242,8 +253,11 @@ public class Node extends AbstractNode
     ensureValid();
     if (children != null)
     {
+      ListenerList<Runnable> onFinish = new ListenerList<>();
+      firePropertyOrderWillBeChanged(onFinish::addStrongListener, pAttributes);
       children.reorder(pComparator);
       firePropertyOrderChanged(pAttributes);
+      onFinish.forEach(Runnable::run);
     }
   }
 

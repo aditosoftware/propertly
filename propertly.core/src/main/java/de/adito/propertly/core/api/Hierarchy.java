@@ -5,7 +5,7 @@ import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
 import java.util.*;
-import java.util.function.Function;
+import java.util.function.*;
 
 /**
  * @author PaL
@@ -86,32 +86,52 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
     return equals(pProperty.getHierarchy()) ? HierarchyHelper.getNode(pProperty) : null;
   }
 
-  protected void fireNodeChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set<Object> pAttributes)
+  protected void fireValueWillBeChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue,
+                                        @Nonnull Consumer<Runnable> pOnRemoved, @Nonnull Set<Object> pAttributes)
+  {
+    for (IPropertyPitEventListener listener : listeners)
+      //noinspection unchecked
+      listener.propertyValueWillBeChanged(pProperty, pOldValue, pNewValue, pOnRemoved, pAttributes);
+  }
+
+  protected void fireValueChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue,
+                                  @Nonnull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyValueChanged(pProperty, pOldValue, pNewValue, pAttributes);
   }
 
-  protected void firePropertyAdded(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription, @Nonnull Set<Object> pAttributes)
+  protected void firePropertyAdded(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription,
+                                   @Nonnull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyAdded(pPropertyPitProvider, pDescription, pAttributes);
   }
 
-  protected void firePropertyWillBeRemoved(@Nonnull IProperty pProperty, @Nonnull Set<Object> pAttributes)
+  protected void firePropertyWillBeRemoved(@Nonnull IProperty pProperty, @Nonnull Consumer<Runnable> pOnRemoved,
+                                           @Nonnull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
-      listener.propertyWillBeRemoved(pProperty, pAttributes);
+      listener.propertyWillBeRemoved(pProperty, pOnRemoved, pAttributes);
   }
 
-  protected void firePropertyRemoved(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription, @Nonnull Set<Object> pAttributes)
+  protected void firePropertyRemoved(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription,
+                                     @Nonnull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyRemoved(pPropertyPitProvider, pDescription, pAttributes);
+  }
+
+  public void fireChildrenOrderWillBeChanged(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull Consumer<Runnable> pOnRemoved,
+                                             @Nonnull Set<Object> pAttributes)
+  {
+    for (IPropertyPitEventListener listener : listeners)
+      //noinspection unchecked
+      listener.propertyOrderWillBeChanged(pPropertyPitProvider, pOnRemoved, pAttributes);
   }
 
   public void fireChildrenOrderChanged(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull Set<Object> pAttributes)
@@ -121,7 +141,8 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
       listener.propertyOrderChanged(pPropertyPitProvider, pAttributes);
   }
 
-  public void fireNodeRenamed(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
+  public void firePropertyRenamed(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName,
+                                  @Nonnull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked

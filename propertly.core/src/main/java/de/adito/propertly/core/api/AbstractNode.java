@@ -6,6 +6,7 @@ import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Abstract class for INode implementations.
@@ -97,11 +98,27 @@ public abstract class AbstractNode implements INode
     listeners.removeListener(pListener);
   }
 
+  protected void fireValueWillBeChange(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Consumer<Runnable> pOnRemoved,
+                                       @Nonnull Set<Object> pAttributes)
+  {
+    ensureValid();
+    HierarchyProperty localProperty = (HierarchyProperty) getProperty();
+    getHierarchy().fireValueWillBeChanged(localProperty, pOldValue, pNewValue, pOnRemoved, pAttributes);
+    AbstractNode localParent = getParent();
+    if (localParent != null)
+    {
+      for (IPropertyPitEventListener eventListener : localParent.listeners)
+        //noinspection unchecked
+        eventListener.propertyValueWillBeChanged(localProperty, pOldValue, pNewValue, pOnRemoved, pAttributes);
+    }
+    localProperty.fireValueWillBeChanged(pOldValue, pNewValue, pOnRemoved, pAttributes);
+  }
+
   protected void fireValueChange(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     HierarchyProperty localProperty = (HierarchyProperty) getProperty();
-    getHierarchy().fireNodeChanged(localProperty, pOldValue, pNewValue, pAttributes);
+    getHierarchy().fireValueChanged(localProperty, pOldValue, pNewValue, pAttributes);
     AbstractNode localParent = getParent();
     if (localParent != null)
     {
@@ -122,16 +139,17 @@ public abstract class AbstractNode implements INode
       listener.propertyAdded(ppp, pPropertyDescription, pAttributes);
   }
 
-  protected void fireNodeWillBeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  protected void fireNodeWillBeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Consumer<Runnable> pOnRemoved,
+                                       @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
     HierarchyProperty property = (HierarchyProperty) ppp.getPit().getProperty(pPropertyDescription);
-    getHierarchy().firePropertyWillBeRemoved(property, pAttributes);
+    getHierarchy().firePropertyWillBeRemoved(property, pOnRemoved, pAttributes);
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked,ConstantConditions
-      listener.propertyWillBeRemoved(property, pAttributes);
-    property.fireWillBeRemoved(pAttributes);
+      listener.propertyWillBeRemoved(property, pOnRemoved, pAttributes);
+    property.fireWillBeRemoved(pOnRemoved, pAttributes);
   }
 
   protected void fireNodeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
@@ -143,6 +161,17 @@ public abstract class AbstractNode implements INode
       for (IPropertyPitEventListener listener : listeners)
         //noinspection unchecked,ConstantConditions
         listener.propertyRemoved(ppp, pPropertyDescription, pAttributes);
+  }
+
+  protected void firePropertyOrderWillBeChanged(@Nonnull Consumer<Runnable> pOnRemoved, @Nonnull Set<Object> pAttributes)
+  {
+    ensureValid();
+    IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
+    getHierarchy().fireChildrenOrderWillBeChanged(ppp, pOnRemoved, pAttributes);
+    if (listeners != null)
+      for (IPropertyPitEventListener listener : listeners)
+        //noinspection unchecked,ConstantConditions
+        listener.propertyOrderWillBeChanged(ppp, pOnRemoved, pAttributes);
   }
 
   protected void firePropertyOrderChanged(@Nonnull Set<Object> pAttributes)
@@ -160,7 +189,7 @@ public abstract class AbstractNode implements INode
   {
     ensureValid();
     HierarchyProperty localProperty = (HierarchyProperty) getProperty();
-    getHierarchy().fireNodeRenamed(localProperty, pOldName, pNewName, pAttributes);
+    getHierarchy().firePropertyRenamed(localProperty, pOldName, pNewName, pAttributes);
     if (listeners != null)
       for (IPropertyPitEventListener listener : listeners)
         //noinspection unchecked,ConstantConditions

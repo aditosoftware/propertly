@@ -1,6 +1,6 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
 import de.adito.propertly.core.spi.*;
 
@@ -85,10 +85,13 @@ public class DelegatingNode extends AbstractNode
   public Object setValue(@Nullable Object pValue, @Nonnull Set<Object> pAttributes)
   {
     Object oldValue = getValue();
+    ListenerList<Runnable> onFinish = new ListenerList<>();
+    fireValueWillBeChange(oldValue, pValue, onFinish::addStrongListener, pAttributes);
     delegate.setValue(pValue, pAttributes);
     _alignToDelegate();
     Object newValue = getValue();
     fireValueChange(oldValue, newValue, pAttributes);
+    onFinish.forEach(Runnable::run);
     return newValue;
   }
 
@@ -163,11 +166,14 @@ public class DelegatingNode extends AbstractNode
       if (!property.isDynamic())
         throw new IllegalStateException("can't remove: " + getProperty());
       IPropertyDescription description = property.getDescription();
-      fireNodeWillBeRemoved(description, pAttributes);
+      ListenerList<Runnable> onFinish = new ListenerList<>();
+      fireNodeWillBeRemoved(description, onFinish::addStrongListener, pAttributes);
       assert children != null;
       delegate.removeProperty(pPropertyDescription, pAttributes);
       children.remove(childNode);
+      HierarchyHelper.getNode(property).remove();
       fireNodeRemoved(description, pAttributes);
+      onFinish.forEach(Runnable::run);
       return true;
     }
     return false;
@@ -202,10 +208,13 @@ public class DelegatingNode extends AbstractNode
     if (!property.isDynamic())
       throw new IllegalStateException("can't remove: " + getProperty());
     IPropertyDescription description = property.getDescription();
-    fireNodeWillBeRemoved(description, pAttributes);
+    ListenerList<Runnable> onFinish = new ListenerList<>();
+    fireNodeWillBeRemoved(description, onFinish::addStrongListener, pAttributes);
     delegate.removeProperty(pIndex, pAttributes);
     children.remove(pIndex);
+    HierarchyHelper.getNode(property).remove();
     fireNodeRemoved(description, pAttributes);
+    onFinish.forEach(Runnable::run);
   }
 
   @Override
@@ -220,9 +229,12 @@ public class DelegatingNode extends AbstractNode
     ensureValid();
     if (children != null)
     {
+      ListenerList<Runnable> onFinish = new ListenerList<>();
+      firePropertyOrderWillBeChanged(onFinish::addStrongListener, pAttributes);
       delegate.reorder(pComparator, pAttributes);
       children.reorder(pComparator);
       firePropertyOrderChanged(pAttributes);
+      onFinish.forEach(Runnable::run);
     }
   }
 

@@ -10,6 +10,7 @@ import org.junit.*;
 import javax.annotation.*;
 import java.awt.*;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author PaL
@@ -26,73 +27,104 @@ public class PropertyTest
 
     Hierarchy<TProperty> sourceHierarchy = new Hierarchy<>("root", new TProperty());
     IHierarchy<TProperty> hierarchy = new VerifyingHierarchy<>(sourceHierarchy);
-    hierarchy.addStrongListener(new IPropertyPitEventListener()
+    hierarchy.addStrongListener(new IPropertyPitEventListener<IPropertyPitProvider<?, ?, ?>, Object>()
     {
       @Override
-      public void propertyValueChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set pAttributes)
+      public void propertyValueWillBeChanged(@Nonnull IProperty<IPropertyPitProvider<?, ?, ?>, Object> pProperty,
+                                             @Nullable Object pOldValue, @Nullable Object pNewValue,
+                                             @Nonnull Consumer<Runnable> pOnChanged, @Nonnull Set<Object> pAttributes)
       {
-        _append(resultStringBuild, "hierarchy propertyValueChanged", pOldValue, pNewValue, pProperty.getName(), pProperty);
+        _append(resultStringBuild, "hierarchy propertyValueWillBeChanged", pOldValue, pNewValue, pProperty.getName(),
+                pProperty, pAttributes);
+        pOnChanged.accept(() -> _append(resultStringBuild, "hierarchy onValueChanged", pOldValue, pNewValue,
+                                        pProperty.getName(), pProperty, pAttributes));
       }
 
       @Override
-      public void propertyAdded(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
+      public void propertyValueChanged(@Nonnull IProperty<IPropertyPitProvider<?, ?, ?>, Object> pProperty, @Nullable Object pOldValue,
+                                       @Nullable Object pNewValue, @Nonnull Set<Object> pAttributes)
       {
-        _append(resultStringBuild, "hierarchy propertyAdded", pSource, pPropertyDescription);
+        _append(resultStringBuild, "hierarchy propertyValueChanged", pOldValue, pNewValue, pProperty.getName(), pProperty,
+                pAttributes);
       }
 
       @Override
-      public void propertyWillBeRemoved(@Nonnull IProperty pProperty, @Nonnull Set pAttributes)
+      public void propertyAdded(@Nonnull IPropertyPitProvider<?, ?, ?> pSource,
+                                @Nonnull IPropertyDescription<IPropertyPitProvider<?, ?, ?>, Object> pPropertyDescription,
+                                @Nonnull Set<Object> pAttributes)
       {
-        _append(resultStringBuild, "hierarchy propertyWillBeRemoved", pProperty);
+        _append(resultStringBuild, "hierarchy propertyAdded", pSource, pPropertyDescription, pAttributes);
       }
 
       @Override
-      public void propertyRemoved(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
+      public void propertyWillBeRemoved(@Nonnull IProperty<IPropertyPitProvider<?, ?, ?>, Object> pProperty,
+                                        @Nonnull Consumer<Runnable> pOnRemoved, @Nonnull Set<Object> pAttributes)
       {
-        _append(resultStringBuild, "hierarchy propertyRemoved", pSource, pPropertyDescription);
+        _append(resultStringBuild, "hierarchy propertyWillBeRemoved", pProperty, pAttributes);
+        pOnRemoved.accept(() -> _append(resultStringBuild, "hierarchy onPropertyRemoved", pProperty, pAttributes));
       }
 
       @Override
-      public void propertyNameChanged(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set pAttributes)
+      public void propertyRemoved(@Nonnull IPropertyPitProvider<?, ?, ?> pSource,
+                                  @Nonnull IPropertyDescription<IPropertyPitProvider<?, ?, ?>, Object> pPropertyDescription,
+                                  @Nonnull Set<Object> pAttributes)
       {
-        _append(resultStringBuild, "hierarchy propertyNameChanged", pOldName, pNewName, pProperty);
+        _append(resultStringBuild, "hierarchy propertyRemoved", pSource, pPropertyDescription, pAttributes);
       }
 
       @Override
-      public void propertyOrderChanged(@Nonnull IPropertyPitProvider pSource, @Nonnull Set pAttributes)
+      public void propertyNameChanged(@Nonnull IProperty<IPropertyPitProvider<?, ?, ?>, Object> pProperty, @Nonnull String pOldName,
+                                      @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
       {
-        _append(resultStringBuild, "hierarchy propertyOrderChanged", pSource);
+        _append(resultStringBuild, "hierarchy propertyNameChanged", pOldName, pNewName, pProperty, pAttributes);
+      }
+
+      @Override
+      public void propertyOrderWillBeChanged(@Nonnull IPropertyPitProvider<?, ?, ?> pSource, @Nonnull Consumer<Runnable> pOnChanged,
+                                             @Nonnull Set<Object> pAttributes)
+      {
+        _append(resultStringBuild, "hierarchy propertyOrderWillBeChanged", pSource, _getChildNames(pSource), pAttributes);
+        pOnChanged.accept(() -> _append(resultStringBuild, "hierarchy onOrderChanged", pSource, _getChildNames(pSource), pAttributes));
+      }
+
+      @Override
+      public void propertyOrderChanged(@Nonnull IPropertyPitProvider<?, ?, ?> pSource, @Nonnull Set<Object> pAttributes)
+      {
+        _append(resultStringBuild, "hierarchy propertyOrderChanged", pSource, _getChildNames(pSource), pAttributes);
       }
     });
     TProperty tProperty = hierarchy.getValue();
     PropertyTestChildren children = tProperty.setCHILD(new PropertyTestChildren());
     tProperty = children.addProperty("DynamicChildProperty", new TProperty()).getValue();
-    //GetterSetterGen.run(tProperty);
-    tProperty.getPit().addStrongListener(new PropertyPitEventAdapter()
+    tProperty.getPit().addStrongListener(new PropertyPitEventAdapter<TProperty, Object>()
     {
       @Override
       public void propertyValueChanged(@Nonnull IProperty pProperty, Object pOldValue, Object pNewValue, @Nonnull Set pAttributes)
       {
-        _append(resultStringBuild, "tProperty propertyValueChanged", pProperty);
+        _append(resultStringBuild, "tProperty propertyValueChanged", pProperty, pAttributes);
       }
     });
     children = tProperty.setCHILD(new PropertyTestChildren());
-    children.addStrongListener(new PropertyPitEventAdapter()
+    children.addStrongListener(new PropertyPitEventAdapter<PropertyTestChildren, Object>()
     {
       @Override
-      public void propertyAdded(@Nonnull IPropertyPitProvider pSource, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set pAttributes)
+      public void propertyAdded(@Nonnull PropertyTestChildren pSource, @Nonnull IPropertyDescription<PropertyTestChildren, Object> pPropertyDescription,
+                                @Nonnull Set<Object> pAttributes)
       {
-        _append(resultStringBuild, "tProperty propertyAdded", pPropertyDescription);
+        _append(resultStringBuild, "tProperty propertyAdded", pPropertyDescription, pAttributes);
       }
     });
 
-    tProperty.setX(123);
+    tProperty.getPropertyX().setValue(123, "attribute1");
     tProperty.setFF(new Dimension(123, 456));
 
+    IProperty<PropertyTestChildren, Color> color3Property = children.addProperty(Color.class, "color3");
     children.addProperty(Color.class, "color1").setValue(Color.BLACK);
+    children.addProperty(Color.class, "color4").setValue(Color.MAGENTA);
     children.addProperty(Color.class, "color2").setValue(Color.RED);
 
-    IProperty<PropertyTestChildren, Color> color3Property = children.addProperty(Color.class, "color3");
+    children.reorder((o1, o2) -> o1.getName().compareTo(o2.getName()));
+
     children.removeProperty(1);
     children.removeProperty((IPropertyDescription) color3Property.getDescription());
 
@@ -119,30 +151,55 @@ public class PropertyTest
     Assert.assertNotNull(ex);
 
 
-    String expected = "hierarchy propertyValueChanged: null, IndexedMutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
-        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(DynamicChildProperty, class de.adito.propertly.test.core.impl.TProperty)\n" +
-        "hierarchy propertyValueChanged: null, PropertyPit, DynamicChildProperty, property(DynamicChildProperty, TProperty, PropertyPit)\n" +
-        "hierarchy propertyValueChanged: null, IndexedMutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
-        "tProperty propertyValueChanged: property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
-        "hierarchy propertyValueChanged: null, 123, X, property(X, Integer, 123)\n" +
-        "tProperty propertyValueChanged: property(X, Integer, 123)\n" +
-        "hierarchy propertyValueChanged: null, java.awt.Dimension[width=123,height=456], FF, property(FF, Dimension, java.awt.Dimension[width=123,height=456])\n" +
-        "tProperty propertyValueChanged: property(FF, Dimension, java.awt.Dimension[width=123,height=456])\n" +
-        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(color1, class java.awt.Color)\n" +
-        "tProperty propertyAdded: description(color1, class java.awt.Color)\n" +
-        "hierarchy propertyValueChanged: null, java.awt.Color[r=0,g=0,b=0], color1, property(color1, Color, java.awt.Color[r=0,g=0,b=0])\n" +
-        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(color2, class java.awt.Color)\n" +
-        "tProperty propertyAdded: description(color2, class java.awt.Color)\n" +
-        "hierarchy propertyValueChanged: null, java.awt.Color[r=255,g=0,b=0], color2, property(color2, Color, java.awt.Color[r=255,g=0,b=0])\n" +
-        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(color3, class java.awt.Color)\n" +
-        "tProperty propertyAdded: description(color3, class java.awt.Color)\n" +
-        "hierarchy propertyWillBeRemoved: property(color2, Color, java.awt.Color[r=255,g=0,b=0])\n" +
-        "hierarchy propertyRemoved: IndexedMutablePropertyPit, description(color2, class java.awt.Color)\n" +
-        "hierarchy propertyWillBeRemoved: property(color3, Color, null)\n" +
-        "hierarchy propertyRemoved: IndexedMutablePropertyPit, description(color3, class java.awt.Color)\n" +
-        "hierarchy propertyNameChanged: color1, black, property(black, Color, java.awt.Color[r=0,g=0,b=0])\n" +
+    String expected = "hierarchy propertyValueWillBeChanged: null, IndexedMutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, null), []\n" +
+        "hierarchy propertyValueChanged: null, IndexedMutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit), []\n" +
+        "hierarchy onValueChanged: null, IndexedMutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit), []\n" +
+        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(DynamicChildProperty, class de.adito.propertly.test.core.impl.TProperty), []\n" +
+        "hierarchy propertyValueWillBeChanged: null, PropertyPit, DynamicChildProperty, property(DynamicChildProperty, TProperty, null), []\n" +
+        "hierarchy propertyValueChanged: null, PropertyPit, DynamicChildProperty, property(DynamicChildProperty, TProperty, PropertyPit), []\n" +
+        "hierarchy onValueChanged: null, PropertyPit, DynamicChildProperty, property(DynamicChildProperty, TProperty, PropertyPit), []\n" +
+        "hierarchy propertyValueWillBeChanged: null, IndexedMutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, null), []\n" +
+        "hierarchy propertyValueChanged: null, IndexedMutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit), []\n" +
+        "tProperty propertyValueChanged: property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit), []\n" +
+        "hierarchy onValueChanged: null, IndexedMutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit), []\n" +
+        "hierarchy propertyValueWillBeChanged: null, 123, X, property(X, Integer, null), [attribute1]\n" +
+        "hierarchy propertyValueChanged: null, 123, X, property(X, Integer, 123), [attribute1]\n" +
+        "tProperty propertyValueChanged: property(X, Integer, 123), [attribute1]\n" +
+        "hierarchy onValueChanged: null, 123, X, property(X, Integer, 123), [attribute1]\n" +
+        "hierarchy propertyValueWillBeChanged: null, java.awt.Dimension[width=123,height=456], FF, property(FF, Dimension, null), []\n" +
+        "hierarchy propertyValueChanged: null, java.awt.Dimension[width=123,height=456], FF, property(FF, Dimension, java.awt.Dimension[width=123,height=456]), []\n" +
+        "tProperty propertyValueChanged: property(FF, Dimension, java.awt.Dimension[width=123,height=456]), []\n" +
+        "hierarchy onValueChanged: null, java.awt.Dimension[width=123,height=456], FF, property(FF, Dimension, java.awt.Dimension[width=123,height=456]), []\n" +
+        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(color3, class java.awt.Color), []\n" +
+        "tProperty propertyAdded: description(color3, class java.awt.Color), []\n" +
+        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(color1, class java.awt.Color), []\n" +
+        "tProperty propertyAdded: description(color1, class java.awt.Color), []\n" +
+        "hierarchy propertyValueWillBeChanged: null, java.awt.Color[r=0,g=0,b=0], color1, property(color1, Color, null), []\n" +
+        "hierarchy propertyValueChanged: null, java.awt.Color[r=0,g=0,b=0], color1, property(color1, Color, java.awt.Color[r=0,g=0,b=0]), []\n" +
+        "hierarchy onValueChanged: null, java.awt.Color[r=0,g=0,b=0], color1, property(color1, Color, java.awt.Color[r=0,g=0,b=0]), []\n" +
+        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(color4, class java.awt.Color), []\n" +
+        "tProperty propertyAdded: description(color4, class java.awt.Color), []\n" +
+        "hierarchy propertyValueWillBeChanged: null, java.awt.Color[r=255,g=0,b=255], color4, property(color4, Color, null), []\n" +
+        "hierarchy propertyValueChanged: null, java.awt.Color[r=255,g=0,b=255], color4, property(color4, Color, java.awt.Color[r=255,g=0,b=255]), []\n" +
+        "hierarchy onValueChanged: null, java.awt.Color[r=255,g=0,b=255], color4, property(color4, Color, java.awt.Color[r=255,g=0,b=255]), []\n" +
+        "hierarchy propertyAdded: IndexedMutablePropertyPit, description(color2, class java.awt.Color), []\n" +
+        "tProperty propertyAdded: description(color2, class java.awt.Color), []\n" +
+        "hierarchy propertyValueWillBeChanged: null, java.awt.Color[r=255,g=0,b=0], color2, property(color2, Color, null), []\n" +
+        "hierarchy propertyValueChanged: null, java.awt.Color[r=255,g=0,b=0], color2, property(color2, Color, java.awt.Color[r=255,g=0,b=0]), []\n" +
+        "hierarchy onValueChanged: null, java.awt.Color[r=255,g=0,b=0], color2, property(color2, Color, java.awt.Color[r=255,g=0,b=0]), []\n" +
+        "hierarchy propertyOrderWillBeChanged: IndexedMutablePropertyPit, [color3, color1, color4, color2], []\n" +
+        "hierarchy propertyOrderChanged: IndexedMutablePropertyPit, [color1, color2, color3, color4], []\n" +
+        "hierarchy onOrderChanged: IndexedMutablePropertyPit, [color1, color2, color3, color4], []\n" +
+        "hierarchy propertyWillBeRemoved: property(color2, Color, java.awt.Color[r=255,g=0,b=0]), []\n" +
+        "hierarchy propertyRemoved: IndexedMutablePropertyPit, description(color2, class java.awt.Color), []\n" +
+        "hierarchy onPropertyRemoved: property(color2, Color, <invalid>), []\n" +
+        "hierarchy propertyWillBeRemoved: property(color3, Color, null), []\n" +
+        "hierarchy propertyRemoved: IndexedMutablePropertyPit, description(color3, class java.awt.Color), []\n" +
+        "hierarchy onPropertyRemoved: property(color3, Color, <invalid>), []\n" +
+        "hierarchy propertyNameChanged: color1, black, property(black, Color, java.awt.Color[r=0,g=0,b=0]), []\n" +
         "child parent: PropertyPit\n" +
         "tProperty child property: property(black, Color, java.awt.Color[r=0,g=0,b=0])\n" +
+        "tProperty child property: property(color4, Color, java.awt.Color[r=255,g=0,b=255])\n" +
         "tProperty parent: IndexedMutablePropertyPit\n" +
         "tProperty property: property(X, Integer, 123)\n" +
         "tProperty property: property(Y, Integer, null)\n" +
@@ -169,6 +226,7 @@ public class PropertyTest
         "\t\t\t MAP : null\n" +
         "\t\t\t/CHILD\n" +
         "\t\t\t\t black : java.awt.Color[r=0,g=0,b=0]\n" +
+        "\t\t\t\t color4 : java.awt.Color[r=255,g=0,b=255]\n" +
         "\t\t\t WIDTH : null\n" +
         "\t\t\t HEIGHT : null\n" +
         "\t\t\t DESCRIPTION : null\n" +
@@ -181,6 +239,13 @@ public class PropertyTest
 
     Assert.assertEquals(expected,
                         PropertlyDebug.toTreeString(sourceHierarchy));
+  }
+
+  private static String _getChildNames(IPropertyPitProvider<?, ?, ?> pPpp)
+  {
+    return "[" + pPpp.getPit().getProperties().stream()
+        .map(IProperty::getName)
+        .reduce((pS, pS2) -> pS + ", " + pS2).orElse("") + "]";
   }
 
   private static void _append(StringBuilder pStrBuilder, String pEvent, Object... pAdd)
@@ -206,7 +271,7 @@ public class PropertyTest
       else if (o instanceof IProperty)
       {
         IProperty p = (IProperty) o;
-        r += "property(" + _toString(p.getName(), p.getType().getSimpleName(), _toString(p.getValue())) + ")";
+        r += "property(" + _toString(p.getName(), p.getType().getSimpleName(), p.isValid() ? _toString(p.getValue()) : "<invalid>") + ")";
       }
       else if (o instanceof IPropertyDescription)
       {

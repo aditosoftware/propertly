@@ -103,20 +103,20 @@ public interface IProperty<S extends IPropertyPitProvider, T>
    *
    * @param pListener the listener to be weakly added.
    */
-  void addWeakListener(@Nonnull IPropertyEventListener pListener);
+  void addWeakListener(@Nonnull IPropertyEventListener<S, T> pListener);
 
   /**
    * Adds a strong listener.
    *
    * @param pListener the listener to be strongly added.
    */
-  void addStrongListener(@Nonnull IPropertyEventListener pListener);
+  void addStrongListener(@Nonnull IPropertyEventListener<S, T> pListener);
 
   /**
    * Removes a listener.
    *
    * @param pListener the listener to be removed.
    */
-  void removeListener(@Nonnull IPropertyEventListener pListener);
+  void removeListener(@Nonnull IPropertyEventListener<S, T> pListener);
 
 }
