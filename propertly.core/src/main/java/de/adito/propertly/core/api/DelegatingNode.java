@@ -30,7 +30,7 @@ public class DelegatingNode extends AbstractNode
                            @Nonnull IPropertyDescription pPropertyDescription,
                            @Nonnull INode pDelegate)
   {
-    super(pHierarchy, pParent, PropertyDescription.create(pPropertyDescription));
+    super(pHierarchy, pParent, pPropertyDescription);
     delegate = pDelegate;
     _alignToDelegate();
   }
@@ -246,7 +246,6 @@ public class DelegatingNode extends AbstractNode
     if (!property.isDynamic())
       throw new PropertlyRenameException(property, pName);
 
-    delegate.rename(pName, pAttributes);
     try
     {
       String oldName = property.getName();
@@ -256,7 +255,7 @@ public class DelegatingNode extends AbstractNode
         assert parent.children != null;
         parent.children.rename(property.getDescription(), pName);
       }
-      ((PropertyDescription) property.getDescription()).setName(pName);
+      delegate.rename(pName, pAttributes);
       firePropertyNameChanged(oldName, pName, pAttributes);
     }
     catch (Exception e)
