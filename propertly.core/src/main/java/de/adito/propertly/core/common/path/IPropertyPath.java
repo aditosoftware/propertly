@@ -30,6 +30,12 @@ public interface IPropertyPath
   IPropertyPath getParent() throws NoParentPathForRootException;
 
   /**
+   * @param pPath the path to test against.
+   * @return whether given path <tt>pPath</tt> is a child path of this path.
+   */
+  boolean isParentOf(IPropertyPath pPath);
+
+  /**
    * @param pName the child's name.
    * @return a new IPropertyPath for the child.
    */

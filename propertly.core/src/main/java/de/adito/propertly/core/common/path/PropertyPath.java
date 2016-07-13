@@ -27,6 +27,11 @@ public class PropertyPath implements IPropertyPath
     }
   }
 
+  public PropertyPath(IPropertyPitProvider pPPP)
+  {
+    this(pPPP.getPit().getOwnProperty());
+  }
+
   public PropertyPath(@Nonnull String pPath)
   {
     elements = Arrays.asList(pPath.split(DELIM));
@@ -71,7 +76,19 @@ public class PropertyPath implements IPropertyPath
   {
     if (elements.isEmpty())
       throw new NoParentPathForRootException();
-    return new PropertyPath(elements.subList(0, elements.size()-1));
+    return new PropertyPath(elements.subList(0, elements.size() - 1));
+  }
+
+  @Override
+  public boolean isParentOf(IPropertyPath pPath)
+  {
+    List<String> otherElements = pPath.getPathElements();
+    if (elements.size() <= otherElements.size())
+      return false;
+    for (int i = 0; i < elements.size(); i++)
+      if (!elements.get(i).equals(otherElements.get(i)))
+        return false;
+    return true;
   }
 
   @Nonnull

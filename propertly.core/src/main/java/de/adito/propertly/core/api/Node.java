@@ -2,9 +2,11 @@ package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
+import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
+import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -44,10 +46,23 @@ public class Node extends AbstractNode
     Object oldValue = value;
     IPropertyPitProvider pppProvider = null;
     if (pValue instanceof IPropertyPitProvider)
+    {
       pppProvider = (IPropertyPitProvider) pValue;
-    if (pppProvider != null && pppProvider.getPit().isValid() &&
-        getHierarchy().equals(HierarchyHelper.getNode(pppProvider).getHierarchy()))
-      throw new IllegalStateException("can't set PPP from my own hierarchy.");
+
+      if (pppProvider.getPit().isValid() && getHierarchy().equals(HierarchyHelper.getNode(pppProvider).getHierarchy()))
+      {
+        PropertyPath path = new PropertyPath(getProperty());
+        PropertyPath pppPath = new PropertyPath(pppProvider);
+        if (path.equals(pppPath))
+          return pppProvider;
+        if (path.isParentOf(pppPath) || pppPath.isParentOf(path))
+        {
+          String message = MessageFormat.format(
+              "The new value for a property mustn't be the parent or a child (set ''{0}'' to ''{1}'').", pppPath, path);
+          throw new IllegalStateException(message);
+        }
+      }
+    }
 
     ListenerList<Runnable> onFinish = new ListenerList<>();
     fireValueWillBeChange(oldValue, pValue, onFinish::addStrongListener, pAttributes);
