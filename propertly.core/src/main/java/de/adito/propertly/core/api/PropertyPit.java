@@ -38,7 +38,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
   @Override
   public boolean isValid()
   {
-    return node != null;
+    return node != null && node.isValid();
   }
 
   @Nonnull
