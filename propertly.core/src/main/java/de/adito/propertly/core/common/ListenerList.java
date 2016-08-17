@@ -24,7 +24,7 @@ public class ListenerList<T> implements Iterable<T>
     return getListeners().iterator();
   }
 
-  public List<T> getListeners()
+  public synchronized List<T> getListeners()
   {
     List<T> l = new ArrayList<>();
     if (listeners != null)
@@ -42,7 +42,7 @@ public class ListenerList<T> implements Iterable<T>
     return l;
   }
 
-  public void addWeakListener(@Nonnull T pListener)
+  public synchronized void addWeakListener(@Nonnull T pListener)
   {
     if (listeners == null)
       listeners = new ArrayList<>();
@@ -50,7 +50,7 @@ public class ListenerList<T> implements Iterable<T>
     _cleanUp();
   }
 
-  public void addStrongListener(@Nonnull T pListener)
+  public synchronized void addStrongListener(@Nonnull T pListener)
   {
     if (listeners == null)
       listeners = new ArrayList<>();
@@ -58,7 +58,7 @@ public class ListenerList<T> implements Iterable<T>
     _cleanUp();
   }
 
-  public void removeListener(@Nonnull T pListener)
+  public synchronized void removeListener(@Nonnull T pListener)
   {
     if (listeners != null)
     {
