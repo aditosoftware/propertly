@@ -107,7 +107,6 @@ public class PPPIntrospector
           if (propertlyOverride != null)
             throw new IllegalStateException("'" + firstDescription + "' at '" + firstDescription.getSourceType()
                                                 + "' is annotated with @PropertlyOverride but does not override.");
-          propertyDescriptions.add(firstDescription);
         }
         else
         {
@@ -124,10 +123,8 @@ public class PPPIntrospector
           if (needsOverride && propertlyOverride == null)
             throw new IllegalStateException("'" + firstDescription + "' at '" + firstDescription.getSourceType()
                                                 + "' overrides another description an thus has the be annotated with @PropertlyOverride.");
-          //noinspection unchecked
-          propertyDescriptions.add(PropertyDescription.create(
-              pPPPClass, type, firstDescription.getName(), firstDescription.getAnnotations()));
         }
+        propertyDescriptions.add(firstDescription);
       }
       propertyDescriptions = Collections.unmodifiableSet(propertyDescriptions);
       ALREADY_KNOWN.put(pPPPClass, propertyDescriptions);
@@ -140,7 +137,7 @@ public class PPPIntrospector
     ArrayList<Field> result = new ArrayList<>();
     HashSet<Class> processed = new HashSet<>();
     processed.add(Object.class); // shall not be processed.
-    _addFields(result, processed, Arrays.asList(pCls));
+    _addFields(result, processed, Collections.singletonList(pCls));
     return result;
   }
 

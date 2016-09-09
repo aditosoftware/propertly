@@ -1,15 +1,10 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author PaL
@@ -126,26 +121,23 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
   }
 
   @Override
-  public boolean equals(Object o)
+  public boolean equals(Object pO)
   {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    PropertyDescription that = (PropertyDescription) o;
-    return annotations.equals(that.annotations) &&
-        name.equals(that.name) &&
-        sourceType.equals(that.sourceType) &&
-        type.equals(that.type);
+    if (this == pO)
+      return true;
+    if (pO == null || getClass() != pO.getClass())
+      return false;
+    PropertyDescription<?, ?> that = (PropertyDescription<?, ?>) pO;
+    return Objects.equals(sourceType, that.sourceType) &&
+        Objects.equals(type, that.type) &&
+        Objects.equals(name, that.name) &&
+        Objects.equals(annotations, that.annotations);
   }
 
   @Override
   public int hashCode()
   {
-    int result = sourceType.hashCode();
-    result = 31 * result + type.hashCode();
-    result = 31 * result + name.hashCode();
-    result = 31 * result + annotations.hashCode();
-    return result;
+    return Objects.hash(sourceType, type, name, annotations);
   }
 
   @Override

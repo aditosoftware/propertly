@@ -12,6 +12,7 @@
 
   <modules>
     <module>propertly.core</module>
+    <module>propertly.preset</module>
     <module>propertly.serialization</module>
   </modules>
 
