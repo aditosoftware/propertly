@@ -2,8 +2,10 @@ package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author PaL
@@ -76,11 +78,14 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
 
   @Nullable
   @Override
-  public <T> IProperty<S, T> findProperty(@Nonnull IPropertyDescription<?, T> pPropertyDescription)
+  public <R> IProperty<S, R> findProperty(@Nonnull IPropertyDescription<?, R> pPropertyDescription)
   {
-    INode childNode = getNode().findNode(pPropertyDescription);
-    //noinspection unchecked
-    return childNode == null ? null : childNode.getProperty();
+    INode childNode = getNode().findNode(pPropertyDescription.getName());
+    if (childNode == null)
+      return null;
+    boolean fittingTypeAndSourceType = pPropertyDescription.getType().isAssignableFrom(childNode.getProperty().getType()) &&
+        pPropertyDescription.getSourceType().isAssignableFrom(childNode.getProperty().getDescription().getSourceType());
+    return fittingTypeAndSourceType ? childNode.getProperty() : null;
   }
 
   @Nonnull
@@ -112,45 +117,33 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
   @Override
   public final Set<IPropertyDescription<S, T>> getPropertyDescriptions()
   {
-    Set<IPropertyDescription<S, T>> set = new LinkedHashSet<>();
-    List<INode> children = getNode().getChildren();
-    if (children != null)
-      for (INode childNode : children)
-        //noinspection unchecked
-        set.add(childNode.getProperty().getDescription());
-    return set;
+    //noinspection unchecked
+    return (Set)getNode().getChildrenStream()
+        .map(stream -> stream.map(node -> node.getProperty().getDescription())
+            .collect(Collectors.toCollection(() -> (Set) new LinkedHashSet<>())))
+        .orElseGet(Collections::emptySet);
   }
 
   @Override
   @Nonnull
   public List<IProperty<S, T>> getProperties()
   {
-    List<IProperty<S, T>> properties = new ArrayList<>();
-    List<INode> children = getNode().getChildren();
-    if (children != null)
-      for (INode childNode : children)
-        //noinspection unchecked
-        properties.add(childNode.getProperty());
-    return properties;
+    //noinspection unchecked
+    return (List)getNode().getChildrenStream()
+        .map(stream -> stream.map(INode::getProperty)
+            .collect(Collectors.toList()))
+        .orElseGet(Collections::emptyList);
   }
 
   @Nonnull
   @Override
   public List<T> getValues()
   {
-    List<T> values = new ArrayList<>();
-    List<INode> children = getNode().getChildren();
-    if (children != null)
-    {
-      for (INode childNode : children)
-      {
-        //noinspection unchecked
-        T value = (T) childNode.getValue();
-        if (value != null)
-          values.add(value);
-      }
-    }
-    return values;
+    //noinspection unchecked
+    return (List)getNode().getChildrenStream()
+        .map(stream -> stream.map(INode::getValue)
+            .collect(Collectors.toList()))
+        .orElseGet(Collections::emptyList);
   }
 
   @Override

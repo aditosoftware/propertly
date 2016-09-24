@@ -9,8 +9,9 @@ import de.adito.propertly.core.spi.IPropertyPitEventListener;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Comparator;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * INodes are the storage structure behind IProperty objects.
@@ -39,12 +40,12 @@ public interface INode
   INode getParent();
 
   /**
-   * Lists the children nodes.
+   * Streams the children nodes.
    *
-   * @return a list of children nodes. This is <tt>null</tt> in case this node is a leaf.
+   * @return a stream of children nodes. The value is not present in case this node is a leaf.
    */
-  @Nullable
-  List<INode> getChildren();
+  @Nonnull
+  Optional<? extends Stream<? extends INode>> getChildrenStream();
 
   /**
    * Tries to find a child node.
@@ -56,13 +57,13 @@ public interface INode
   INode findNode(@Nonnull String pName);
 
   /**
-   * Tries to find a child node.
+   * Gets the child node at the specified index.
    *
-   * @param pPropertyDescription describes the search children.
-   * @return the found child node or <tt>null</tt> if a child node with the given description does not exist.
+   * @param pIndex the index.
+   * @return child node.
    */
-  @Nullable
-  INode findNode(@Nonnull IPropertyDescription pPropertyDescription);
+  @Nonnull
+  INode getNode(int pIndex) throws IndexOutOfBoundsException;
 
   /**
    * The set value.
@@ -106,8 +107,10 @@ public interface INode
 
   /**
    * Removes this INode from the node hierarchy thus rendering it invalid.
+   *
+   * @param pAttributes additional attributes describing this change.
    */
-  void remove();
+  void remove(@Nonnull Set<Object> pAttributes);
 
   /**
    * @return the IProperty object for this INode.
@@ -136,27 +139,10 @@ public interface INode
   INode addProperty(@Nullable Integer pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
 
   /**
-   * Removes a child from this node.
-   *
-   * @param pPropertyDescription describes the node to be removed.
-   * @param pAttributes          additional attributes describing this change.
-   * @return whether something was removed.
+   * @param pName the property's name for which the index is looked for.
+   * @return the index of an child property. '-1' in case there is no child with that name.
    */
-  boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
-
-  /**
-   * Removes a property at a specified index. If no exception occurs the removal was successful.
-   *
-   * @param pIndex      the index at which the child node shall be removed.
-   * @param pAttributes additional attributes describing this change.
-   */
-  void removeProperty(int pIndex, @Nonnull Set<Object> pAttributes);
-
-  /**
-   * @param pPropertyDescription the description for the property for which the index is looked for.
-   * @return the index of an child property. '-1' in case the property is not a child of this node.
-   */
-  int indexOf(@Nonnull IPropertyDescription pPropertyDescription);
+  int indexOf(@Nonnull String pName);
 
   /**
    * Reorders the child nodes using the given comparator.

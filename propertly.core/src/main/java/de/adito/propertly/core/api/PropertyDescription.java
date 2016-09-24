@@ -94,7 +94,7 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
       @Nullable Annotation... pAnnotations)
   {
     return new PropertyDescription<>(pSourceType, pType, pName,
-                                     pAnnotations == null ? Collections.<Annotation>emptyList() : Arrays.asList(pAnnotations));
+                                     pAnnotations == null ? Collections.emptyList() : Arrays.asList(pAnnotations));
   }
 
   @Nonnull

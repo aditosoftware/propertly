@@ -3,9 +3,10 @@ package de.adito.propertly.core.api;
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Comparator;
-import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author PaL
@@ -39,19 +40,15 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
   @Override
   public int getSize()
   {
-    List<INode> children = getNode().getChildren();
-    return children == null ? 0 : children.size();
+    return getNode().getChildrenStream().map(Stream::count).orElse(0L).intValue();
   }
 
   @Nonnull
   @Override
   public IProperty<S, T> getProperty(int pIndex)
   {
-    List<INode> children = getNode().getChildren();
-    if (children != null && pIndex >= 0 && pIndex < children.size())
-      //noinspection unchecked
-      return children.get(pIndex).getProperty();
-    throw new IndexOutOfBoundsException("index '" + pIndex + "' >= size '" + getSize() + "'.");
+    //noinspection unchecked
+    return getNode().getNode(pIndex).getProperty();
   }
 
   @Nonnull
@@ -65,13 +62,13 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
   @Override
   public void removeProperty(int pIndex, @Nullable Object... pAttributes)
   {
-    getNode().removeProperty(pIndex, PropertlyUtility.toNonnullSet(pAttributes));
+    getNode().getNode(pIndex).remove(PropertlyUtility.toNonnullSet(pAttributes));
   }
 
   @Override
   public int indexOf(@Nonnull IPropertyDescription<?, ?> pPropertyDescription)
   {
-    return getNode().indexOf(pPropertyDescription);
+    return getNode().indexOf(pPropertyDescription.getName());
   }
 
   @Override

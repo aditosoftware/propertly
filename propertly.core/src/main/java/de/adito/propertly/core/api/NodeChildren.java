@@ -8,11 +8,11 @@ import java.util.*;
 /**
  * @author j.boesl, 09.11.14
  */
-class NodeChildren implements Iterable<INode>
+class NodeChildren<T extends INode> implements Iterable<T>
 {
 
-  private Map<String, INode> childrenMap;
-  private List<INode> childrenList;
+  private Map<String, T> childrenMap;
+  private List<T> childrenList;
 
   public NodeChildren()
   {
@@ -26,12 +26,12 @@ class NodeChildren implements Iterable<INode>
     childrenList.clear();
   }
 
-  public void add(INode pNode)
+  public void add(T pNode)
   {
     add(null, pNode);
   }
 
-  public void add(Integer pIndex, INode pNode)
+  public void add(Integer pIndex, T pNode)
   {
     String name = pNode.getProperty().getName();
     if (!childrenMap.containsKey(name))
@@ -44,7 +44,7 @@ class NodeChildren implements Iterable<INode>
     }
   }
 
-  public boolean remove(INode pNode)
+  public boolean remove(T pNode)
   {
     IProperty property = pNode.getProperty();
     boolean wasRemoved = childrenMap.remove(property.getName()) != null;
@@ -63,14 +63,14 @@ class NodeChildren implements Iterable<INode>
   {
     if (childrenMap.containsKey(pName))
       throw new RuntimeException("property with name '" + pName + "' already exists.");
-    INode node = childrenMap.remove(pPropertyDescription.getName());
+    T node = childrenMap.remove(pPropertyDescription.getName());
     assert node != null;
     childrenMap.put(pName, node);
   }
 
-  public int indexOf(IPropertyDescription pPropertyDescription)
+  public int indexOf(String pName)
   {
-    INode node = find(pPropertyDescription);
+    T node = find(pName);
     return childrenList.indexOf(node);
   }
 
@@ -82,19 +82,19 @@ class NodeChildren implements Iterable<INode>
     });
   }
 
-  public List<INode> asList()
+  public List<T> asList()
   {
     return Collections.unmodifiableList(childrenList);
   }
 
-  public INode find(String pName)
+  public T find(String pName)
   {
     return childrenMap.get(pName);
   }
 
-  public INode find(IPropertyDescription<?, ?> pPropertyDescription)
+  public T find(IPropertyDescription<?, ?> pPropertyDescription)
   {
-    INode node = childrenMap.get(pPropertyDescription.getName());
+    T node = childrenMap.get(pPropertyDescription.getName());
     if (node == null)
       return null;
     boolean fittingTypeAndSourceType = pPropertyDescription.getType().isAssignableFrom(node.getProperty().getType()) &&
@@ -102,13 +102,13 @@ class NodeChildren implements Iterable<INode>
     return fittingTypeAndSourceType ? node : null;
   }
 
-  public INode get(int pIndex)
+  public T get(int pIndex)
   {
     return childrenList.get(pIndex);
   }
 
   @Override
-  public Iterator<INode> iterator()
+  public Iterator<T> iterator()
   {
     return asList().iterator();
   }

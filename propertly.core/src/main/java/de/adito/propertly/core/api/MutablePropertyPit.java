@@ -94,7 +94,14 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
   @Override
   public boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription, @Nullable Object... pAttributes)
   {
-    return getNode().removeProperty(pPropertyDescription, PropertlyUtility.toNonnullSet(pAttributes));
+    IProperty<S, T> property = findProperty(pPropertyDescription);
+    if (property == null)
+      return false;
+
+    INode node = getNode().findNode(pPropertyDescription.getName());
+    assert node != null;
+    node.remove(PropertlyUtility.toNonnullSet(pAttributes));
+    return findProperty(pPropertyDescription) == null;
   }
 
   @Override
