@@ -90,12 +90,12 @@ public class DelegatingNode extends AbstractNode
   @Nullable
   public Object setValue(@Nullable Object pValue, @Nonnull Set<Object> pAttributes)
   {
-    Object oldValue = getValue();
+    Object oldValue = getValueInternal();
     ListenerList<Runnable> onFinish = new ListenerList<>();
     fireValueWillBeChange(oldValue, pValue, onFinish::addStrongListener, pAttributes);
     delegate.setValue(pValue, pAttributes);
     _alignToDelegate();
-    Object newValue = getValue();
+    Object newValue = getValueInternal();
     fireValueChange(oldValue, newValue, pAttributes);
     onFinish.forEach(Runnable::run);
     return newValue;
@@ -104,7 +104,7 @@ public class DelegatingNode extends AbstractNode
   @Override
   public Object getValue()
   {
-    return pitProvider == null && delegate != null ? delegate.getValue() : pitProvider;
+    return getValueInternal();
   }
 
   @Override
@@ -271,5 +271,10 @@ public class DelegatingNode extends AbstractNode
     pitProvider = null;
     delegate = null;
     super.remove();
+  }
+
+  protected Object getValueInternal()
+  {
+    return pitProvider == null && delegate != null ? delegate.getValue() : pitProvider;
   }
 }
