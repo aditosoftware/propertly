@@ -78,6 +78,14 @@ public abstract class AbstractPropertyPath implements IPropertyPath
     return new ArrayList<>(getInternalElements());
   }
 
+  @Nullable
+  @Override
+  public String getName()
+  {
+    List<String> elements = getInternalElements();
+    return elements.isEmpty() ? null : elements.get(elements.size() - 1);
+  }
+
   @Nonnull
   @Override
   public String asString()
@@ -108,5 +116,31 @@ public abstract class AbstractPropertyPath implements IPropertyPath
   public int hashCode()
   {
     return Objects.hash(getInternalElements());
+  }
+
+  @Override
+  public int compareTo(IPropertyPath o)
+  {
+    List<String> elements2;
+    if (o instanceof PropertyPath)
+      elements2 = ((PropertyPath) o).getInternalElements();
+    else
+      elements2 = o.getPathElements();
+
+    int size1 = getInternalElements().size();
+    int size2 = elements2.size();
+    int maxSize = Math.max(size1, size2);
+    for (int i = 0; i < maxSize; i++) {
+      String s1 = i < size1 ? getInternalElements().get(i) : null;
+      String s2 = i < size2 ? elements2.get(i) : null;
+      if (s1 == null)
+        return s2 == null ? 0 : -1;
+      if (s2 == null)
+        return 1;
+      int result = s1.compareTo(s2);
+      if (result != 0)
+        return result;
+    }
+    return 0;
   }
 }

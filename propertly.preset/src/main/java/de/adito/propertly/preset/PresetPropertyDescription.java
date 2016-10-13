@@ -3,6 +3,7 @@ package de.adito.propertly.preset;
 import de.adito.propertly.core.api.PropertyDescription;
 import de.adito.propertly.core.spi.*;
 
+import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.util.Objects;
 
@@ -103,6 +104,23 @@ public class PresetPropertyDescription<S extends IPropertyPitProvider, T>
         "', name='" + delegate.getName() + '\'' +
         "', preset='" + presetValueString + '\'' +
         '}';
+  }
+
+  @Override
+  public int compareTo(@Nonnull IPropertyDescription<?, ?> o)
+  {
+    int i = getName().compareTo(o.getName());
+    if (i == 0)
+    {
+      i = getType().getClass().getCanonicalName().compareTo(o.getType().getClass().getCanonicalName());
+      if (i == 0)
+      {
+        i = getSourceType().getClass().getCanonicalName().compareTo(o.getSourceType().getClass().getCanonicalName());
+        if (i == 0)
+          i = getAnnotations().length - o.getAnnotations().length;
+      }
+    }
+    return i;
   }
 
 }

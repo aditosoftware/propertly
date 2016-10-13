@@ -149,5 +149,21 @@ public class PropertyDescription<S extends IPropertyPitProvider, T> implements I
         '}';
   }
 
+  @Override
+  public int compareTo(@Nonnull IPropertyDescription<?, ?> o)
+  {
+    int i = name.compareTo(o.getName());
+    if (i == 0)
+    {
+      i = type.getClass().getCanonicalName().compareTo(o.getType().getClass().getCanonicalName());
+      if (i == 0)
+      {
+        i = sourceType.getClass().getCanonicalName().compareTo(o.getSourceType().getClass().getCanonicalName());
+        if (i == 0)
+          i = annotations.size() - o.getAnnotations().length;
+      }
+    }
+    return i;
+  }
 
 }

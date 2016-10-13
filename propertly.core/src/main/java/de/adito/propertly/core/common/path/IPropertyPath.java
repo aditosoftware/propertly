@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author j.boesl, 11.05.15
  */
-public interface IPropertyPath
+public interface IPropertyPath extends Comparable<IPropertyPath>
 {
 
   /**
@@ -47,6 +47,12 @@ public interface IPropertyPath
    */
   @Nonnull
   List<String> getPathElements();
+
+  /**
+   * @return the last path element.
+   */
+  @Nullable
+  String getName();
 
   /**
    * @return path as string separated by slashes.

@@ -201,7 +201,7 @@ class HierarchyProperty implements IProperty
   @Override
   public String toString()
   {
-    return PropertlyUtility.asString(this, propertyDescription.toString(), "value=" + getValue());
+    return PropertlyUtility.asString(this, propertyDescription.toString(), isValid() ? "value=" + getValue() : "<invalid>");
   }
 
 }

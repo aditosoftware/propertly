@@ -9,7 +9,7 @@ import java.lang.reflect.AnnotatedElement;
  *         Date: 29.09.11
  *         Time: 21:39
  */
-public interface IPropertyDescription<S extends IPropertyPitProvider, T> extends AnnotatedElement
+public interface IPropertyDescription<S extends IPropertyPitProvider, T> extends AnnotatedElement, Comparable<IPropertyDescription<?, ?>>
 {
 
   /**
