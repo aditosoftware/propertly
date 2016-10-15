@@ -28,8 +28,8 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
   public Hierarchy(final String pName, final T pPPP)
   {
     this(pHierarchy -> {
-      return new Node(pHierarchy, null, PropertyDescription.create(
-          IPropertyPitProvider.class, pPPP.getClass(), pName));
+      PropertyDescription<?, ?> description = new PropertyDescription<>(IPropertyPitProvider.class, pPPP.getClass(), pName);
+      return new Node(pHierarchy, null, description, true);
     }, pPPP);
   }
 

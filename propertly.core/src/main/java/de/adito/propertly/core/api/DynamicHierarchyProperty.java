@@ -12,7 +12,7 @@ import javax.annotation.*;
 class DynamicHierarchyProperty extends HierarchyProperty
 {
 
-  public DynamicHierarchyProperty(AbstractNode pNode, IPropertyDescription pPropertyDescription)
+  DynamicHierarchyProperty(AbstractNode pNode, IPropertyDescription pPropertyDescription)
   {
     super(pNode, pPropertyDescription);
   }

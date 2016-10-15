@@ -1,8 +1,7 @@
 package de.adito.propertly.core.spi;
 
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.lang.annotation.Annotation;
 
 /**
@@ -43,11 +42,12 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    *
    * @param pPropertyDescription the IPropertyDescription describing the new IProperty.
    * @param <E>                  the created IProperty's type.
-   * @param pAttributes additional attributes describing this change.
+   * @param pAttributes          additional attributes describing this change.
    * @return the created IProperty.
    */
   @Nonnull
-  <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription, @Nullable Object ... pAttributes);
+  <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription,
+                                            @Nullable Object... pAttributes);
 
   /**
    * Adds a new IProperty to this IMutablePropertyPit.
@@ -79,10 +79,11 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    * Removes a dynamic IProperty. Static IProperty objects can't be removed.
    *
    * @param pPropertyDescription describes the IProperty that shall be removed.
-   * @param pAttributes additional attributes describing this change.
+   * @param pAttributes          additional attributes describing this change.
    * @return <tt>true</tt> when an IProperty was removed <tt>false</tt> otherwise.
    */
-  boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription, @Nullable Object ... pAttributes);
+  boolean removeProperty(@Nonnull IPropertyDescription<? super S, ? extends T> pPropertyDescription,
+                         @Nullable Object... pAttributes);
 
   /**
    * Removes a dynamic IProperty. Static IProperty objects can't be removed.
@@ -90,5 +91,5 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    * @param pProperty the IProperty to be removed.
    * @return <tt>true</tt> when an IProperty was removed <tt>false</tt> otherwise.
    */
-  boolean removeProperty(@Nonnull IProperty<S, T> pProperty);
+  boolean removeProperty(@Nonnull IProperty<? super S, ? extends T> pProperty);
 }

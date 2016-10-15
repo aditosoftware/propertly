@@ -82,7 +82,7 @@ public class Serializer<T>
         {
           Annotation[] arr = descr.getAnnotations();
           List<? extends Annotation> annotations =
-              arr == null || arr.length == 0 ? Collections.<Annotation>emptyList() : Arrays.asList(arr);
+              arr == null || arr.length == 0 ? Collections.emptyList() : Arrays.asList(arr);
           _getSerializationProvider().serializeDynamicValue(pOutputData, name, type, value, annotations);
         }
         else if (value != null)
@@ -105,7 +105,7 @@ public class Serializer<T>
       {
         Annotation[] arr = descr.getAnnotations();
         List<? extends Annotation> annotations =
-            arr == null || arr.length == 0 ? Collections.<Annotation>emptyList() : Arrays.asList(arr);
+            arr == null || arr.length == 0 ? Collections.emptyList() : Arrays.asList(arr);
         if (pPPP.getClass().equals(type))
           _getSerializationProvider().serializeDynamicNode(pOutputData, name, type, annotations, childRunner);
         else
@@ -149,7 +149,7 @@ public class Serializer<T>
         if (ppp != null)
         {
           IProperty<?, Object> childProperty =
-              ppp.getPit().findProperty(PropertyDescription.create(IPropertyPitProvider.class, Object.class, pName));
+              ppp.getPit().findProperty(new PropertyDescription<>(IPropertyPitProvider.class, Object.class, pName));
 
           if (childProperty != null)
           {
@@ -198,8 +198,7 @@ public class Serializer<T>
     }
 
     @Override
-    public void appendFixedValue(
-        @Nonnull String pName, @Nullable Object pValue)
+    public void appendFixedValue(@Nonnull String pName, @Nullable Object pValue)
     {
       IProperty<?, Object> prop = _getProperty(pName, Object.class);
       prop.setValue(pValue);
@@ -276,7 +275,7 @@ public class Serializer<T>
     private <T> IProperty<?, T> _getProperty(String pName, Class<T> pType)
     {
       IPropertyPitProvider ppp = _getPropertyPitProvider();
-      IPropertyDescription<?, T> pd = PropertyDescription.create(IPropertyPitProvider.class, pType, pName);
+      IPropertyDescription<?, T> pd = new PropertyDescription<>(IPropertyPitProvider.class, pType, pName);
       return ppp.getPit().getProperty(pd);
     }
   }

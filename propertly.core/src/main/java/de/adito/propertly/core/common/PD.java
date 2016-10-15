@@ -2,15 +2,11 @@ package de.adito.propertly.core.common;
 
 import de.adito.propertly.core.api.PropertyDescription;
 import de.adito.propertly.core.common.exception.InitializationException;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -50,31 +46,25 @@ public class PD
   create(@Nonnull Class<S> pSource)
   {
     List<Field> fields = FIELD_CACHE.get(pSource);
-    if (fields == null)
-    {
+    if (fields == null) {
       fields = new ArrayList<>(Arrays.asList(pSource.getDeclaredFields()));
       FIELD_CACHE.put(pSource, fields);
     }
     Iterator<Field> iterator = fields.iterator();
-    while (iterator.hasNext())
-    {
+    while (iterator.hasNext()) {
       Field field = iterator.next();
-      try
-      {
+      try {
         int modifiers = field.getModifiers();
-        if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers))
-        {
+        if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) {
           if (!Modifier.isPublic(modifiers))
             field.setAccessible(true);
           if (field.get(null) == null) // not yet initialized
           {
-            if (IPropertyDescription.class.isAssignableFrom(field.getType()))
-            {
+            if (IPropertyDescription.class.isAssignableFrom(field.getType())) {
               iterator.remove();
               Class type = Object.class;
               Type[] types = ((ParameterizedType) field.getGenericType()).getActualTypeArguments();
-              if (types.length == 2)
-              {
+              if (types.length == 2) {
                 if (!((Class<?>) types[0]).isAssignableFrom(pSource))
                   throw new RuntimeException("invalid type: " + types[0]);
                 if (types[1] instanceof Class)
@@ -85,13 +75,12 @@ public class PD
               String name = field.getName();
               Annotation[] annotations = field.getDeclaredAnnotations();
               //noinspection unchecked
-              return (IPropertyDescription<S, T>) PropertyDescription.create(pSource, type, name, annotations);
+              return (IPropertyDescription<S, T>) new PropertyDescription(pSource, type, name, annotations);
             }
           }
         }
       }
-      catch (IllegalAccessException e)
-      {
+      catch (IllegalAccessException e) {
         throw new RuntimeException(e);
       }
       iterator.remove();

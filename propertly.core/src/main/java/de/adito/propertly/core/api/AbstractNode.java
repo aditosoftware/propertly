@@ -26,11 +26,11 @@ public abstract class AbstractNode implements INode
 
 
   protected AbstractNode(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent,
-                         @Nonnull IPropertyDescription pPropertyDescription)
+                         @Nonnull IPropertyDescription pPropertyDescription, boolean pDynamic)
   {
     hierarchy = pHierarchy;
     parent = pParent;
-    if (parent == null || parent.getValue() instanceof IMutablePropertyPitProvider)
+    if (pDynamic || parent == null)
       property = new DynamicHierarchyProperty(this, pPropertyDescription);
     else
       property = new HierarchyProperty(this, pPropertyDescription);

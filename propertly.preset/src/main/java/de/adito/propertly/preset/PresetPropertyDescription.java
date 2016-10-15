@@ -1,8 +1,9 @@
 package de.adito.propertly.preset;
 
-import de.adito.propertly.core.api.PropertyDescription;
+import de.adito.propertly.core.api.AbstractPropertyDescription;
 import de.adito.propertly.core.spi.*;
 
+import javax.annotation.*;
 import java.lang.annotation.Annotation;
 import java.util.Objects;
 
@@ -10,57 +11,39 @@ import java.util.Objects;
  * @author j.boesl, 09.09.16
  */
 public class PresetPropertyDescription<S extends IPropertyPitProvider, T>
+    extends AbstractPropertyDescription<S, T>
     implements IPresetPropertyDescription<S, T>
 {
-  private IPropertyDescription<S, T> delegate;
   private IPresetSupplier<S, T> presetSupplier;
 
-  protected PresetPropertyDescription(Class<S> pSourceType, Class<? extends T> pType, String pName,
-                                      Iterable<? extends Annotation> pAnnotations, IPresetSupplier<S, T> pPresetSupplier)
+  public PresetPropertyDescription(@Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType,
+                                   @Nonnull String pName, @Nonnull IPresetSupplier<S, T> pPresetSupplier,
+                                   @Nullable Iterable<? extends Annotation> pAnnotations)
   {
-    this(PropertyDescription.create(pSourceType, pType, pName, pAnnotations), pPresetSupplier);
-  }
-
-  protected PresetPropertyDescription(IPropertyDescription<S, T> pDescription, IPresetSupplier<S, T> pPresetSupplier)
-  {
-    delegate = pDescription;
+    super(pSourceType, pType, pName, pAnnotations);
     presetSupplier = pPresetSupplier;
   }
 
-  @Override
-  public Class<S> getSourceType()
+  public PresetPropertyDescription(@Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType,
+                                   @Nonnull String pName, @Nonnull IPresetSupplier<S, T> pPresetSupplier,
+                                   @Nullable Annotation... pAnnotations)
   {
-    return delegate.getSourceType();
+    super(pSourceType, pType, pName, pAnnotations);
+    presetSupplier = pPresetSupplier;
   }
 
-  @Override
-  public Class<? extends T> getType()
+  public PresetPropertyDescription(@Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType,
+                                   @Nonnull String pName, @Nonnull IPresetSupplier<S, T> pPresetSupplier)
   {
-    return delegate.getType();
+    super(pSourceType, pType, pName);
+    presetSupplier = pPresetSupplier;
   }
 
-  @Override
-  public String getName()
+  public PresetPropertyDescription(@Nonnull IPropertyDescription<S, T> pPropertyDescription,
+                                   @Nonnull IPresetSupplier<S, T> pPresetSupplier)
   {
-    return delegate.getName();
-  }
-
-  @Override
-  public <A extends Annotation> A getAnnotation(Class<A> pAnnotationClass)
-  {
-    return delegate.getAnnotation(pAnnotationClass);
-  }
-
-  @Override
-  public Annotation[] getAnnotations()
-  {
-    return delegate.getAnnotations();
-  }
-
-  @Override
-  public Annotation[] getDeclaredAnnotations()
-  {
-    return delegate.getDeclaredAnnotations();
+    super(pPropertyDescription);
+    presetSupplier = pPresetSupplier;
   }
 
   @Override
@@ -70,39 +53,50 @@ public class PresetPropertyDescription<S extends IPropertyPitProvider, T>
   }
 
   @Override
+  public IPropertyDescription<S, T> copy(@Nullable String pNewName)
+  {
+    return pNewName == null ?
+        new PresetPropertyDescription<>(this, presetSupplier) :
+        new PresetPropertyDescription<>(getSourceType(), getType(), pNewName, presetSupplier, getAnnotations());
+  }
+
+  @Override
   public boolean equals(Object pO)
   {
     if (this == pO)
       return true;
     if (!(pO instanceof PresetPropertyDescription))
       return false;
+    if (!super.equals(pO))
+      return false;
     PresetPropertyDescription<?, ?> that = (PresetPropertyDescription<?, ?>) pO;
-    return Objects.equals(delegate, that.delegate) &&
-        Objects.equals(presetSupplier, that.presetSupplier);
+    return Objects.equals(_getPresetValueWithoutException(), that._getPresetValueWithoutException());
   }
 
   @Override
   public int hashCode()
   {
-    return Objects.hash(delegate, presetSupplier);
+    return Objects.hash(super.hashCode(), _getPresetValueWithoutException());
   }
 
   @Override
   public String toString()
   {
-    String presetValueString;
+    return "PresetPropertyDescription{" +
+        "type='" + (getType() == null ? null : getType().getSimpleName()) +
+        "', name='" + getName() + '\'' +
+        "', preset='" + Objects.toString(_getPresetValueWithoutException()) + '\'' +
+        '}';
+  }
+
+  private Object _getPresetValueWithoutException()
+  {
     try {
-      presetValueString = Objects.toString(presetSupplier.get(this));
+      return getPreset();
     }
     catch (Exception pE) {
-      presetValueString = pE.getClass().getSimpleName() + ": " + pE.getMessage();
+      return pE.getClass().getSimpleName() + ": " + pE.getMessage();
     }
-
-    return "PresetPropertyDescription{" +
-        "type='" + (delegate.getType() == null ? null : delegate.getType().getSimpleName()) +
-        "', name='" + delegate.getName() + '\'' +
-        "', preset='" + presetValueString + '\'' +
-        '}';
   }
 
 }

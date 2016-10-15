@@ -4,8 +4,7 @@ import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author PaL

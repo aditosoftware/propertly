@@ -33,7 +33,7 @@ public class SimpleMutableTest
     propertyList.add(property);
 
     IPropertyDescription<DynamicTestPropertyPitProvider, Color> pinkDescription =
-        PropertyDescription.create(DynamicTestPropertyPitProvider.class, Color.class, "pink");
+        new PropertyDescription<>(DynamicTestPropertyPitProvider.class, Color.class, "pink");
     property = root.addProperty(0, pinkDescription);
     property.setValue(Color.PINK);
     propertyList.add(0, property);
@@ -43,7 +43,7 @@ public class SimpleMutableTest
     propertyList.add(property);
 
     IPropertyDescription<DynamicTestPropertyPitProvider, Color> blackDescription =
-        PropertyDescription.create(DynamicTestPropertyPitProvider.class, Color.class, "black");
+        new PropertyDescription<>(DynamicTestPropertyPitProvider.class, Color.class, "black");
     property = root.addProperty(3, blackDescription);
     property.setValue(Color.black);
     propertyList.add(3, property);
@@ -58,8 +58,7 @@ public class SimpleMutableTest
     Assert.assertEquals(propertyList, root.getProperties());
 
 
-    for (Iterator<IProperty<DynamicTestPropertyPitProvider, Color>> i = propertyList.iterator(); i.hasNext(); )
-    {
+    for (Iterator<IProperty<DynamicTestPropertyPitProvider, Color>> i = propertyList.iterator(); i.hasNext(); ) {
       IProperty<DynamicTestPropertyPitProvider, Color> next = i.next();
       if (Arrays.<IPropertyDescription>asList(pinkDescription, blackDescription).contains(next.getDescription()))
         i.remove();

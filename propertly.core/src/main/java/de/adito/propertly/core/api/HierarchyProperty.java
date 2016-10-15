@@ -33,12 +33,16 @@ class HierarchyProperty implements IProperty
     return propertyDescription;
   }
 
+  void setPropertyDescription(IPropertyDescription pPropertyDescription)
+  {
+    propertyDescription = pPropertyDescription;
+  }
+
   @Override
   public IHierarchy<?> getHierarchy()
   {
     IPropertyPitProvider parent = getParent();
-    if (parent == null)
-    {
+    if (parent == null) {
       Object value = getValue();
       assert value instanceof IPropertyPitProvider;
       return ((IPropertyPitProvider) value).getPit().getHierarchy();
@@ -91,14 +95,14 @@ class HierarchyProperty implements IProperty
   @Override
   public Class getType()
   {
-    return propertyDescription.getType();
+    return getDescription().getType();
   }
 
   @Nonnull
   @Override
   public String getName()
   {
-    return propertyDescription.getName();
+    return getDescription().getName();
   }
 
   @Override
@@ -140,8 +144,7 @@ class HierarchyProperty implements IProperty
                               @Nonnull Set<Object> pAttributes)
   {
     List<IPropertyEventListener> l;
-    synchronized (this)
-    {
+    synchronized (this) {
       if (listeners == null)
         return;
       l = listeners.getListeners();
@@ -154,8 +157,7 @@ class HierarchyProperty implements IProperty
   void fireValueChanged(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set<Object> pAttributes)
   {
     List<IPropertyEventListener> l;
-    synchronized (this)
-    {
+    synchronized (this) {
       if (listeners == null)
         return;
       l = listeners.getListeners();
@@ -168,8 +170,7 @@ class HierarchyProperty implements IProperty
   void fireNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
   {
     List<IPropertyEventListener> l;
-    synchronized (this)
-    {
+    synchronized (this) {
       if (listeners == null)
         return;
       l = listeners.getListeners();
@@ -182,8 +183,7 @@ class HierarchyProperty implements IProperty
   void fireWillBeRemoved(@Nonnull Consumer<Runnable> pOnRemoved, @Nonnull Set<Object> pAttributes)
   {
     List<IPropertyEventListener> l;
-    synchronized (this)
-    {
+    synchronized (this) {
       if (listeners == null)
         return;
       l = listeners.getListeners();
@@ -201,7 +201,7 @@ class HierarchyProperty implements IProperty
   @Override
   public String toString()
   {
-    return PropertlyUtility.asString(this, propertyDescription.toString(), "value=" + getValue());
+    return PropertlyUtility.asString(this, getDescription().toString(), "value=" + getValue());
   }
 
 }

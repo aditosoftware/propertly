@@ -2,10 +2,7 @@ package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
-import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,14 +26,14 @@ public class DelegatingNode extends AbstractNode
   protected DelegatingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
                            @Nonnull INode pDelegate)
   {
-    this(pHierarchy, pParent, pDelegate.getProperty().getDescription(), pDelegate);
+    this(pHierarchy, pParent, pDelegate.getProperty().getDescription(), pDelegate.getProperty().isDynamic(), pDelegate);
   }
 
   protected DelegatingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
-                           @Nonnull IPropertyDescription pPropertyDescription,
+                           @Nonnull IPropertyDescription pPropertyDescription, boolean pDynamic,
                            @Nonnull INode pDelegate)
   {
-    super(pHierarchy, pParent, pPropertyDescription);
+    super(pHierarchy, pParent, pPropertyDescription, pDynamic);
     delegate = pDelegate;
     _alignToDelegate();
   }
@@ -235,6 +232,8 @@ public class DelegatingNode extends AbstractNode
 
     try
     {
+      delegate.rename(pName, pAttributes);
+
       String oldName = property.getName();
       DelegatingNode parent = (DelegatingNode) getParent();
       if (parent != null)
@@ -242,7 +241,7 @@ public class DelegatingNode extends AbstractNode
         assert parent.children != null;
         parent.children.rename(property.getDescription(), pName);
       }
-      delegate.rename(pName, pAttributes);
+      ((HierarchyProperty) property).setPropertyDescription(property.getDescription().copy(pName));
       firePropertyNameChanged(oldName, pName, pAttributes);
     }
     catch (Exception e)

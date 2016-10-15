@@ -126,7 +126,7 @@ public class PropertyTest
     children.reorder((o1, o2) -> o1.getName().compareTo(o2.getName()));
 
     children.removeProperty(1);
-    children.removeProperty((IPropertyDescription) color3Property.getDescription());
+    children.removeProperty(color3Property);
 
     children.getProperty(0).rename("black");
 

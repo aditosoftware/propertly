@@ -83,7 +83,8 @@ public interface IProperty<S extends IPropertyPitProvider, T>
   String getName();
 
   /**
-   * Renaming is only supported when the corresponding IPropertyPitProvider's IPropertyPit is mutable.
+   * Renaming is only supported when the corresponding IPropertyPitProvider's IPropertyPit is mutable and this IProperty
+   * is dynamic.
    *
    * @param pName       the new name for this IProperty.
    * @param pAttributes additional attributes describing this change.

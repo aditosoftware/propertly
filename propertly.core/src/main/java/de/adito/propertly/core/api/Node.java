@@ -5,10 +5,7 @@ import de.adito.propertly.core.common.PPPIntrospector;
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
 import de.adito.propertly.core.common.path.PropertyPath;
-import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,9 +28,10 @@ public class Node extends AbstractNode
   private NodeChildren children;
 
 
-  public Node(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull IPropertyDescription pPropertyDescription)
+  public Node(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull IPropertyDescription pPropertyDescription,
+              boolean pDynamic)
   {
-    super(pHierarchy, pParent, pPropertyDescription);
+    super(pHierarchy, pParent, pPropertyDescription, pDynamic);
   }
 
   @Override
@@ -101,8 +99,9 @@ public class Node extends AbstractNode
           children.clear();
         for (INode remoteChild : childNodes)
         {
-          IPropertyDescription description = remoteChild.getProperty().getDescription();
-          INode newChild = createChild(description);
+          IProperty property = remoteChild.getProperty();
+          IPropertyDescription description = property.getDescription();
+          INode newChild = createChild(description, property.isDynamic());
           children.add(newChild);
           newChild.setValue(remoteChild.getValue(), pAttributes);
         }
@@ -115,7 +114,7 @@ public class Node extends AbstractNode
         else
           children.clear();
         for (IPropertyDescription description : descriptions)
-          children.add(createChild(description));
+          children.add(createChild(description, false));
       }
     }
     else
@@ -181,10 +180,10 @@ public class Node extends AbstractNode
     return children == null ? null : children.find(pPropertyDescription);
   }
 
-  protected INode createChild(IPropertyDescription pPropertyDescription)
+  protected INode createChild(IPropertyDescription pPropertyDescription, boolean pIsDynamic)
   {
     ensureValid();
-    return new Node(getHierarchy(), this, pPropertyDescription);
+    return new Node(getHierarchy(), this, pPropertyDescription, pIsDynamic);
   }
 
   @Override
@@ -198,7 +197,7 @@ public class Node extends AbstractNode
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
     if (children == null)
       children = new NodeChildren();
-    INode child = createChild(pPropertyDescription);
+    INode child = createChild(pPropertyDescription, true);
     children.add(pIndex, child);
     fireNodeAdded(child.getProperty().getDescription(), pAttributes);
     return child;
@@ -284,7 +283,7 @@ public class Node extends AbstractNode
         assert parent.children != null;
         parent.children.rename(property.getDescription(), pName);
       }
-      ((PropertyDescription) property.getDescription()).setName(pName);
+      ((HierarchyProperty) property).setPropertyDescription(property.getDescription().copy(pName));
       firePropertyNameChanged(oldName, pName, pAttributes);
     }
     catch (Exception e)

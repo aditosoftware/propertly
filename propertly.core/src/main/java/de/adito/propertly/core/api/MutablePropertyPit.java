@@ -3,8 +3,7 @@ package de.adito.propertly.core.api;
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.lang.annotation.Annotation;
 import java.util.UUID;
 
@@ -44,8 +43,7 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
   @Override
   public <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue)
   {
-    if (pValue instanceof IPropertyPitProvider)
-    {
+    if (pValue instanceof IPropertyPitProvider) {
       IPropertyPit pit = ((IPropertyPitProvider) pValue).getPit();
       if (pit.isValid())
         return addProperty(pit.getOwnProperty().getName(), pValue);
@@ -58,7 +56,7 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
   public <E extends T> IProperty<S, E> addProperty(@Nonnull String pName, @Nonnull E pValue)
   {
     //noinspection unchecked
-    IPropertyDescription<S, E> description = PropertyDescription.create((Class) getClass(), pValue.getClass(), pName);
+    IPropertyDescription<S, E> description = new PropertyDescription<>((Class) getClass(), pValue.getClass(), pName);
     IProperty<S, E> property = addProperty(description);
     property.setValue(pValue);
     return property;
@@ -79,7 +77,7 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
                                                    @Nullable Annotation... pAnnotations)
   {
     //noinspection unchecked
-    return addProperty(PropertyDescription.create((Class<S>) getSource().getClass(), pType, pName, pAnnotations));
+    return addProperty(new PropertyDescription<>((Class<S>) getSource().getClass(), pType, pName, pAnnotations));
   }
 
   @Nonnull
@@ -88,17 +86,18 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
                                                    @Nullable Iterable<? extends Annotation> pAnnotations)
   {
     //noinspection unchecked
-    return addProperty(PropertyDescription.create((Class<S>) getSource().getClass(), pType, pName, pAnnotations));
+    return addProperty(new PropertyDescription<>((Class<S>) getSource().getClass(), pType, pName, pAnnotations));
   }
 
   @Override
-  public boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription, @Nullable Object... pAttributes)
+  public boolean removeProperty(@Nonnull IPropertyDescription<? super S, ? extends T> pPropertyDescription,
+                                @Nullable Object... pAttributes)
   {
     return getNode().removeProperty(pPropertyDescription, PropertlyUtility.toNonnullSet(pAttributes));
   }
 
   @Override
-  public boolean removeProperty(@Nonnull IProperty<S, T> pProperty)
+  public boolean removeProperty(@Nonnull IProperty<? super S, ? extends T> pProperty)
   {
     return removeProperty(pProperty.getDescription());
   }

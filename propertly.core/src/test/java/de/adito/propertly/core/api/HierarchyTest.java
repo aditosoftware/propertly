@@ -1,6 +1,5 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.PD;
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.spi.extension.AbstractIndexedMutablePPP;
 import org.junit.*;
@@ -30,12 +29,15 @@ public class HierarchyTest
   @Test
   public void test_renameOnClone() throws Exception
   {
-    Hierarchy<MPPP> clonedHierarchy = new Hierarchy<>(hierarchy.getProperty().getName(), hierarchy.getValue());
-    IProperty<MPPP, String> stringProp = hierarchy.getValue().getPit().getProperty(MPPP.myStringProp);
-    IProperty<MPPP, String> clonedStringProp = clonedHierarchy.getValue().getPit().getProperty(MPPP.myStringProp);
-    clonedStringProp.rename("renamedCloneStringProp");
-    Assert.assertEquals("myStringProp", stringProp.getName());
-    Assert.assertEquals("renamedCloneStringProp", clonedStringProp.getName());
+    IProperty<MPPP, String> stringProp = hierarchy.getValue().getPit().addProperty("stringProp", "value");
+
+    Hierarchy<MPPP> copied = new Hierarchy<>(hierarchy.getProperty().getName(), hierarchy.getValue());
+    IIndexedMutablePropertyPit<IPropertyPitProvider, MPPP, Object> pit = copied.getValue().getPit();
+    IProperty<MPPP, String> copiedStringProperty = pit.getProperty(stringProp.getDescription());
+
+    copiedStringProperty.rename("renamedCopiedStringProp");
+    Assert.assertEquals("stringProp", stringProp.getName());
+    Assert.assertEquals("renamedCopiedStringProp", copiedStringProperty.getName());
   }
 
   @After
@@ -49,9 +51,6 @@ public class HierarchyTest
    */
   public static class MPPP extends AbstractIndexedMutablePPP<IPropertyPitProvider, MPPP, Object>
   {
-    public static final IPropertyDescription<MPPP, String> myStringProp = PD.create(MPPP.class);
-    public static final IPropertyDescription<MPPP, Integer> myIntProp = PD.create(MPPP.class);
-
     public MPPP()
     {
       super(Object.class);

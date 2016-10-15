@@ -1,12 +1,8 @@
 package de.adito.propertly.core.spi.extension;
 
-import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.lang.annotation.Annotation;
 
 /**
@@ -17,6 +13,7 @@ abstract class AbstractMutablePropertyPitProviderBase
     extends AbstractPropertyPitProviderBase<P, S, T>
     implements IMutablePropertyPitProvider<P, S, T>
 {
+
   @Nonnull
   public <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue)
   {
@@ -47,7 +44,7 @@ abstract class AbstractMutablePropertyPitProviderBase
     return getPit().removeProperty(pPropertyDescription);
   }
 
-  public boolean removeProperty(@Nonnull IProperty<S, T> pProperty)
+  public boolean removeProperty(@Nonnull IProperty<S, ? extends T> pProperty)
   {
     return getPit().removeProperty(pProperty);
   }

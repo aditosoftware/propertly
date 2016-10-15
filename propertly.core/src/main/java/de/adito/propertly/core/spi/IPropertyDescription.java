@@ -1,5 +1,6 @@
 package de.adito.propertly.core.spi;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.AnnotatedElement;
 
 /**
@@ -26,5 +27,11 @@ public interface IPropertyDescription<S extends IPropertyPitProvider, T> extends
    * @return the name for the corresponding IProperty.
    */
   String getName();
+
+  /**
+   * @param pNewName if not null the name of the created IPropertyDescription.
+   * @return a copy of the current IPropertyDescription optionally with a new name.
+   */
+  IPropertyDescription<S, T> copy(@Nullable String pNewName);
 
 }
