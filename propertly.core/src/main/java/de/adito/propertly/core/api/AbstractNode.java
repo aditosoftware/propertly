@@ -1,8 +1,9 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
+import de.adito.util.weak.MixedReferences;
 
 import javax.annotation.*;
 import java.util.Set;
@@ -22,7 +23,7 @@ public abstract class AbstractNode implements INode
   private AbstractNode parent;
   private HierarchyProperty property;
 
-  private ListenerList<IPropertyPitEventListener> listeners;
+  private MixedReferences<IPropertyPitEventListener> listeners;
 
 
   protected AbstractNode(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent,
@@ -34,7 +35,7 @@ public abstract class AbstractNode implements INode
       property = new DynamicHierarchyProperty(this, pPropertyDescription);
     else
       property = new HierarchyProperty(this, pPropertyDescription);
-    listeners = new ListenerList<>();
+    listeners = new MixedReferences<>();
   }
 
   @Nonnull
@@ -81,21 +82,21 @@ public abstract class AbstractNode implements INode
   public void addWeakListener(@Nonnull IPropertyPitEventListener pListener)
   {
     ensureValid();
-    listeners.addWeakListener(pListener);
+    listeners.addWeak(pListener);
   }
 
   @Override
   public void addStrongListener(@Nonnull IPropertyPitEventListener pListener)
   {
     ensureValid();
-    listeners.addStrongListener(pListener);
+    listeners.addStrong(pListener);
   }
 
   @Override
   public void removeListener(@Nonnull IPropertyPitEventListener pListener)
   {
     ensureValid();
-    listeners.removeListener(pListener);
+    listeners.remove(pListener);
   }
 
   protected void fireValueWillBeChange(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Consumer<Runnable> pOnRemoved,
@@ -105,8 +106,7 @@ public abstract class AbstractNode implements INode
     HierarchyProperty localProperty = (HierarchyProperty) getProperty();
     getHierarchy().fireValueWillBeChanged(localProperty, pOldValue, pNewValue, pOnRemoved, pAttributes);
     AbstractNode localParent = getParent();
-    if (localParent != null)
-    {
+    if (localParent != null) {
       for (IPropertyPitEventListener eventListener : localParent.listeners)
         //noinspection unchecked
         eventListener.propertyValueWillBeChanged(localProperty, pOldValue, pNewValue, pOnRemoved, pAttributes);
@@ -120,8 +120,7 @@ public abstract class AbstractNode implements INode
     HierarchyProperty localProperty = (HierarchyProperty) getProperty();
     getHierarchy().fireValueChanged(localProperty, pOldValue, pNewValue, pAttributes);
     AbstractNode localParent = getParent();
-    if (localParent != null)
-    {
+    if (localParent != null) {
       for (IPropertyPitEventListener eventListener : localParent.listeners)
         //noinspection unchecked
         eventListener.propertyValueChanged(localProperty, pOldValue, pNewValue, pAttributes);

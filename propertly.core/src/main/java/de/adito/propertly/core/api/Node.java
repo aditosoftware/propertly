@@ -1,18 +1,13 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.ListenerList;
-import de.adito.propertly.core.common.PPPIntrospector;
-import de.adito.propertly.core.common.PropertlyUtility;
+import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
 import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.text.MessageFormat;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author PaL
@@ -42,8 +37,7 @@ public class Node extends AbstractNode
     if ((value == pValue) || (value != null && value.equals(pValue)))
       return value; // nothing changes with equal values.
 
-    if (pValue != null)
-    {
+    if (pValue != null) {
       Class type = getProperty().getType();
       //noinspection unchecked
       if (!type.isAssignableFrom(pValue.getClass()))
@@ -51,18 +45,15 @@ public class Node extends AbstractNode
     }
     Object oldValue = value;
     IPropertyPitProvider pppProvider = null;
-    if (pValue instanceof IPropertyPitProvider)
-    {
+    if (pValue instanceof IPropertyPitProvider) {
       pppProvider = (IPropertyPitProvider) pValue;
 
-      if (pppProvider.getPit().isValid() && getHierarchy().equals(HierarchyHelper.getNode(pppProvider).getHierarchy()))
-      {
+      if (pppProvider.getPit().isValid() && getHierarchy().equals(HierarchyHelper.getNode(pppProvider).getHierarchy())) {
         PropertyPath path = new PropertyPath(getProperty());
         PropertyPath pppPath = new PropertyPath(pppProvider);
         if (path.equals(pppPath))
           return pppProvider;
-        if (path.isParentOf(pppPath) || pppPath.isParentOf(path))
-        {
+        if (path.isParentOf(pppPath) || pppPath.isParentOf(path)) {
           String message = MessageFormat.format(
               "The new value for a property mustn't be the parent or a child (set ''{0}'' to ''{1}'').", pppPath, path);
           throw new IllegalStateException(message);
@@ -70,26 +61,22 @@ public class Node extends AbstractNode
       }
     }
 
-    ListenerList<Runnable> onFinish = new ListenerList<>();
-    fireValueWillBeChange(oldValue, pValue, onFinish::addStrongListener, pAttributes);
+    List<Runnable> onFinish = new ArrayList<>();
+    fireValueWillBeChange(oldValue, pValue, onFinish::add, pAttributes);
 
-    if (oldValue instanceof IPropertyPitProvider)
-    {
-      if (children != null)
-      {
+    if (oldValue instanceof IPropertyPitProvider) {
+      if (children != null) {
         for (INode child : children)
           child.remove();
       }
       HierarchyHelper.setNode((IPropertyPitProvider) oldValue, null);
     }
-    if (pppProvider != null)
-    {
+    if (pppProvider != null) {
       IPropertyPitProvider pppCopy = PropertlyUtility.create(pppProvider);
       value = pppCopy;
       HierarchyHelper.setNode(pppCopy, this);
 
-      if (pppProvider.getPit().isValid())
-      {
+      if (pppProvider.getPit().isValid()) {
         INode node = HierarchyHelper.getNode(pppProvider);
         List<INode> childNodes = node.getChildren();
         assert childNodes != null;
@@ -97,8 +84,7 @@ public class Node extends AbstractNode
           children = new NodeChildren();
         else
           children.clear();
-        for (INode remoteChild : childNodes)
-        {
+        for (INode remoteChild : childNodes) {
           IProperty property = remoteChild.getProperty();
           IPropertyDescription description = property.getDescription();
           INode newChild = createChild(description, property.isDynamic());
@@ -106,8 +92,7 @@ public class Node extends AbstractNode
           newChild.setValue(remoteChild.getValue(), pAttributes);
         }
       }
-      else
-      {
+      else {
         Set<IPropertyDescription> descriptions = PPPIntrospector.get(pppProvider.getClass());
         if (children == null)
           children = new NodeChildren();
@@ -117,8 +102,7 @@ public class Node extends AbstractNode
           children.add(createChild(description, false));
       }
     }
-    else
-    {
+    else {
       value = pValue;
       children = null;
     }
@@ -149,8 +133,7 @@ public class Node extends AbstractNode
   @Override
   public void remove()
   {
-    if (isValid() && children != null)
-    {
+    if (isValid() && children != null) {
       for (INode child : children)
         child.remove();
       children = null;
@@ -210,14 +193,13 @@ public class Node extends AbstractNode
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
     INode childNode = findNode(pPropertyDescription);
-    if (childNode != null)
-    {
+    if (childNode != null) {
       IProperty property = childNode.getProperty();
       if (!property.isDynamic())
         throw new IllegalStateException("can't remove: " + getProperty());
       IPropertyDescription description = property.getDescription();
-      ListenerList<Runnable> onFinish = new ListenerList<>();
-      fireNodeWillBeRemoved(description, onFinish::addStrongListener, pAttributes);
+      List<Runnable> onFinish = new ArrayList<>();
+      fireNodeWillBeRemoved(description, onFinish::add, pAttributes);
       assert children != null;
       children.remove(childNode);
       HierarchyHelper.getNode(property).remove();
@@ -238,8 +220,8 @@ public class Node extends AbstractNode
     if (!property.isDynamic())
       throw new IllegalStateException("can't remove: " + getProperty());
     IPropertyDescription description = property.getDescription();
-    ListenerList<Runnable> onFinish = new ListenerList<>();
-    fireNodeWillBeRemoved(description, onFinish::addStrongListener, pAttributes);
+    List<Runnable> onFinish = new ArrayList<>();
+    fireNodeWillBeRemoved(description, onFinish::add, pAttributes);
     children.remove(pIndex);
     HierarchyHelper.getNode(property).remove();
     fireNodeRemoved(description, pAttributes);
@@ -256,10 +238,9 @@ public class Node extends AbstractNode
   public void reorder(@Nonnull Comparator pComparator, @Nonnull Set<Object> pAttributes)
   {
     ensureValid();
-    if (children != null)
-    {
-      ListenerList<Runnable> onFinish = new ListenerList<>();
-      firePropertyOrderWillBeChanged(onFinish::addStrongListener, pAttributes);
+    if (children != null) {
+      List<Runnable> onFinish = new ArrayList<>();
+      firePropertyOrderWillBeChanged(onFinish::add, pAttributes);
       children.reorder(pComparator);
       firePropertyOrderChanged(pAttributes);
       onFinish.forEach(Runnable::run);
@@ -274,20 +255,17 @@ public class Node extends AbstractNode
     if (!property.isDynamic())
       throw new PropertlyRenameException(property, pName);
 
-    try
-    {
+    try {
       String oldName = property.getName();
       Node parent = (Node) getParent();
-      if (parent != null)
-      {
+      if (parent != null) {
         assert parent.children != null;
         parent.children.rename(property.getDescription(), pName);
       }
       ((HierarchyProperty) property).setPropertyDescription(property.getDescription().copy(pName));
       firePropertyNameChanged(oldName, pName, pAttributes);
     }
-    catch (Exception e)
-    {
+    catch (Exception e) {
       throw new PropertlyRenameException(e, property, pName);
     }
   }

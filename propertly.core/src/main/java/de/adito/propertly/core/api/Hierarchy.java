@@ -1,7 +1,7 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.ListenerList;
 import de.adito.propertly.core.spi.*;
+import de.adito.util.weak.MixedReferences;
 
 import javax.annotation.*;
 import java.util.*;
@@ -16,7 +16,7 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
 {
 
   private final INode node;
-  private final ListenerList<IPropertyPitEventListener> listeners;
+  private final MixedReferences<IPropertyPitEventListener> listeners;
 
 
   /**
@@ -42,7 +42,7 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
   Hierarchy(Function<Hierarchy, INode> pNodeSupplier)
   {
     node = pNodeSupplier.apply(this);
-    listeners = new ListenerList<>();
+    listeners = new MixedReferences<>();
   }
 
   @Override
@@ -61,19 +61,19 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
   @Override
   public void addWeakListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    listeners.addWeakListener(pListener);
+    listeners.addWeak(pListener);
   }
 
   @Override
   public void addStrongListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    listeners.addStrongListener(pListener);
+    listeners.addStrong(pListener);
   }
 
   @Override
   public void removeListener(@Nonnull IPropertyPitEventListener pListener)
   {
-    listeners.removeListener(pListener);
+    listeners.remove(pListener);
   }
 
   protected INode getNode()

@@ -1,11 +1,12 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.common.exception.*;
 import de.adito.propertly.core.spi.*;
+import de.adito.util.weak.MixedReferences;
 
 import javax.annotation.*;
-import java.util.*;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -18,7 +19,7 @@ class HierarchyProperty implements IProperty
 
   private AbstractNode node;
   private IPropertyDescription propertyDescription;
-  private ListenerList<IPropertyEventListener> listeners;
+  private MixedReferences<IPropertyEventListener> listeners;
 
   HierarchyProperty(AbstractNode pNode, IPropertyDescription pPropertyDescription)
   {
@@ -121,74 +122,66 @@ class HierarchyProperty implements IProperty
   public synchronized void addWeakListener(@Nonnull IPropertyEventListener pListener)
   {
     if (listeners == null)
-      listeners = new ListenerList<>();
-    listeners.addWeakListener(pListener);
+      listeners = new MixedReferences<>();
+    listeners.addWeak(pListener);
   }
 
   @Override
   public synchronized void addStrongListener(@Nonnull IPropertyEventListener pListener)
   {
     if (listeners == null)
-      listeners = new ListenerList<>();
-    listeners.addStrongListener(pListener);
+      listeners = new MixedReferences<>();
+    listeners.addStrong(pListener);
   }
 
   @Override
   public synchronized void removeListener(@Nonnull IPropertyEventListener pListener)
   {
     if (listeners != null)
-      listeners.removeListener(pListener);
+      listeners.remove(pListener);
   }
 
   void fireValueWillBeChanged(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Consumer<Runnable> pOnRemoved,
                               @Nonnull Set<Object> pAttributes)
   {
-    List<IPropertyEventListener> l;
     synchronized (this) {
       if (listeners == null)
         return;
-      l = listeners.getListeners();
     }
-    for (IPropertyEventListener listener : l)
+    for (IPropertyEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyValueWillBeChanged(this, pOldValue, pNewValue, pOnRemoved, pAttributes);
   }
 
   void fireValueChanged(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set<Object> pAttributes)
   {
-    List<IPropertyEventListener> l;
     synchronized (this) {
       if (listeners == null)
         return;
-      l = listeners.getListeners();
     }
-    for (IPropertyEventListener listener : l)
+    for (IPropertyEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyValueChanged(this, pOldValue, pNewValue, pAttributes);
   }
 
   void fireNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
   {
-    List<IPropertyEventListener> l;
     synchronized (this) {
       if (listeners == null)
         return;
-      l = listeners.getListeners();
     }
-    for (IPropertyEventListener listener : l)
+    for (IPropertyEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyNameChanged(this, pOldName, pNewName, pAttributes);
   }
 
   void fireWillBeRemoved(@Nonnull Consumer<Runnable> pOnRemoved, @Nonnull Set<Object> pAttributes)
   {
-    List<IPropertyEventListener> l;
     synchronized (this) {
       if (listeners == null)
         return;
-      l = listeners.getListeners();
     }
-    for (IPropertyEventListener listener : l)
+    for (IPropertyEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyWillBeRemoved(this, pOnRemoved, pAttributes);
   }

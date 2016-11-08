@@ -12,6 +12,14 @@
 
   <artifactId>propertly.core</artifactId>
 
+  <dependencies>
+    <dependency>
+      <groupId>de.adito.util</groupId>
+      <artifactId>weak</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
