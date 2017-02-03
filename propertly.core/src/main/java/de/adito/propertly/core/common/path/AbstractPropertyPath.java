@@ -54,7 +54,7 @@ public abstract class AbstractPropertyPath implements IPropertyPath
   {
     List<String> elements = getInternalElements();
     List<String> otherElements = pPath.getPathElements();
-    if (elements.size() <= otherElements.size())
+    if (elements.size() >= otherElements.size())
       return false;
     for (int i = 0; i < elements.size(); i++)
       if (!elements.get(i).equals(otherElements.get(i)))
