@@ -6,7 +6,7 @@ import de.adito.propertly.core.spi.*;
 import de.adito.util.weak.MixedReferences;
 
 import javax.annotation.*;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -23,7 +23,7 @@ public abstract class AbstractNode implements INode
   private AbstractNode parent;
   private HierarchyProperty property;
 
-  private MixedReferences<IPropertyPitEventListener> listeners;
+  private _MixedReferences listeners;
 
 
   protected AbstractNode(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent,
@@ -35,7 +35,7 @@ public abstract class AbstractNode implements INode
       property = new DynamicHierarchyProperty(this, pPropertyDescription);
     else
       property = new HierarchyProperty(this, pPropertyDescription);
-    listeners = new MixedReferences<>();
+    listeners = new _MixedReferences();
   }
 
   @Nonnull
@@ -107,9 +107,12 @@ public abstract class AbstractNode implements INode
     getHierarchy().fireValueWillBeChanged(localProperty, pOldValue, pNewValue, pOnRemoved, pAttributes);
     AbstractNode localParent = getParent();
     if (localParent != null) {
-      for (IPropertyPitEventListener eventListener : localParent.listeners)
-        //noinspection unchecked
-        eventListener.propertyValueWillBeChanged(localProperty, pOldValue, pNewValue, pOnRemoved, pAttributes);
+      if (localParent.listeners != null) {
+        List<IPropertyPitEventListener> parentalListeners = localParent.listeners.getObjects();
+        for (IPropertyPitEventListener eventListener : parentalListeners)
+          //noinspection unchecked
+          eventListener.propertyValueWillBeChanged(localProperty, pOldValue, pNewValue, pOnRemoved, pAttributes);
+      }
     }
     localProperty.fireValueWillBeChanged(pOldValue, pNewValue, pOnRemoved, pAttributes);
   }
@@ -121,9 +124,12 @@ public abstract class AbstractNode implements INode
     getHierarchy().fireValueChanged(localProperty, pOldValue, pNewValue, pAttributes);
     AbstractNode localParent = getParent();
     if (localParent != null) {
-      for (IPropertyPitEventListener eventListener : localParent.listeners)
-        //noinspection unchecked
-        eventListener.propertyValueChanged(localProperty, pOldValue, pNewValue, pAttributes);
+      if (localParent.listeners != null) {
+        List<IPropertyPitEventListener> parentalListeners = localParent.listeners.getObjects();
+        for (IPropertyPitEventListener eventListener : parentalListeners)
+          //noinspection unchecked
+          eventListener.propertyValueChanged(localProperty, pOldValue, pNewValue, pAttributes);
+      }
     }
     localProperty.fireValueChanged(pOldValue, pNewValue, pAttributes);
   }
@@ -133,9 +139,12 @@ public abstract class AbstractNode implements INode
     ensureValid();
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
     getHierarchy().firePropertyAdded(ppp, pPropertyDescription, pAttributes);
-    for (IPropertyPitEventListener listener : listeners)
-      //noinspection unchecked,ConstantConditions
-      listener.propertyAdded(ppp, pPropertyDescription, pAttributes);
+    if (listeners != null) {
+      List<IPropertyPitEventListener> localListeners = listeners.getObjects();
+      for (IPropertyPitEventListener listener : localListeners)
+        //noinspection unchecked,ConstantConditions
+        listener.propertyAdded(ppp, pPropertyDescription, pAttributes);
+    }
   }
 
   protected void fireNodeWillBeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Consumer<Runnable> pOnRemoved,
@@ -145,9 +154,12 @@ public abstract class AbstractNode implements INode
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
     HierarchyProperty property = (HierarchyProperty) ppp.getPit().getProperty(pPropertyDescription);
     getHierarchy().firePropertyWillBeRemoved(property, pOnRemoved, pAttributes);
-    for (IPropertyPitEventListener listener : listeners)
-      //noinspection unchecked,ConstantConditions
-      listener.propertyWillBeRemoved(property, pOnRemoved, pAttributes);
+    if (listeners != null) {
+      List<IPropertyPitEventListener> localListeners = listeners.getObjects();
+      for (IPropertyPitEventListener listener : localListeners)
+        //noinspection unchecked,ConstantConditions
+        listener.propertyWillBeRemoved(property, pOnRemoved, pAttributes);
+    }
     property.fireWillBeRemoved(pOnRemoved, pAttributes);
   }
 
@@ -156,10 +168,12 @@ public abstract class AbstractNode implements INode
     ensureValid();
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
     getHierarchy().firePropertyRemoved(ppp, pPropertyDescription, pAttributes);
-    if (listeners != null)
-      for (IPropertyPitEventListener listener : listeners)
+    if (listeners != null) {
+      List<IPropertyPitEventListener> localListeners = listeners.getObjects();
+      for (IPropertyPitEventListener listener : localListeners)
         //noinspection unchecked,ConstantConditions
         listener.propertyRemoved(ppp, pPropertyDescription, pAttributes);
+    }
   }
 
   protected void firePropertyOrderWillBeChanged(@Nonnull Consumer<Runnable> pOnRemoved, @Nonnull Set<Object> pAttributes)
@@ -167,10 +181,12 @@ public abstract class AbstractNode implements INode
     ensureValid();
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
     getHierarchy().fireChildrenOrderWillBeChanged(ppp, pOnRemoved, pAttributes);
-    if (listeners != null)
-      for (IPropertyPitEventListener listener : listeners)
+    if (listeners != null) {
+      List<IPropertyPitEventListener> localListeners = listeners.getObjects();
+      for (IPropertyPitEventListener listener : localListeners)
         //noinspection unchecked,ConstantConditions
         listener.propertyOrderWillBeChanged(ppp, pOnRemoved, pAttributes);
+    }
   }
 
   protected void firePropertyOrderChanged(@Nonnull Set<Object> pAttributes)
@@ -178,10 +194,12 @@ public abstract class AbstractNode implements INode
     ensureValid();
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
     getHierarchy().fireChildrenOrderChanged(ppp, pAttributes);
-    if (listeners != null)
-      for (IPropertyPitEventListener listener : listeners)
+    if (listeners != null) {
+      List<IPropertyPitEventListener> localListeners = listeners.getObjects();
+      for (IPropertyPitEventListener listener : localListeners)
         //noinspection unchecked,ConstantConditions
         listener.propertyOrderChanged(ppp, pAttributes);
+    }
   }
 
   protected void firePropertyNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
@@ -189,10 +207,12 @@ public abstract class AbstractNode implements INode
     ensureValid();
     HierarchyProperty localProperty = (HierarchyProperty) getProperty();
     getHierarchy().firePropertyRenamed(localProperty, pOldName, pNewName, pAttributes);
-    if (listeners != null)
-      for (IPropertyPitEventListener listener : listeners)
+    if (listeners != null) {
+      List<IPropertyPitEventListener> localListeners = listeners.getObjects();
+      for (IPropertyPitEventListener listener : localListeners)
         //noinspection unchecked,ConstantConditions
         listener.propertyNameChanged(localProperty, pOldName, pNewName, pAttributes);
+    }
     localProperty.fireNameChanged(pOldName, pNewName, pAttributes);
   }
 
@@ -208,6 +228,19 @@ public abstract class AbstractNode implements INode
   {
     if (!isValid())
       throw new NullPointerException("node is invalid.");
+  }
+
+  /**
+   * {@link MixedReferences}-implementation with direct access to a copy of the stored objects.
+   */
+  private class _MixedReferences extends MixedReferences<IPropertyPitEventListener>
+  {
+    @Nonnull
+    @Override
+    public List<IPropertyPitEventListener> getObjects()
+    {
+      return super.getObjects();
+    }
   }
 
 }
