@@ -41,9 +41,6 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-            <Bundle-Name>${project.artifactId}</Bundle-Name>
-            <Bundle-Version>${project.version}</Bundle-Version>
             <Export-Package>
               de.adito.propertly.serialization,
               de.adito.propertly.serialization.converter,
@@ -53,15 +50,6 @@
             </Export-Package>
           </instructions>
         </configuration>
-        <executions>
-          <execution>
-            <id>bundle-manifest</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>manifest</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
