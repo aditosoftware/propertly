@@ -141,7 +141,7 @@ public class DelegatingNode extends AbstractNode
     ensureValid();
     if (!(pitProvider instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
-    INode node = findNode(pPropertyDescription);
+    INode node = findNode(pPropertyDescription.getName());
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
 

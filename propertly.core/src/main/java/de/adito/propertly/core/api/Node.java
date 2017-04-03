@@ -175,7 +175,7 @@ public class Node extends AbstractNode
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
       throw new IllegalStateException("not mutable: " + getProperty());
-    INode node = findNode(pPropertyDescription);
+    INode node = findNode(pPropertyDescription.getName());
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
     if (children == null)
