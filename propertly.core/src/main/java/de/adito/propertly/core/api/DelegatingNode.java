@@ -1,12 +1,18 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author PaL
@@ -85,6 +91,7 @@ public class DelegatingNode extends AbstractNode
   @Nullable
   public Object setValue(@Nullable Object pValue, @Nonnull Set<Object> pAttributes)
   {
+    ensureValid();
     Object oldValue = getValueInternal();
     List<Runnable> onFinish = new ArrayList<>();
     fireValueWillBeChange(oldValue, pValue, onFinish::add, pAttributes);
@@ -105,13 +112,13 @@ public class DelegatingNode extends AbstractNode
   @Override
   public boolean canRead()
   {
-    return delegate.canRead();
+    return isValid() && delegate.canRead();
   }
 
   @Override
   public boolean canWrite()
   {
-    return delegate.canWrite();
+    return isValid() && delegate.canWrite();
   }
 
   @Nullable
@@ -257,6 +264,7 @@ public class DelegatingNode extends AbstractNode
   @Override
   public void remove()
   {
+    assert delegate != null;
     delegate.remove();
     if (isValid() && children != null)
     {
