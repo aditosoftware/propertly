@@ -9,8 +9,8 @@ import java.util.UUID;
 
 /**
  * @author PaL
- *         Date: 18.11.12
- *         Time: 21:51
+ * Date: 18.11.12
+ * Time: 21:51
  */
 class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePropertyPitProvider<P, S, T>, T>
     extends PropertyPit<P, S, T>
@@ -56,7 +56,7 @@ class MutablePropertyPit<P extends IPropertyPitProvider, S extends IMutablePrope
   public <E extends T> IProperty<S, E> addProperty(@Nonnull String pName, @Nonnull E pValue)
   {
     //noinspection unchecked
-    IPropertyDescription<S, E> description = new PropertyDescription<>((Class) getClass(), pValue.getClass(), pName);
+    IPropertyDescription<S, E> description = new PropertyDescription<>((Class<S>) getSource().getClass(), (Class<E>) pValue.getClass(), pName);
     IProperty<S, E> property = addProperty(description);
     property.setValue(pValue);
     return property;

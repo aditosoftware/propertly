@@ -1,7 +1,9 @@
 package de.adito.propertly.test.core;
 
 import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.common.PD;
 import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.extension.AbstractIndexedMutablePPP;
 import de.adito.propertly.test.core.impl.DynamicTestPropertyPitProvider;
 import org.junit.*;
 
@@ -51,22 +53,41 @@ public class SimpleMutableTest
     Assert.assertEquals(propertyList, root.getProperties());
 
 
-    Comparator<IProperty<DynamicTestPropertyPitProvider, Color>> comparator = (o1, o2) -> o1.getName().compareTo(o2.getName());
-    Collections.sort(propertyList, comparator);
+    Comparator<IProperty<DynamicTestPropertyPitProvider, Color>> comparator = Comparator.comparing(IProperty::getName);
+    propertyList.sort(comparator);
     root.reorder(comparator);
 
     Assert.assertEquals(propertyList, root.getProperties());
 
 
-    for (Iterator<IProperty<DynamicTestPropertyPitProvider, Color>> i = propertyList.iterator(); i.hasNext(); ) {
-      IProperty<DynamicTestPropertyPitProvider, Color> next = i.next();
-      if (Arrays.<IPropertyDescription>asList(pinkDescription, blackDescription).contains(next.getDescription()))
-        i.remove();
-    }
+    propertyList.removeIf(
+        next -> Arrays.<IPropertyDescription>asList(pinkDescription, blackDescription).contains(next.getDescription()));
     root.removeProperty(pinkDescription);
     root.removeProperty(blackDescription);
 
     Assert.assertEquals(propertyList, root.getProperties());
+  }
+
+  @Test
+  public void testDescription()
+  {
+    _PPP pit = new Hierarchy<>("", new _PPP()).getValue();
+
+    IProperty<_PPP, String> fixedProperty = pit.getProperty(_PPP.fixedProperty);
+    IProperty<_PPP, String> dynamicProperty = pit.addProperty("DynamicProperty");
+
+    Assert.assertEquals(_PPP.class, fixedProperty.getDescription().getSourceType());
+    Assert.assertEquals(_PPP.class, dynamicProperty.getDescription().getSourceType());
+  }
+
+  public static class _PPP extends AbstractIndexedMutablePPP<IPropertyPitProvider, _PPP, Object>
+  {
+    public static final IPropertyDescription<_PPP, String> fixedProperty = PD.create(_PPP.class);
+
+    public _PPP()
+    {
+      super(Object.class);
+    }
   }
 
 }
