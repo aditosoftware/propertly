@@ -21,8 +21,8 @@ import java.util.*;
  * The created IPropertyDescription for <tt>X</tt> is of type <tt>Integer</tt> with name <tt>X</tt> and source <tt>MyPitProvider</tt>.
  *
  * @author PaL
- *         Date: 13.11.12
- *         Time: 19:23
+ * Date: 13.11.12
+ * Time: 19:23
  */
 public class PD
 {
@@ -50,13 +50,15 @@ public class PD
       fields = new ArrayList<>(Arrays.asList(pSource.getDeclaredFields()));
       FIELD_CACHE.put(pSource, fields);
     }
+    boolean isPublicClass = Modifier.isPublic(pSource.getModifiers());
+
     Iterator<Field> iterator = fields.iterator();
     while (iterator.hasNext()) {
       Field field = iterator.next();
       try {
         int modifiers = field.getModifiers();
         if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) {
-          if (!Modifier.isPublic(modifiers))
+          if (!Modifier.isPublic(modifiers) || !isPublicClass)
             field.setAccessible(true);
           if (field.get(null) == null) // not yet initialized
           {
