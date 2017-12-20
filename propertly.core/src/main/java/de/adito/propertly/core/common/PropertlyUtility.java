@@ -4,6 +4,7 @@ package de.adito.propertly.core.common;
 import de.adito.propertly.core.spi.*;
 
 import javax.annotation.*;
+import java.lang.invoke.*;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -11,8 +12,8 @@ import java.util.function.Supplier;
  * An Utility class with common functions.
  *
  * @author PaL
- *         Date: 07.04.13
- *         Time: 14:23
+ * Date: 07.04.13
+ * Time: 14:23
  */
 public class PropertlyUtility
 {
@@ -39,12 +40,10 @@ public class PropertlyUtility
 
   public static <T extends IPropertyPitProvider> T create(@Nonnull Class<T> pClass)
   {
-    try
-    {
-      return pClass.newInstance();
+    try {
+      return (T) MethodHandles.lookup().findConstructor(pClass, MethodType.methodType(void.class)).invoke();
     }
-    catch (Exception e)
-    {
+    catch (Throwable e) {
       throw new RuntimeException("can't instantiate: " + pClass, e);
     }
   }
@@ -65,11 +64,9 @@ public class PropertlyUtility
         .append(pObj.getClass().getSimpleName())
         .append("@")
         .append(Integer.toHexString(pObj.hashCode()));
-    if (pDetails != null && pDetails.length != 0)
-    {
+    if (pDetails != null && pDetails.length != 0) {
       StringBuilder detailsBuilder = new StringBuilder();
-      for (String detail : pDetails)
-      {
+      for (String detail : pDetails) {
         if (detailsBuilder.length() != 0)
           detailsBuilder.append(", ");
         detailsBuilder.append(detail);
@@ -92,8 +89,7 @@ public class PropertlyUtility
     Set<? extends IPropertyDescription> p2ds = pit2.getPropertyDescriptions();
     if (!p1ds.equals(p2ds))
       return false;
-    for (IProperty<?, ?> prop1 : pit1.getProperties())
-    {
+    for (IProperty<?, ?> prop1 : pit1.getProperties()) {
       IProperty<? extends IPropertyPitProvider<?, ?, ?>, ?> prop2 = pit2.findProperty(prop1.getDescription());
       if (!isEqual(prop1, prop2))
         return false;
