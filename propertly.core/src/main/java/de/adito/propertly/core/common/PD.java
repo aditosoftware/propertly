@@ -42,7 +42,7 @@ public class PD
    * @return the fitting IPropertyDescription object for the given IPropertyPitProvider.
    */
   @Nonnull
-  public static <S extends IPropertyPitProvider<?, ? extends S, ?>, T> IPropertyDescription<S, T>
+  public static <S extends IPropertyPitProvider<?, ?, ?>, T> IPropertyDescription<S, T>
   create(@Nonnull Class<S> pSource)
   {
     List<Field> fields = FIELD_CACHE.get(pSource);
