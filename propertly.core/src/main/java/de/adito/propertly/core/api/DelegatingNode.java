@@ -220,8 +220,8 @@ public class DelegatingNode extends AbstractNode
     {
       List<Runnable> onFinish = new ArrayList<>();
       firePropertyOrderWillBeChanged(onFinish::add, pAttributes);
-      delegate.reorder(pComparator, pAttributes);
       children.reorder(pComparator);
+      delegate.reorder(Comparator.<IProperty>comparingInt(p -> children.indexOf(p.getDescription())), pAttributes);
       firePropertyOrderChanged(pAttributes);
       onFinish.forEach(Runnable::run);
     }
