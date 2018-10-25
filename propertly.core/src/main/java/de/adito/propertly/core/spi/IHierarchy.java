@@ -1,6 +1,6 @@
 package de.adito.propertly.core.spi;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * IHierarchy is the source of IPropertyPitProvider structures. Each IPropertyPitProvider is assigned to an IHierarchy.
@@ -26,19 +26,19 @@ public interface IHierarchy<T extends IPropertyPitProvider>
    *
    * @param pListener the listener to be weakly added.
    */
-  void addWeakListener(@Nonnull IPropertyPitEventListener<?, ?> pListener);
+  void addWeakListener(@NotNull IPropertyPitEventListener<?, ?> pListener);
 
   /**
    * Adds a strong listener.
    *
    * @param pListener the listener to be strongly added.
    */
-  void addStrongListener(@Nonnull IPropertyPitEventListener<?, ?> pListener);
+  void addStrongListener(@NotNull IPropertyPitEventListener<?, ?> pListener);
 
   /**
    * Removes a listener.
    *
    * @param pListener the listener to be removed.
    */
-  void removeListener(@Nonnull IPropertyPitEventListener<?, ?> pListener);
+  void removeListener(@NotNull IPropertyPitEventListener<?, ?> pListener);
 }

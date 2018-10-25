@@ -1,9 +1,11 @@
 package de.adito.propertly.serialization.converter.impl;
 
 import de.adito.propertly.serialization.converter.IObjectConverter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author j.boesl, 04.03.15
@@ -14,12 +16,12 @@ public abstract class AbstractObjectConverter<S> implements IObjectConverter<S>
   private String name;
   private List<SourceTargetConverter<S, ?>> sourceTargetConverters;
 
-  public AbstractObjectConverter(@Nonnull Class<S> pCls)
+  public AbstractObjectConverter(@NotNull Class<S> pCls)
   {
     this(pCls, pCls.getSimpleName());
   }
 
-  public AbstractObjectConverter(@Nonnull Class<S> pCls, @Nonnull String pName)
+  public AbstractObjectConverter(@NotNull Class<S> pCls, @NotNull String pName)
   {
     cls = pCls;
     name = pName;
@@ -27,23 +29,23 @@ public abstract class AbstractObjectConverter<S> implements IObjectConverter<S>
 
     registerSourceTargetConverter(new SourceTargetConverter<S, S>(cls)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public S sourceToTarget(@Nonnull S pSource)
+      public S sourceToTarget(@NotNull S pSource)
       {
         return pSource;
       }
 
       @Nullable
       @Override
-      public S targetToSource(@Nonnull S pTarget)
+      public S targetToSource(@NotNull S pTarget)
       {
         return pTarget;
       }
     });
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public Class<S> getCommonType()
   {
@@ -52,21 +54,21 @@ public abstract class AbstractObjectConverter<S> implements IObjectConverter<S>
 
   @Nullable
   @Override
-  public Class<? extends S> stringToType(@Nonnull String pTypeAsString)
+  public Class<? extends S> stringToType(@NotNull String pTypeAsString)
   {
     return name.equals(pTypeAsString) ? cls : null;
   }
 
-  @Nonnull
+  @NotNull
   @Override
-  public String typeToString(@Nonnull Class<? extends S> pType)
+  public String typeToString(@NotNull Class<? extends S> pType)
   {
     return name;
   }
 
   @Nullable
   @Override
-  public S targetToSource(@Nonnull Object pTarget, @Nonnull Class<? extends S> pSourceType)
+  public S targetToSource(@NotNull Object pTarget, @NotNull Class<? extends S> pSourceType)
   {
     if (!cls.equals(pSourceType))
       throw new IllegalArgumentException(cls + " != " + pSourceType);
@@ -78,9 +80,9 @@ public abstract class AbstractObjectConverter<S> implements IObjectConverter<S>
     throw new IllegalArgumentException(pTarget.getClass() + " is not convertible to " + pSourceType + ".");
   }
 
-  @Nonnull
+  @NotNull
   @Override
-  public Object sourceToTarget(@Nonnull S pSource, @Nonnull Class... pTargetTypes)
+  public Object sourceToTarget(@NotNull S pSource, @NotNull Class... pTargetTypes)
   {
     for (Class targetType : pTargetTypes)
       for (SourceTargetConverter<S, ?> sourceTargetConverter : sourceTargetConverters)
@@ -89,7 +91,7 @@ public abstract class AbstractObjectConverter<S> implements IObjectConverter<S>
     throw new IllegalArgumentException("no supported target type for " + cls + ".");
   }
 
-  protected void registerSourceTargetConverter(@Nonnull SourceTargetConverter<S, ?> pSourceTargetConverter)
+  protected void registerSourceTargetConverter(@NotNull SourceTargetConverter<S, ?> pSourceTargetConverter)
   {
     Class<?> targetType = pSourceTargetConverter.getSupportedTargetType();
     for (int i = 0; i < sourceTargetConverters.size(); i++)
@@ -116,22 +118,22 @@ public abstract class AbstractObjectConverter<S> implements IObjectConverter<S>
   {
     private Class<T> supportedTargetType;
 
-    protected SourceTargetConverter(@Nonnull Class<T> pSupportedTargetType)
+    protected SourceTargetConverter(@NotNull Class<T> pSupportedTargetType)
     {
       supportedTargetType = pSupportedTargetType;
     }
 
-    @Nonnull
+    @NotNull
     public Class<T> getSupportedTargetType()
     {
       return supportedTargetType;
     }
 
-    @Nonnull
-    public abstract T sourceToTarget(@Nonnull S pSource);
+    @NotNull
+    public abstract T sourceToTarget(@NotNull S pSource);
 
     @Nullable
-    public abstract S targetToSource(@Nonnull T pTarget);
+    public abstract S targetToSource(@NotNull T pTarget);
   }
 
 }

@@ -1,6 +1,7 @@
 package de.adito.propertly.core.spi;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -12,12 +13,12 @@ import java.util.function.Consumer;
 public interface IPropertyPitEventListener<S extends IPropertyPitProvider, T> extends IPropertyEventListener<S, T>
 {
 
-  void propertyRemoved(@Nonnull S pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes);
+  void propertyRemoved(@NotNull S pSource, @NotNull IPropertyDescription<S, T> pPropertyDescription, @NotNull Set<Object> pAttributes);
 
-  void propertyAdded(@Nonnull S pSource, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nonnull Set<Object> pAttributes);
+  void propertyAdded(@NotNull S pSource, @NotNull IPropertyDescription<S, T> pPropertyDescription, @NotNull Set<Object> pAttributes);
 
-  void propertyOrderWillBeChanged(@Nonnull S pSource, @Nonnull Consumer<Runnable> pOnChanged, @Nonnull Set<Object> pAttributes);
+  void propertyOrderWillBeChanged(@NotNull S pSource, @NotNull Consumer<Runnable> pOnChanged, @NotNull Set<Object> pAttributes);
 
-  void propertyOrderChanged(@Nonnull S pSource, @Nonnull Set<Object> pAttributes);
+  void propertyOrderChanged(@NotNull S pSource, @NotNull Set<Object> pAttributes);
 
 }

@@ -3,15 +3,26 @@ package de.adito.propertly.serialization.xml;
 import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.serialization.ISerializationProvider;
 import de.adito.propertly.serialization.converter.ConverterRegistry;
-import org.w3c.dom.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.annotation.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -53,11 +64,11 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
     return builder.parse(new ByteArrayInputStream(pXmlString.getBytes("UTF-8")));
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public Document serializeRootNode(
-      @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
-      @Nonnull IChildRunner<Element> pChildRunner)
+      @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
+      @NotNull IChildRunner<Element> pChildRunner)
   {
     try
     {
@@ -78,7 +89,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
 
   @Override
   public void serializeFixedNode(
-      @Nonnull Element pParentOutputData, @Nonnull String pName, @Nonnull IChildRunner<Element> pChildRunner)
+      @NotNull Element pParentOutputData, @NotNull String pName, @NotNull IChildRunner<Element> pChildRunner)
   {
     final Element element = pParentOutputData.getOwnerDocument().createElement(pName);
     pParentOutputData.appendChild(element);
@@ -87,8 +98,8 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
 
   @Override
   public void serializeFixedNode(
-      @Nonnull Element pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pType,
-      @Nonnull IChildRunner<Element> pChildRunner)
+      @NotNull Element pParentOutputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pType,
+      @NotNull IChildRunner<Element> pChildRunner)
   {
     final Element element = pParentOutputData.getOwnerDocument().createElement(pName);
     pParentOutputData.appendChild(element);
@@ -98,8 +109,8 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
 
   @Override
   public void serializeDynamicNode(
-      @Nonnull Element pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
-      @Nullable List<? extends Annotation> pAnnotations, @Nonnull IChildRunner<Element> pChildRunner)
+      @NotNull Element pParentOutputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
+      @Nullable List<? extends Annotation> pAnnotations, @NotNull IChildRunner<Element> pChildRunner)
   {
     Element element = pParentOutputData.getOwnerDocument().createElement(converterRegistry.typeToString(pPropertyType));
     pParentOutputData.appendChild(element);
@@ -111,9 +122,9 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
 
   @Override
   public void serializeDynamicNode(
-      @Nonnull Element pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
-      @Nonnull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations,
-      @Nonnull IChildRunner<Element> pChildRunner)
+      @NotNull Element pParentOutputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
+      @NotNull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations,
+      @NotNull IChildRunner<Element> pChildRunner)
   {
     Element element = pParentOutputData.getOwnerDocument().createElement(converterRegistry.typeToString(pPropertyType));
     pParentOutputData.appendChild(element);
@@ -126,7 +137,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
 
   @Override
   public void serializeFixedValue(
-      @Nonnull Element pParentOutputData, @Nonnull String pName, @Nonnull Object pValue)
+      @NotNull Element pParentOutputData, @NotNull String pName, @NotNull Object pValue)
   {
     final Element element = pParentOutputData.getOwnerDocument().createElement(pName);
     pParentOutputData.appendChild(element);
@@ -135,7 +146,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
 
   @Override
   public <V> void serializeDynamicValue(
-      @Nonnull Element pParentOutputData, @Nonnull String pName, @Nonnull Class<? super V> pPropertyType,
+      @NotNull Element pParentOutputData, @NotNull String pName, @NotNull Class<? super V> pPropertyType,
       @Nullable V pValue, @Nullable List<? extends Annotation> pAnnotations)
   {
     final Element element = pParentOutputData.getOwnerDocument().createElement(converterRegistry.typeToString(pPropertyType));
@@ -151,13 +162,13 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
 
 
   @Override
-  public void deserializeRoot(@Nonnull Document pRootData, @Nonnull IChildAppender<Element> pChildAppender)
+  public void deserializeRoot(@NotNull Document pRootData, @NotNull IChildAppender<Element> pChildAppender)
   {
     _deserialize(pRootData.getDocumentElement(), pChildAppender);
   }
 
   @Override
-  public void deserializeChild(@Nonnull Element pInputData, @Nonnull IChildAppender<Element> pChildAppender)
+  public void deserializeChild(@NotNull Element pInputData, @NotNull IChildAppender<Element> pChildAppender)
   {
     NodeList childNodes = pInputData.getChildNodes();
     for (int i = 0; i < childNodes.getLength(); i++)
@@ -171,7 +182,7 @@ public class XMLSerializationProvider implements ISerializationProvider<Document
     }
   }
 
-  private void _deserialize(@Nonnull Element pElement, @Nonnull IChildAppender<Element> pAppendChild)
+  private void _deserialize(@NotNull Element pElement, @NotNull IChildAppender<Element> pAppendChild)
   {
     String name;
     if (pElement.hasAttribute("name"))

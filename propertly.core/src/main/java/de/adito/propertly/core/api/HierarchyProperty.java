@@ -1,11 +1,13 @@
 package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.PropertlyUtility;
-import de.adito.propertly.core.common.exception.*;
+import de.adito.propertly.core.common.exception.InaccessibleException;
+import de.adito.propertly.core.common.exception.PropertlyRenameException;
 import de.adito.propertly.core.spi.*;
 import de.adito.util.weak.MixedReferences;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -27,7 +29,7 @@ class HierarchyProperty implements IProperty
     propertyDescription = pPropertyDescription;
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public IPropertyDescription getDescription()
   {
@@ -92,14 +94,14 @@ class HierarchyProperty implements IProperty
     return parent == null ? null : (IPropertyPitProvider) parent.getValue();
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public Class getType()
   {
     return getDescription().getType();
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public String getName()
   {
@@ -107,7 +109,7 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
-  public void rename(@Nonnull String pName, @Nullable Object... pAttributes) throws PropertlyRenameException
+  public void rename(@NotNull String pName, @Nullable Object... pAttributes) throws PropertlyRenameException
   {
     throw new PropertlyRenameException(this, pName, pAttributes);
   }
@@ -119,7 +121,7 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
-  public synchronized void addWeakListener(@Nonnull IPropertyEventListener pListener)
+  public synchronized void addWeakListener(@NotNull IPropertyEventListener pListener)
   {
     if (listeners == null)
       listeners = new MixedReferences<>();
@@ -127,7 +129,7 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
-  public synchronized void addStrongListener(@Nonnull IPropertyEventListener pListener)
+  public synchronized void addStrongListener(@NotNull IPropertyEventListener pListener)
   {
     if (listeners == null)
       listeners = new MixedReferences<>();
@@ -135,14 +137,14 @@ class HierarchyProperty implements IProperty
   }
 
   @Override
-  public synchronized void removeListener(@Nonnull IPropertyEventListener pListener)
+  public synchronized void removeListener(@NotNull IPropertyEventListener pListener)
   {
     if (listeners != null)
       listeners.remove(pListener);
   }
 
-  void fireValueWillBeChanged(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Consumer<Runnable> pOnRemoved,
-                              @Nonnull Set<Object> pAttributes)
+  void fireValueWillBeChanged(@Nullable Object pOldValue, @Nullable Object pNewValue, @NotNull Consumer<Runnable> pOnRemoved,
+                              @NotNull Set<Object> pAttributes)
   {
     synchronized (this) {
       if (listeners == null)
@@ -153,7 +155,7 @@ class HierarchyProperty implements IProperty
       listener.propertyValueWillBeChanged(this, pOldValue, pNewValue, pOnRemoved, pAttributes);
   }
 
-  void fireValueChanged(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set<Object> pAttributes)
+  void fireValueChanged(@Nullable Object pOldValue, @Nullable Object pNewValue, @NotNull Set<Object> pAttributes)
   {
     synchronized (this) {
       if (listeners == null)
@@ -164,7 +166,7 @@ class HierarchyProperty implements IProperty
       listener.propertyValueChanged(this, pOldValue, pNewValue, pAttributes);
   }
 
-  void fireNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
+  void fireNameChanged(@NotNull String pOldName, @NotNull String pNewName, @NotNull Set<Object> pAttributes)
   {
     synchronized (this) {
       if (listeners == null)
@@ -175,7 +177,7 @@ class HierarchyProperty implements IProperty
       listener.propertyNameChanged(this, pOldName, pNewName, pAttributes);
   }
 
-  void fireWillBeRemoved(@Nonnull Consumer<Runnable> pOnRemoved, @Nonnull Set<Object> pAttributes)
+  void fireWillBeRemoved(@NotNull Consumer<Runnable> pOnRemoved, @NotNull Set<Object> pAttributes)
   {
     synchronized (this) {
       if (listeners == null)

@@ -1,6 +1,7 @@
 package de.adito.propertly.serialization.converter.impl;
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author j.boesl, 04.03.15
@@ -12,32 +13,32 @@ public class LongStringConverter extends AbstractObjectConverter<Long>
     super(Long.class);
     registerSourceTargetConverter(new SourceTargetConverter<Long, String>(String.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public String sourceToTarget(@Nonnull Long pSource)
+      public String sourceToTarget(@NotNull Long pSource)
       {
         return pSource.toString();
       }
 
       @Nullable
       @Override
-      public Long targetToSource(@Nonnull String pTarget)
+      public Long targetToSource(@NotNull String pTarget)
       {
         return Long.parseLong(pTarget);
       }
     });
     registerSourceTargetConverter(new SourceTargetConverter<Long, Number>(Number.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public Number sourceToTarget(@Nonnull Long pSource)
+      public Number sourceToTarget(@NotNull Long pSource)
       {
         return pSource;
       }
 
       @Nullable
       @Override
-      public Long targetToSource(@Nonnull Number pTarget)
+      public Long targetToSource(@NotNull Number pTarget)
       {
         return pTarget.longValue();
       }

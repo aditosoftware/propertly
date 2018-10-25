@@ -6,9 +6,9 @@ import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
 import de.adito.propertly.core.spi.IProperty;
 import de.adito.propertly.core.spi.IPropertyDescription;
 import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,15 +27,15 @@ public class DelegatingNode extends AbstractNode
   private NodeChildren children;
 
 
-  protected DelegatingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
-                           @Nonnull INode pDelegate)
+  protected DelegatingNode(@NotNull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
+                           @NotNull INode pDelegate)
   {
     this(pHierarchy, pParent, pDelegate.getProperty().getDescription(), pDelegate.getProperty().isDynamic(), pDelegate);
   }
 
-  protected DelegatingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
-                           @Nonnull IPropertyDescription pPropertyDescription, boolean pDynamic,
-                           @Nonnull INode pDelegate)
+  protected DelegatingNode(@NotNull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
+                           @NotNull IPropertyDescription pPropertyDescription, boolean pDynamic,
+                           @NotNull INode pDelegate)
   {
     super(pHierarchy, pParent, pPropertyDescription, pDynamic);
     delegate = pDelegate;
@@ -80,7 +80,7 @@ public class DelegatingNode extends AbstractNode
     return new DelegatingNode(getHierarchy(), this, pDelegate);
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public final DelegatingHierarchy getHierarchy()
   {
@@ -89,7 +89,7 @@ public class DelegatingNode extends AbstractNode
 
   @Override
   @Nullable
-  public Object setValue(@Nullable Object pValue, @Nonnull Set<Object> pAttributes)
+  public Object setValue(@Nullable Object pValue, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     Object oldValue = getValueInternal();
@@ -130,20 +130,20 @@ public class DelegatingNode extends AbstractNode
 
   @Nullable
   @Override
-  public INode findNode(@Nonnull String pName)
+  public INode findNode(@NotNull String pName)
   {
     return children == null ? null : children.find(pName);
   }
 
   @Nullable
   @Override
-  public INode findNode(@Nonnull IPropertyDescription pPropertyDescription)
+  public INode findNode(@NotNull IPropertyDescription pPropertyDescription)
   {
     return children == null ? null : children.find(pPropertyDescription);
   }
 
   @Override
-  public INode addProperty(@Nullable Integer pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  public INode addProperty(@Nullable Integer pIndex, @NotNull IPropertyDescription pPropertyDescription, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(pitProvider instanceof IMutablePropertyPitProvider))
@@ -162,7 +162,7 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  public boolean removeProperty(@NotNull IPropertyDescription pPropertyDescription, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(pitProvider instanceof IMutablePropertyPitProvider))
@@ -188,7 +188,7 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public void removeProperty(int pIndex, @Nonnull Set<Object> pAttributes)
+  public void removeProperty(int pIndex, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(pitProvider instanceof IMutablePropertyPitProvider) || children == null)
@@ -207,13 +207,13 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public int indexOf(@Nonnull IPropertyDescription pPropertyDescription)
+  public int indexOf(@NotNull IPropertyDescription pPropertyDescription)
   {
     return children == null ? -1 : children.indexOf(pPropertyDescription);
   }
 
   @Override
-  public void reorder(@Nonnull Comparator pComparator, @Nonnull Set<Object> pAttributes)
+  public void reorder(@NotNull Comparator pComparator, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     if (children != null)
@@ -228,7 +228,7 @@ public class DelegatingNode extends AbstractNode
   }
 
   @Override
-  public void rename(@Nonnull String pName, @Nonnull Set<Object> pAttributes) throws PropertlyRenameException
+  public void rename(@NotNull String pName, @NotNull Set<Object> pAttributes) throws PropertlyRenameException
   {
     ensureValid();
     IProperty property = getProperty();

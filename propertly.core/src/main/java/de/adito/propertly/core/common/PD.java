@@ -2,11 +2,15 @@ package de.adito.propertly.core.common;
 
 import de.adito.propertly.core.api.PropertyDescription;
 import de.adito.propertly.core.common.exception.InitializationException;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -41,9 +45,9 @@ public class PD
    * @param <T>     the value's type this IPropertyDescription object describes.
    * @return the fitting IPropertyDescription object for the given IPropertyPitProvider.
    */
-  @Nonnull
+  @NotNull
   public static <S extends IPropertyPitProvider<?, ?, ?>, T> IPropertyDescription<S, T>
-  create(@Nonnull Class<S> pSource)
+  create(@NotNull Class<S> pSource)
   {
     List<Field> fields = FIELD_CACHE.get(pSource);
     if (fields == null) {

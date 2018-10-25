@@ -1,6 +1,7 @@
 package de.adito.propertly.serialization.converter;
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author j.boesl, 05.03.15
@@ -8,19 +9,19 @@ import javax.annotation.*;
 public interface IObjectConverter<S>
 {
 
-  @Nonnull
+  @NotNull
   Class<S> getCommonType();
 
   @Nullable
-  Class<? extends S> stringToType(@Nonnull String pTypeAsString);
+  Class<? extends S> stringToType(@NotNull String pTypeAsString);
 
-  @Nonnull
-  String typeToString(@Nonnull Class<? extends S> pType);
+  @NotNull
+  String typeToString(@NotNull Class<? extends S> pType);
 
   @Nullable
-  S targetToSource(@Nonnull Object pTarget, @Nonnull Class<? extends S> pSourceType);
+  S targetToSource(@NotNull Object pTarget, @NotNull Class<? extends S> pSourceType);
 
-  @Nonnull
-  Object sourceToTarget(@Nonnull S pSource, @Nonnull Class... pTargetTypes);
+  @NotNull
+  Object sourceToTarget(@NotNull S pSource, @NotNull Class... pTargetTypes);
 
 }

@@ -2,7 +2,9 @@ package de.adito.propertly.test.core.impl;
 
 import de.adito.propertly.core.common.PD;
 import de.adito.propertly.core.common.annotations.PropertlyOverride;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.spi.extension.AbstractPPP;
 
 import java.awt.*;

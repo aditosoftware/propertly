@@ -1,8 +1,10 @@
 package de.adito.propertly.core.common.path;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IHierarchy;
+import de.adito.propertly.core.spi.IProperty;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.util.List;
 
 /**
@@ -26,7 +28,7 @@ public interface IPropertyPath
    * @return the parental IPropertyPath object.
    * @throws NoParentPathForRootException when called on the root path.
    */
-  @Nonnull
+  @NotNull
   IPropertyPath getParent() throws NoParentPathForRootException;
 
   /**
@@ -39,19 +41,19 @@ public interface IPropertyPath
    * @param pName the child's name.
    * @return a new IPropertyPath for the child.
    */
-  @Nonnull
+  @NotNull
   IPropertyPath getChild(String pName);
 
   /**
    * @return path as elements.
    */
-  @Nonnull
+  @NotNull
   List<String> getPathElements();
 
   /**
    * @return path as string separated by slashes.
    */
-  @Nonnull
+  @NotNull
   String asString();
 
 }

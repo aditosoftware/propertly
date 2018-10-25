@@ -1,6 +1,7 @@
 package de.adito.propertly.serialization.converter.impl;
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author j.boesl, 04.03.15
@@ -12,32 +13,32 @@ public class FloatStringConverter extends AbstractObjectConverter<Float>
     super(Float.class);
     registerSourceTargetConverter(new SourceTargetConverter<Float, String>(String.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public String sourceToTarget(@Nonnull Float pSource)
+      public String sourceToTarget(@NotNull Float pSource)
       {
         return pSource.toString();
       }
 
       @Nullable
       @Override
-      public Float targetToSource(@Nonnull String pTarget)
+      public Float targetToSource(@NotNull String pTarget)
       {
         return Float.parseFloat(pTarget);
       }
     });
     registerSourceTargetConverter(new SourceTargetConverter<Float, Number>(Number.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public Number sourceToTarget(@Nonnull Float pSource)
+      public Number sourceToTarget(@NotNull Float pSource)
       {
         return pSource;
       }
 
       @Nullable
       @Override
-      public Float targetToSource(@Nonnull Number pTarget)
+      public Float targetToSource(@NotNull Number pTarget)
       {
         return pTarget.floatValue();
       }

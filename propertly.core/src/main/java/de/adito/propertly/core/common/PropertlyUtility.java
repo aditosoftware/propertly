@@ -1,11 +1,19 @@
 package de.adito.propertly.core.common;
 
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPit;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
-import java.lang.invoke.*;
-import java.util.*;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -27,7 +35,7 @@ public class PropertlyUtility
     return () -> pInstance;
   }
 
-  public static <T extends IPropertyPitProvider> T create(@Nonnull T pPropertyPitProvider)
+  public static <T extends IPropertyPitProvider> T create(@NotNull T pPropertyPitProvider)
   {
     if (pPropertyPitProvider instanceof IReconstructor)
       //noinspection unchecked
@@ -38,7 +46,7 @@ public class PropertlyUtility
     return create(cls);
   }
 
-  public static <T extends IPropertyPitProvider> T create(@Nonnull Class<T> pClass)
+  public static <T extends IPropertyPitProvider> T create(@NotNull Class<T> pClass)
   {
     try {
       return (T) MethodHandles.lookup().findConstructor(pClass, MethodType.methodType(void.class)).invoke();
@@ -58,7 +66,7 @@ public class PropertlyUtility
     return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(pTs)));
   }
 
-  public static String asString(@Nonnull Object pObj, String... pDetails)
+  public static String asString(@NotNull Object pObj, String... pDetails)
   {
     StringBuilder strBuilder = new StringBuilder()
         .append(pObj.getClass().getSimpleName())

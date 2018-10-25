@@ -1,6 +1,6 @@
 package de.adito.propertly.core.spi;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An IPropertyPitProvider which return an IIndexedMutablePropertyPit instead of a IPropertyPit.
@@ -16,7 +16,7 @@ public interface IIndexedMutablePropertyPitProvider<P extends IPropertyPitProvid
   /**
    * @return this IIndexedMutablePropertyPitProvider's IIndexedMutablePropertyPit.
    */
-  @Nonnull
+  @NotNull
   @Override
   IIndexedMutablePropertyPit<P, S, T> getPit();
 

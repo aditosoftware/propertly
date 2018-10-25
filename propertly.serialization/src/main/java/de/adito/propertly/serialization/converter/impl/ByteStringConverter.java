@@ -1,6 +1,7 @@
 package de.adito.propertly.serialization.converter.impl;
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author j.boesl, 04.03.15
@@ -12,16 +13,16 @@ public class ByteStringConverter extends AbstractObjectConverter<Byte>
     super(Byte.class);
     registerSourceTargetConverter(new SourceTargetConverter<Byte, String>(String.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public String sourceToTarget(@Nonnull Byte pSource)
+      public String sourceToTarget(@NotNull Byte pSource)
       {
         return pSource.toString();
       }
 
       @Nullable
       @Override
-      public Byte targetToSource(@Nonnull String pTarget)
+      public Byte targetToSource(@NotNull String pTarget)
       {
         int value = Integer.decode(pTarget);
         if (value >= -128 && value <= 255)
@@ -36,16 +37,16 @@ public class ByteStringConverter extends AbstractObjectConverter<Byte>
     });
     registerSourceTargetConverter(new SourceTargetConverter<Byte, Number>(Number.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public Number sourceToTarget(@Nonnull Byte pSource)
+      public Number sourceToTarget(@NotNull Byte pSource)
       {
         return pSource;
       }
 
       @Nullable
       @Override
-      public Byte targetToSource(@Nonnull Number pTarget)
+      public Byte targetToSource(@NotNull Number pTarget)
       {
         return pTarget.byteValue();
       }

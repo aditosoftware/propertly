@@ -2,8 +2,8 @@ package de.adito.propertly.core.spi.extension;
 
 import de.adito.propertly.core.api.PitFactory;
 import de.adito.propertly.core.spi.*;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Comparator;
 
 /**
@@ -30,7 +30,7 @@ public abstract class AbstractIndexedMutablePPP
     pit = pFactory.create((S) this, pAllowedChildType);
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public final IIndexedMutablePropertyPit<P, S, T> getPit()
   {
@@ -42,7 +42,7 @@ public abstract class AbstractIndexedMutablePPP
     return pit.getSize();
   }
 
-  @Nonnull
+  @NotNull
   public IProperty<S, T> getProperty(int pIndex)
   {
     return pit.getProperty(pIndex);
@@ -53,13 +53,13 @@ public abstract class AbstractIndexedMutablePPP
     pit.removeProperty(pIndex);
   }
 
-  @Nonnull
+  @NotNull
   public IProperty<S, T> addProperty(int pIndex, IPropertyDescription<S, T> pPropertyDescription)
   {
     return pit.addProperty(pIndex, pPropertyDescription);
   }
 
-  public int indexOf(@Nonnull IPropertyDescription<?, ?> pPropertyDescription)
+  public int indexOf(@NotNull IPropertyDescription<?, ?> pPropertyDescription)
   {
     return pit.indexOf(pPropertyDescription);
   }

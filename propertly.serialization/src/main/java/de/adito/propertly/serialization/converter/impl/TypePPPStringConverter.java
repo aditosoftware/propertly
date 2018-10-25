@@ -1,15 +1,15 @@
 package de.adito.propertly.serialization.converter.impl;
 
 import de.adito.propertly.core.spi.IPropertyPitProvider;
-
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author j.boesl, 05.03.15
  */
 public class TypePPPStringConverter extends AbstractSubTypeStringConverter<IPropertyPitProvider>
 {
-  @Nonnull
+  @NotNull
   @Override
   public Class<IPropertyPitProvider> getCommonType()
   {
@@ -18,14 +18,14 @@ public class TypePPPStringConverter extends AbstractSubTypeStringConverter<IProp
 
   @Nullable
   @Override
-  public IPropertyPitProvider targetToSource(@Nonnull Object pTarget, @Nonnull Class<? extends IPropertyPitProvider> pSourceType)
+  public IPropertyPitProvider targetToSource(@NotNull Object pTarget, @NotNull Class<? extends IPropertyPitProvider> pSourceType)
   {
     throw new RuntimeException("'targetToSource' not available for " + getClass().getSimpleName());
   }
 
-  @Nonnull
+  @NotNull
   @Override
-  public Object sourceToTarget(@Nonnull IPropertyPitProvider pSource, @Nonnull Class... pTargetTypes)
+  public Object sourceToTarget(@NotNull IPropertyPitProvider pSource, @NotNull Class... pTargetTypes)
   {
     throw new RuntimeException("'sourceToTarget' not available for " + getClass().getSimpleName());
   }

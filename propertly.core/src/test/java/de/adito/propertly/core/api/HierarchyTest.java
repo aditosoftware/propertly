@@ -1,8 +1,13 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IIndexedMutablePropertyPit;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.spi.extension.AbstractIndexedMutablePPP;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author W.Glanzer, 10.10.2016

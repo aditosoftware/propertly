@@ -1,7 +1,9 @@
 package de.adito.propertly.core.spi;
 
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.lang.annotation.Annotation;
 
 /**
@@ -22,8 +24,8 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    * @param <E>    the created IProperty's type.
    * @return the created IProperty.
    */
-  @Nonnull
-  <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue);
+  @NotNull
+  <E extends T> IProperty<S, E> addProperty(@NotNull E pValue);
 
   /**
    * Adds a new IProperty to this IMutablePropertyPit. The created IProperty is returned. The type is used from the
@@ -34,8 +36,8 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    * @param <E>    the created IProperty's type.
    * @return the created IProperty.
    */
-  @Nonnull
-  <E extends T> IProperty<S, E> addProperty(@Nonnull String pName, @Nonnull E pValue);
+  @NotNull
+  <E extends T> IProperty<S, E> addProperty(@NotNull String pName, @NotNull E pValue);
 
   /**
    * Adds a new IProperty to this IMutablePropertyPit based on the passed IPropertyDescription.
@@ -45,8 +47,8 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    * @param pAttributes          additional attributes describing this change.
    * @return the created IProperty.
    */
-  @Nonnull
-  <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription,
+  @NotNull
+  <E extends T> IProperty<S, E> addProperty(@NotNull IPropertyDescription<S, E> pPropertyDescription,
                                             @Nullable Object... pAttributes);
 
   /**
@@ -58,8 +60,8 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    * @param <E>          the created IProperty's type.
    * @return the created IProperty.
    */
-  @Nonnull
-  <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName,
+  @NotNull
+  <E extends T> IProperty<S, E> addProperty(@NotNull Class<E> pType, @NotNull String pName,
                                             @Nullable Annotation... pAnnotations);
 
   /**
@@ -71,8 +73,8 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    * @param <E>          the created IProperty's type.
    * @return the created IProperty.
    */
-  @Nonnull
-  <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName,
+  @NotNull
+  <E extends T> IProperty<S, E> addProperty(@NotNull Class<E> pType, @NotNull String pName,
                                             @Nullable Iterable<? extends Annotation> pAnnotations);
 
   /**
@@ -82,7 +84,7 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    * @param pAttributes          additional attributes describing this change.
    * @return <tt>true</tt> when an IProperty was removed <tt>false</tt> otherwise.
    */
-  boolean removeProperty(@Nonnull IPropertyDescription<? super S, ? extends T> pPropertyDescription,
+  boolean removeProperty(@NotNull IPropertyDescription<? super S, ? extends T> pPropertyDescription,
                          @Nullable Object... pAttributes);
 
   /**
@@ -91,5 +93,5 @@ public interface IMutablePropertyPit<P extends IPropertyPitProvider, S extends I
    * @param pProperty the IProperty to be removed.
    * @return <tt>true</tt> when an IProperty was removed <tt>false</tt> otherwise.
    */
-  boolean removeProperty(@Nonnull IProperty<? super S, ? extends T> pProperty);
+  boolean removeProperty(@NotNull IProperty<? super S, ? extends T> pProperty);
 }

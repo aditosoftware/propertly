@@ -2,8 +2,9 @@ package de.adito.propertly.test.core.impl;
 
 import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.util.Set;
 
 /**
@@ -25,13 +26,13 @@ public class VerifyingHierarchy<T extends IPropertyPitProvider> extends Delegati
    */
   private static class _VerifyingNode extends DelegatingNode
   {
-    _VerifyingNode(@Nonnull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull INode pDelegate)
+    _VerifyingNode(@NotNull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent, @NotNull INode pDelegate)
     {
       super(pHierarchy, pParent, pDelegate);
     }
 
     @Override
-    public Object setValue(Object pValue, @Nonnull Set<Object> pAttributes)
+    public Object setValue(Object pValue, @NotNull Set<Object> pAttributes)
     {
       if (pValue instanceof Number)
       {

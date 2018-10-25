@@ -1,9 +1,14 @@
 package de.adito.propertly.serialization.structuredescription;
 
 import de.adito.propertly.core.common.PPPIntrospector;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author j.boesl, 09.03.15

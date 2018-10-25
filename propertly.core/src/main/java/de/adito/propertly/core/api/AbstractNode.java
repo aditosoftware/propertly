@@ -2,11 +2,16 @@ package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.common.path.PropertyPath;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitEventListener;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.util.weak.MixedReferences;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -26,8 +31,8 @@ public abstract class AbstractNode implements INode
   private _MixedReferences listeners;
 
 
-  protected AbstractNode(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent,
-                         @Nonnull IPropertyDescription pPropertyDescription, boolean pDynamic)
+  protected AbstractNode(@NotNull Hierarchy pHierarchy, @Nullable AbstractNode pParent,
+                         @NotNull IPropertyDescription pPropertyDescription, boolean pDynamic)
   {
     hierarchy = pHierarchy;
     parent = pParent;
@@ -38,7 +43,7 @@ public abstract class AbstractNode implements INode
     listeners = new _MixedReferences();
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public Hierarchy getHierarchy()
   {
@@ -54,7 +59,7 @@ public abstract class AbstractNode implements INode
     return parent;
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public IProperty getProperty()
   {
@@ -79,28 +84,28 @@ public abstract class AbstractNode implements INode
   }
 
   @Override
-  public void addWeakListener(@Nonnull IPropertyPitEventListener pListener)
+  public void addWeakListener(@NotNull IPropertyPitEventListener pListener)
   {
     ensureValid();
     listeners.addWeak(pListener);
   }
 
   @Override
-  public void addStrongListener(@Nonnull IPropertyPitEventListener pListener)
+  public void addStrongListener(@NotNull IPropertyPitEventListener pListener)
   {
     ensureValid();
     listeners.addStrong(pListener);
   }
 
   @Override
-  public void removeListener(@Nonnull IPropertyPitEventListener pListener)
+  public void removeListener(@NotNull IPropertyPitEventListener pListener)
   {
     ensureValid();
     listeners.remove(pListener);
   }
 
-  protected void fireValueWillBeChange(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Consumer<Runnable> pOnRemoved,
-                                       @Nonnull Set<Object> pAttributes)
+  protected void fireValueWillBeChange(@Nullable Object pOldValue, @Nullable Object pNewValue, @NotNull Consumer<Runnable> pOnRemoved,
+                                       @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     HierarchyProperty localProperty = (HierarchyProperty) getProperty();
@@ -117,7 +122,7 @@ public abstract class AbstractNode implements INode
     localProperty.fireValueWillBeChanged(pOldValue, pNewValue, pOnRemoved, pAttributes);
   }
 
-  protected void fireValueChange(@Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set<Object> pAttributes)
+  protected void fireValueChange(@Nullable Object pOldValue, @Nullable Object pNewValue, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     HierarchyProperty localProperty = (HierarchyProperty) getProperty();
@@ -134,7 +139,7 @@ public abstract class AbstractNode implements INode
     localProperty.fireValueChanged(pOldValue, pNewValue, pAttributes);
   }
 
-  protected void fireNodeAdded(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  protected void fireNodeAdded(@NotNull IPropertyDescription pPropertyDescription, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
@@ -147,8 +152,8 @@ public abstract class AbstractNode implements INode
     }
   }
 
-  protected void fireNodeWillBeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Consumer<Runnable> pOnRemoved,
-                                       @Nonnull Set<Object> pAttributes)
+  protected void fireNodeWillBeRemoved(@NotNull IPropertyDescription pPropertyDescription, @NotNull Consumer<Runnable> pOnRemoved,
+                                       @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
@@ -163,7 +168,7 @@ public abstract class AbstractNode implements INode
     property.fireWillBeRemoved(pOnRemoved, pAttributes);
   }
 
-  protected void fireNodeRemoved(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  protected void fireNodeRemoved(@NotNull IPropertyDescription pPropertyDescription, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
@@ -176,7 +181,7 @@ public abstract class AbstractNode implements INode
     }
   }
 
-  protected void firePropertyOrderWillBeChanged(@Nonnull Consumer<Runnable> pOnRemoved, @Nonnull Set<Object> pAttributes)
+  protected void firePropertyOrderWillBeChanged(@NotNull Consumer<Runnable> pOnRemoved, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
@@ -189,7 +194,7 @@ public abstract class AbstractNode implements INode
     }
   }
 
-  protected void firePropertyOrderChanged(@Nonnull Set<Object> pAttributes)
+  protected void firePropertyOrderChanged(@NotNull Set<Object> pAttributes)
   {
     ensureValid();
     IPropertyPitProvider ppp = (IPropertyPitProvider) getValue();
@@ -202,7 +207,7 @@ public abstract class AbstractNode implements INode
     }
   }
 
-  protected void firePropertyNameChanged(@Nonnull String pOldName, @Nonnull String pNewName, @Nonnull Set<Object> pAttributes)
+  protected void firePropertyNameChanged(@NotNull String pOldName, @NotNull String pNewName, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     HierarchyProperty localProperty = (HierarchyProperty) getProperty();
@@ -235,7 +240,7 @@ public abstract class AbstractNode implements INode
    */
   private class _MixedReferences extends MixedReferences<IPropertyPitEventListener>
   {
-    @Nonnull
+    @NotNull
     @Override
     public List<IPropertyPitEventListener> getObjects()
     {

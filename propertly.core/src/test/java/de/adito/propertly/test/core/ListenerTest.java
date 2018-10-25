@@ -2,11 +2,14 @@ package de.adito.propertly.test.core;
 
 import de.adito.propertly.core.api.Hierarchy;
 import de.adito.propertly.core.common.PropertyPitEventAdapter;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitEventListener;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.spi.extension.AbstractMutablePPP;
-import org.junit.*;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
+import org.junit.Test;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -23,7 +26,7 @@ public class ListenerTest
     pel = new PropertyPitEventAdapter<PPP, Object>()
     {
       @Override
-      public void propertyAdded(@Nonnull PPP pSource, @Nonnull IPropertyDescription<PPP, Object> pPropertyDescription, @Nonnull Set<Object> pAttributes)
+      public void propertyAdded(@NotNull PPP pSource, @NotNull IPropertyDescription<PPP, Object> pPropertyDescription, @NotNull Set<Object> pAttributes)
       {
         Assert.fail();
       }

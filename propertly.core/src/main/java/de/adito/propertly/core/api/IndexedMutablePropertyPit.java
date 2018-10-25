@@ -2,9 +2,11 @@ package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author PaL
@@ -28,7 +30,7 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
     return new IndexedMutablePropertyPit<>(pCreateFor, pAllowedChildType);
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public IIndexedMutablePropertyPit<P, S, T> getPit()
   {
@@ -42,7 +44,7 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
     return children == null ? 0 : children.size();
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public IProperty<S, T> getProperty(int pIndex)
   {
@@ -53,9 +55,9 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
     throw new IndexOutOfBoundsException("index '" + pIndex + "' >= size '" + getSize() + "'.");
   }
 
-  @Nonnull
+  @NotNull
   @Override
-  public IProperty<S, T> addProperty(int pIndex, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nullable Object... pAttributes)
+  public IProperty<S, T> addProperty(int pIndex, @NotNull IPropertyDescription<S, T> pPropertyDescription, @Nullable Object... pAttributes)
   {
     getNode().addProperty(pIndex, pPropertyDescription, PropertlyUtility.toNonnullSet(pAttributes));
     return getProperty(pIndex);
@@ -68,13 +70,13 @@ class IndexedMutablePropertyPit<P extends IPropertyPitProvider, S extends IIndex
   }
 
   @Override
-  public int indexOf(@Nonnull IPropertyDescription<?, ?> pPropertyDescription)
+  public int indexOf(@NotNull IPropertyDescription<?, ?> pPropertyDescription)
   {
     return getNode().indexOf(pPropertyDescription);
   }
 
   @Override
-  public void reorder(@Nonnull Comparator<IProperty<S, T>> pComparator, @Nullable Object... pAttributes)
+  public void reorder(@NotNull Comparator<IProperty<S, T>> pComparator, @Nullable Object... pAttributes)
   {
     getNode().reorder(pComparator, PropertlyUtility.toNonnullSet(pAttributes));
   }

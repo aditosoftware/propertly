@@ -1,9 +1,10 @@
 package de.adito.propertly.core.spi.extension;
 
-import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.api.PitFactory;
-
-import javax.annotation.Nonnull;
+import de.adito.propertly.core.spi.IPropertyPit;
+import de.adito.propertly.core.spi.IPropertyPitFactory;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author PaL
@@ -26,7 +27,7 @@ public abstract class AbstractPPP<P extends IPropertyPitProvider, S extends IPro
     pit = pFactory.create((S) this);
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public final IPropertyPit<P, S, T> getPit()
   {

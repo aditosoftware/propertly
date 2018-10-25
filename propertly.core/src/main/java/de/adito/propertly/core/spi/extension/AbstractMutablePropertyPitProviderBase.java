@@ -1,8 +1,12 @@
 package de.adito.propertly.core.spi.extension;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.lang.annotation.Annotation;
 
 /**
@@ -14,37 +18,37 @@ abstract class AbstractMutablePropertyPitProviderBase
     implements IMutablePropertyPitProvider<P, S, T>
 {
 
-  @Nonnull
-  public <E extends T> IProperty<S, E> addProperty(@Nonnull E pValue)
+  @NotNull
+  public <E extends T> IProperty<S, E> addProperty(@NotNull E pValue)
   {
     return getPit().addProperty(pValue);
   }
 
-  @Nonnull
-  public <E extends T> IProperty<S, E> addProperty(@Nonnull String pName, @Nonnull E pValue)
+  @NotNull
+  public <E extends T> IProperty<S, E> addProperty(@NotNull String pName, @NotNull E pValue)
   {
     return getPit().addProperty(pName, pValue);
   }
 
-  @Nonnull
-  public <E extends T> IProperty<S, E> addProperty(@Nonnull IPropertyDescription<S, E> pPropertyDescription)
+  @NotNull
+  public <E extends T> IProperty<S, E> addProperty(@NotNull IPropertyDescription<S, E> pPropertyDescription)
   {
     return getPit().addProperty(pPropertyDescription);
   }
 
-  @Nonnull
-  public <E extends T> IProperty<S, E> addProperty(@Nonnull Class<E> pType, @Nonnull String pName,
+  @NotNull
+  public <E extends T> IProperty<S, E> addProperty(@NotNull Class<E> pType, @NotNull String pName,
                                                    @Nullable Annotation... pAnnotations)
   {
     return getPit().addProperty(pType, pName, pAnnotations);
   }
 
-  public boolean removeProperty(@Nonnull IPropertyDescription<? super S, T> pPropertyDescription)
+  public boolean removeProperty(@NotNull IPropertyDescription<? super S, T> pPropertyDescription)
   {
     return getPit().removeProperty(pPropertyDescription);
   }
 
-  public boolean removeProperty(@Nonnull IProperty<S, ? extends T> pProperty)
+  public boolean removeProperty(@NotNull IProperty<S, ? extends T> pProperty)
   {
     return getPit().removeProperty(pProperty);
   }

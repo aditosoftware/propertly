@@ -1,6 +1,6 @@
 package de.adito.propertly.core.spi;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * IPropertyPitProvider gives access to an IPropertyPit and is used to define all IProperty objects for its IPropertyPit.<br/>
@@ -17,7 +17,7 @@ public interface IPropertyPitProvider<P extends IPropertyPitProvider, S extends 
   /**
    * @return this IPropertyPitProvider's IPropertyPit.
    */
-  @Nonnull
+  @NotNull
   IPropertyPit<P, S, T> getPit();
 
 }

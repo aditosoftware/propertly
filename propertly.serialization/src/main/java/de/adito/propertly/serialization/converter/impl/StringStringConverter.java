@@ -1,6 +1,7 @@
 package de.adito.propertly.serialization.converter.impl;
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author j.boesl, 09.03.15
@@ -12,16 +13,16 @@ public class StringStringConverter extends AbstractObjectConverter<String>
     super(String.class);
     registerSourceTargetConverter(new SourceTargetConverter<String, CharSequence>(CharSequence.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public CharSequence sourceToTarget(@Nonnull String pSource)
+      public CharSequence sourceToTarget(@NotNull String pSource)
       {
         return pSource;
       }
 
       @Nullable
       @Override
-      public String targetToSource(@Nonnull CharSequence pTarget)
+      public String targetToSource(@NotNull CharSequence pTarget)
       {
         return pTarget.toString();
       }

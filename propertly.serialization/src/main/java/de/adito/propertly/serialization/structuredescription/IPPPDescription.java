@@ -1,6 +1,7 @@
 package de.adito.propertly.serialization.structuredescription;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
 import java.util.Set;
 

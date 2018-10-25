@@ -1,6 +1,8 @@
 package de.adito.propertly.core.common;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IHierarchy;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
 /**
  * Little helper class for debugging.

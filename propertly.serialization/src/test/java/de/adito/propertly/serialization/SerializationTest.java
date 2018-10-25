@@ -2,12 +2,17 @@ package de.adito.propertly.serialization;
 
 import de.adito.propertly.core.api.Hierarchy;
 import de.adito.propertly.core.common.PropertlyDebug;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IHierarchy;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.serialization.converter.ConverterRegistry;
-import de.adito.propertly.serialization.converter.impl.*;
+import de.adito.propertly.serialization.converter.impl.EnumStringConverter;
+import de.adito.propertly.serialization.converter.impl.TypePPPStringConverter;
 import de.adito.propertly.serialization.xml.XMLSerializationProvider;
-import de.adito.propertly.test.core.impl.*;
-import org.junit.*;
+import de.adito.propertly.test.core.impl.PropertyTestChildren;
+import de.adito.propertly.test.core.impl.TProperty;
+import de.adito.propertly.test.core.impl.VerifyingHierarchy;
+import org.junit.Assert;
+import org.junit.Test;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.ParserConfigurationException;

@@ -1,11 +1,12 @@
 package de.adito.propertly.core.common;
 
-import de.adito.propertly.core.api.PropertyDescription;
 import de.adito.propertly.core.common.annotations.PropertlyOverride;
 import de.adito.propertly.core.common.exception.WrongModifiersException;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**

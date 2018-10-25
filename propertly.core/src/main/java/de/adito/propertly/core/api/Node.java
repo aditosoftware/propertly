@@ -1,13 +1,21 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.common.*;
+import de.adito.propertly.core.common.PPPIntrospector;
+import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
 import de.adito.propertly.core.common.path.PropertyPath;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author PaL
@@ -23,14 +31,14 @@ public class Node extends AbstractNode
   private NodeChildren children;
 
 
-  public Node(@Nonnull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @Nonnull IPropertyDescription pPropertyDescription,
+  public Node(@NotNull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @NotNull IPropertyDescription pPropertyDescription,
               boolean pDynamic)
   {
     super(pHierarchy, pParent, pPropertyDescription, pDynamic);
   }
 
   @Override
-  public Object setValue(Object pValue, @Nonnull Set<Object> pAttributes)
+  public Object setValue(Object pValue, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
 
@@ -151,14 +159,14 @@ public class Node extends AbstractNode
 
   @Nullable
   @Override
-  public INode findNode(@Nonnull String pName)
+  public INode findNode(@NotNull String pName)
   {
     return children == null ? null : children.find(pName);
   }
 
   @Nullable
   @Override
-  public INode findNode(@Nonnull IPropertyDescription pPropertyDescription)
+  public INode findNode(@NotNull IPropertyDescription pPropertyDescription)
   {
     return children == null ? null : children.find(pPropertyDescription);
   }
@@ -170,7 +178,7 @@ public class Node extends AbstractNode
   }
 
   @Override
-  public INode addProperty(@Nullable Integer pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  public INode addProperty(@Nullable Integer pIndex, @NotNull IPropertyDescription pPropertyDescription, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
@@ -187,7 +195,7 @@ public class Node extends AbstractNode
   }
 
   @Override
-  public boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes)
+  public boolean removeProperty(@NotNull IPropertyDescription pPropertyDescription, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider))
@@ -211,7 +219,7 @@ public class Node extends AbstractNode
   }
 
   @Override
-  public void removeProperty(int pIndex, @Nonnull Set<Object> pAttributes)
+  public void removeProperty(int pIndex, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     if (!(value instanceof IMutablePropertyPitProvider) || children == null)
@@ -229,13 +237,13 @@ public class Node extends AbstractNode
   }
 
   @Override
-  public int indexOf(@Nonnull IPropertyDescription pPropertyDescription)
+  public int indexOf(@NotNull IPropertyDescription pPropertyDescription)
   {
     return children == null ? -1 : children.indexOf(pPropertyDescription);
   }
 
   @Override
-  public void reorder(@Nonnull Comparator pComparator, @Nonnull Set<Object> pAttributes)
+  public void reorder(@NotNull Comparator pComparator, @NotNull Set<Object> pAttributes)
   {
     ensureValid();
     if (children != null) {
@@ -248,7 +256,7 @@ public class Node extends AbstractNode
   }
 
   @Override
-  public void rename(@Nonnull String pName, @Nonnull Set<Object> pAttributes) throws PropertlyRenameException
+  public void rename(@NotNull String pName, @NotNull Set<Object> pAttributes) throws PropertlyRenameException
   {
     ensureValid();
     IProperty property = getProperty();

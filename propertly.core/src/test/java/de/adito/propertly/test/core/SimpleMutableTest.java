@@ -1,14 +1,20 @@
 package de.adito.propertly.test.core;
 
-import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.api.Hierarchy;
+import de.adito.propertly.core.api.PropertyDescription;
 import de.adito.propertly.core.common.PD;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.spi.extension.AbstractIndexedMutablePPP;
 import de.adito.propertly.test.core.impl.DynamicTestPropertyPitProvider;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**

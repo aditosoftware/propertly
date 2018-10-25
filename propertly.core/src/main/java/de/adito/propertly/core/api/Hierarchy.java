@@ -2,10 +2,13 @@ package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.spi.*;
 import de.adito.util.weak.MixedReferences;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
-import java.util.*;
-import java.util.function.*;
+import java.util.Collections;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author PaL
@@ -59,19 +62,19 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
   }
 
   @Override
-  public void addWeakListener(@Nonnull IPropertyPitEventListener pListener)
+  public void addWeakListener(@NotNull IPropertyPitEventListener pListener)
   {
     listeners.addWeak(pListener);
   }
 
   @Override
-  public void addStrongListener(@Nonnull IPropertyPitEventListener pListener)
+  public void addStrongListener(@NotNull IPropertyPitEventListener pListener)
   {
     listeners.addStrong(pListener);
   }
 
   @Override
-  public void removeListener(@Nonnull IPropertyPitEventListener pListener)
+  public void removeListener(@NotNull IPropertyPitEventListener pListener)
   {
     listeners.remove(pListener);
   }
@@ -86,63 +89,63 @@ public class Hierarchy<T extends IPropertyPitProvider> implements IHierarchy<T>
     return equals(pProperty.getHierarchy()) ? HierarchyHelper.getNode(pProperty) : null;
   }
 
-  protected void fireValueWillBeChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue,
-                                        @Nonnull Consumer<Runnable> pOnRemoved, @Nonnull Set<Object> pAttributes)
+  protected void fireValueWillBeChanged(@NotNull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue,
+                                        @NotNull Consumer<Runnable> pOnRemoved, @NotNull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyValueWillBeChanged(pProperty, pOldValue, pNewValue, pOnRemoved, pAttributes);
   }
 
-  protected void fireValueChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue,
-                                  @Nonnull Set<Object> pAttributes)
+  protected void fireValueChanged(@NotNull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue,
+                                  @NotNull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyValueChanged(pProperty, pOldValue, pNewValue, pAttributes);
   }
 
-  protected void firePropertyAdded(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription,
-                                   @Nonnull Set<Object> pAttributes)
+  protected void firePropertyAdded(@NotNull IPropertyPitProvider pPropertyPitProvider, @NotNull IPropertyDescription pDescription,
+                                   @NotNull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyAdded(pPropertyPitProvider, pDescription, pAttributes);
   }
 
-  protected void firePropertyWillBeRemoved(@Nonnull IProperty pProperty, @Nonnull Consumer<Runnable> pOnRemoved,
-                                           @Nonnull Set<Object> pAttributes)
+  protected void firePropertyWillBeRemoved(@NotNull IProperty pProperty, @NotNull Consumer<Runnable> pOnRemoved,
+                                           @NotNull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyWillBeRemoved(pProperty, pOnRemoved, pAttributes);
   }
 
-  protected void firePropertyRemoved(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull IPropertyDescription pDescription,
-                                     @Nonnull Set<Object> pAttributes)
+  protected void firePropertyRemoved(@NotNull IPropertyPitProvider pPropertyPitProvider, @NotNull IPropertyDescription pDescription,
+                                     @NotNull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyRemoved(pPropertyPitProvider, pDescription, pAttributes);
   }
 
-  public void fireChildrenOrderWillBeChanged(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull Consumer<Runnable> pOnRemoved,
-                                             @Nonnull Set<Object> pAttributes)
+  public void fireChildrenOrderWillBeChanged(@NotNull IPropertyPitProvider pPropertyPitProvider, @NotNull Consumer<Runnable> pOnRemoved,
+                                             @NotNull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyOrderWillBeChanged(pPropertyPitProvider, pOnRemoved, pAttributes);
   }
 
-  public void fireChildrenOrderChanged(@Nonnull IPropertyPitProvider pPropertyPitProvider, @Nonnull Set<Object> pAttributes)
+  public void fireChildrenOrderChanged(@NotNull IPropertyPitProvider pPropertyPitProvider, @NotNull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked
       listener.propertyOrderChanged(pPropertyPitProvider, pAttributes);
   }
 
-  public void firePropertyRenamed(@Nonnull IProperty pProperty, @Nonnull String pOldName, @Nonnull String pNewName,
-                                  @Nonnull Set<Object> pAttributes)
+  public void firePropertyRenamed(@NotNull IProperty pProperty, @NotNull String pOldName, @NotNull String pNewName,
+                                  @NotNull Set<Object> pAttributes)
   {
     for (IPropertyPitEventListener listener : listeners)
       //noinspection unchecked

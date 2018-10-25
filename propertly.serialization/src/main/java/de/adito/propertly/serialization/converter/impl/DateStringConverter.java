@@ -1,7 +1,10 @@
 package de.adito.propertly.serialization.converter.impl;
 
-import javax.annotation.*;
-import java.text.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -17,16 +20,16 @@ public class DateStringConverter extends AbstractObjectConverter<Date>
     dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S z");
     registerSourceTargetConverter(new SourceTargetConverter<Date, String>(String.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public String sourceToTarget(@Nonnull Date pSource)
+      public String sourceToTarget(@NotNull Date pSource)
       {
         return dateFormat.format(pSource);
       }
 
       @Nullable
       @Override
-      public Date targetToSource(@Nonnull String pTarget)
+      public Date targetToSource(@NotNull String pTarget)
       {
         try
         {
@@ -40,16 +43,16 @@ public class DateStringConverter extends AbstractObjectConverter<Date>
     });
     registerSourceTargetConverter(new SourceTargetConverter<Date, Number>(Number.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public Number sourceToTarget(@Nonnull Date pSource)
+      public Number sourceToTarget(@NotNull Date pSource)
       {
         return pSource.getTime();
       }
 
       @Nullable
       @Override
-      public Date targetToSource(@Nonnull Number pTarget)
+      public Date targetToSource(@NotNull Number pTarget)
       {
         return new Date(pTarget.longValue());
       }

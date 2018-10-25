@@ -1,7 +1,10 @@
 package de.adito.propertly.core.spi;
 
-import javax.annotation.*;
-import java.util.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * IPropertyPit is the main access point for IProperty objects.
@@ -15,7 +18,7 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
   /**
    * @return the IPropertyPitProvider that provides this IPropertyPit.
    */
-  @Nonnull
+  @NotNull
   S getSource();
 
   /**
@@ -26,7 +29,7 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
   /**
    * @return the connected Hierarchy object.
    */
-  @Nonnull
+  @NotNull
   IHierarchy<?> getHierarchy();
 
   /**
@@ -39,7 +42,7 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
   /**
    * @return the IProperty that provides this IPropertyPit's IPropertyPitProvider.
    */
-  @Nonnull
+  @NotNull
   IProperty<P, S> getOwnProperty();
 
   /**
@@ -49,7 +52,7 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
    * @return the IProperty if available otherwise <tt>null</tt>.
    */
   @Nullable
-  IProperty<S, T> findProperty(@Nonnull String pName);
+  IProperty<S, T> findProperty(@NotNull String pName);
 
   /**
    * Finds an IProperty at this IPropertyPit. In contrast to #getProperty this method can return <tt>null</tt> because
@@ -60,7 +63,7 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
    * @return the IProperty if available otherwise <tt>null</tt>.
    */
   @Nullable
-  <E> IProperty<S, E> findProperty(@Nonnull IPropertyDescription<?, E> pPropertyDescription);
+  <E> IProperty<S, E> findProperty(@NotNull IPropertyDescription<?, E> pPropertyDescription);
 
   /**
    * Returns an IProperty for the supplied IPropertyDescription. In case the searched IPropertyDescription does not
@@ -71,8 +74,8 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
    * @param <E>                  the searched IPropertyPit's value type.
    * @return the IProperty from this IPropertyPit's IPropertyPitProvider.
    */
-  @Nonnull
-  <E extends T> IProperty<S, E> getProperty(@Nonnull IPropertyDescription<? super S, E> pPropertyDescription);
+  @NotNull
+  <E extends T> IProperty<S, E> getProperty(@NotNull IPropertyDescription<? super S, E> pPropertyDescription);
 
   /**
    * @param pPropertyDescription an IPropertyDescription from this IPropertyPit's IPropertyPitProvider or one of it's
@@ -81,7 +84,7 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
    * @return a value from an IProperty.
    */
   @Nullable
-  <E extends T> E getValue(@Nonnull IPropertyDescription<? super S, E> pPropertyDescription);
+  <E extends T> E getValue(@NotNull IPropertyDescription<? super S, E> pPropertyDescription);
 
   /**
    * @param pPropertyDescription an IPropertyDescription from this IPropertyPit's IPropertyPitProvider or one of it's
@@ -91,24 +94,24 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
    * @return the actual value that is set.
    */
   @Nullable
-  <E extends T> E setValue(@Nonnull IPropertyDescription<? super S, E> pPropertyDescription, @Nullable E pValue);
+  <E extends T> E setValue(@NotNull IPropertyDescription<? super S, E> pPropertyDescription, @Nullable E pValue);
 
   /**
    * @return all IPropertyDescription objects available at this IPropertyPit.
    */
-  @Nonnull
+  @NotNull
   Set<IPropertyDescription<S, T>> getPropertyDescriptions();
 
   /**
    * @return all IProperty objects available at this IPropertyPit.
    */
-  @Nonnull
+  @NotNull
   List<IProperty<S, T>> getProperties();
 
   /**
    * @return the values from all IProperty objects available at this IPropertyPit.
    */
-  @Nonnull
+  @NotNull
   List<T> getValues();
 
   /**
@@ -121,20 +124,20 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
    *
    * @param pListener the listener to be weakly added.
    */
-  void addWeakListener(@Nonnull IPropertyPitEventListener<S, T> pListener);
+  void addWeakListener(@NotNull IPropertyPitEventListener<S, T> pListener);
 
   /**
    * Adds a strong listener.
    *
    * @param pListener the listener to be strongly added.
    */
-  void addStrongListener(@Nonnull IPropertyPitEventListener<S, T> pListener);
+  void addStrongListener(@NotNull IPropertyPitEventListener<S, T> pListener);
 
   /**
    * Removes a listener.
    *
    * @param pListener the listener to be removed.
    */
-  void removeListener(@Nonnull IPropertyPitEventListener<S, T> pListener);
+  void removeListener(@NotNull IPropertyPitEventListener<S, T> pListener);
 
 }

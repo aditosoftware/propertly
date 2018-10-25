@@ -1,8 +1,9 @@
 package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.spi.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.util.*;
 
 /**
@@ -29,7 +30,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
   }
 
   @Override
-  @Nonnull
+  @NotNull
   public S getSource()
   {
     return source;
@@ -41,7 +42,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
     return node != null && node.isValid();
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public IHierarchy<?> getHierarchy()
   {
@@ -57,7 +58,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
     return parent == null ? null : (P) parent.getProperty().getValue();
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public IProperty<P, S> getOwnProperty()
   {
@@ -67,7 +68,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
 
   @Nullable
   @Override
-  public IProperty<S, T> findProperty(@Nonnull String pName)
+  public IProperty<S, T> findProperty(@NotNull String pName)
   {
     INode childNode = getNode().findNode(pName);
     //noinspection unchecked
@@ -76,16 +77,16 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
 
   @Nullable
   @Override
-  public <T> IProperty<S, T> findProperty(@Nonnull IPropertyDescription<?, T> pPropertyDescription)
+  public <T> IProperty<S, T> findProperty(@NotNull IPropertyDescription<?, T> pPropertyDescription)
   {
     INode childNode = getNode().findNode(pPropertyDescription);
     //noinspection unchecked
     return childNode == null ? null : childNode.getProperty();
   }
 
-  @Nonnull
+  @NotNull
   @Override
-  public <E extends T> IProperty<S, E> getProperty(@Nonnull IPropertyDescription<? super S, E> pPropertyDescription)
+  public <E extends T> IProperty<S, E> getProperty(@NotNull IPropertyDescription<? super S, E> pPropertyDescription)
   {
     IProperty<?, E> property = findProperty(pPropertyDescription);
     if (property == null)
@@ -96,19 +97,19 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
 
   @Override
   @Nullable
-  public final <E extends T> E getValue(@Nonnull IPropertyDescription<? super S, E> pPropertyDescription)
+  public final <E extends T> E getValue(@NotNull IPropertyDescription<? super S, E> pPropertyDescription)
   {
     return getProperty(pPropertyDescription).getValue();
   }
 
   @Override
   @Nullable
-  public final <E extends T> E setValue(@Nonnull IPropertyDescription<? super S, E> pPropertyDescription, @Nullable E pValue)
+  public final <E extends T> E setValue(@NotNull IPropertyDescription<? super S, E> pPropertyDescription, @Nullable E pValue)
   {
     return getProperty(pPropertyDescription).setValue(pValue);
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public final Set<IPropertyDescription<S, T>> getPropertyDescriptions()
   {
@@ -122,7 +123,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
   }
 
   @Override
-  @Nonnull
+  @NotNull
   public List<IProperty<S, T>> getProperties()
   {
     List<IProperty<S, T>> properties = new ArrayList<>();
@@ -134,7 +135,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
     return properties;
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public List<T> getValues()
   {
@@ -166,24 +167,24 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
   }
 
   @Override
-  public void addWeakListener(@Nonnull IPropertyPitEventListener pListener)
+  public void addWeakListener(@NotNull IPropertyPitEventListener pListener)
   {
     getNode().addWeakListener(pListener);
   }
 
   @Override
-  public void addStrongListener(@Nonnull IPropertyPitEventListener pListener)
+  public void addStrongListener(@NotNull IPropertyPitEventListener pListener)
   {
     getNode().addStrongListener(pListener);
   }
 
   @Override
-  public void removeListener(@Nonnull IPropertyPitEventListener pListener)
+  public void removeListener(@NotNull IPropertyPitEventListener pListener)
   {
     getNode().removeListener(pListener);
   }
 
-  @Nonnull
+  @NotNull
   public IPropertyPit<P, S, T> getPit()
   {
     return this;
@@ -194,7 +195,7 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
     node = pNode;
   }
 
-  @Nonnull
+  @NotNull
   INode getNode()
   {
     if (isValid())

@@ -1,13 +1,18 @@
 package de.adito.propertly.serialization;
 
-import de.adito.propertly.core.api.*;
+import de.adito.propertly.core.api.Hierarchy;
+import de.adito.propertly.core.api.PropertyDescription;
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.lang.annotation.Annotation;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Can serialize and deserialize IPropertyPitProviders. Output format is dependent on used ISerializationProvider
@@ -32,23 +37,23 @@ public class Serializer<T>
   }
 
 
-  @Nonnull
-  public T serialize(@Nonnull IHierarchy<?> pHierarchy)
+  @NotNull
+  public T serialize(@NotNull IHierarchy<?> pHierarchy)
   {
     IPropertyPitProvider<?, ?, ?> value = pHierarchy.getValue();
     return serialize(value);
   }
 
-  @Nonnull
-  public T serialize(@Nonnull IPropertyPitProvider<?, ?, ?> pPropertyPitProvider)
+  @NotNull
+  public T serialize(@NotNull IPropertyPitProvider<?, ?, ?> pPropertyPitProvider)
   {
     ISerializationProvider.IChildRunner<Object> childRunner = new _ChildRunner(pPropertyPitProvider);
     return ((ISerializationProvider<T, Object>) sp).serializeRootNode(
         pPropertyPitProvider.getPit().getOwnProperty().getName(), pPropertyPitProvider.getClass(), childRunner);
   }
 
-  @Nonnull
-  public IPropertyPitProvider deserialize(@Nonnull T pData)
+  @NotNull
+  public IPropertyPitProvider deserialize(@NotNull T pData)
   {
     _ChildAppender<?> childAppender = new _ChildAppender(null);
     sp.deserializeRoot(pData, (_ChildAppender) childAppender);
@@ -68,7 +73,7 @@ public class Serializer<T>
     }
 
     @Override
-    public void run(@Nonnull F pOutputData)
+    public void run(@NotNull F pOutputData)
     {
       for (IProperty property : ppp.getPit().getProperties())
       {
@@ -138,9 +143,9 @@ public class Serializer<T>
       property = pProperty;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ISerializationProvider.IChildDetail getChildDetail(@Nonnull String pName)
+    public ISerializationProvider.IChildDetail getChildDetail(@NotNull String pName)
     {
       Class<?> type = Object.class;
       if (property != null)
@@ -169,21 +174,21 @@ public class Serializer<T>
 
     @Override
     public void appendFixedNode(
-        @Nonnull F pInputData, @Nonnull String pName)
+        @NotNull F pInputData, @NotNull String pName)
     {
       _appendFixedNode(pInputData, pName, null);
     }
 
     @Override
     public void appendFixedNode(
-        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pType)
+        @NotNull F pInputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pType)
     {
       _appendFixedNode(pInputData, pName, pType);
     }
 
     @Override
     public void appendDynamicNode(
-        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+        @NotNull F pInputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
         @Nullable List<? extends Annotation> pAnnotations)
     {
       _appendDynamicNode(pInputData, pName, pPropertyType, null, pAnnotations);
@@ -191,14 +196,14 @@ public class Serializer<T>
 
     @Override
     public void appendDynamicNode(
-        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
-        @Nonnull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations)
+        @NotNull F pInputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
+        @NotNull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations)
     {
       _appendDynamicNode(pInputData, pName, pPropertyType, pType, pAnnotations);
     }
 
     @Override
-    public void appendFixedValue(@Nonnull String pName, @Nullable Object pValue)
+    public void appendFixedValue(@NotNull String pName, @Nullable Object pValue)
     {
       IProperty<?, Object> prop = _getProperty(pName, Object.class);
       prop.setValue(pValue);
@@ -206,7 +211,7 @@ public class Serializer<T>
 
     @Override
     public <V> void appendDynamicValue(
-        @Nonnull String pName, @Nonnull Class<V> pPropertyType, @Nullable V pValue,
+        @NotNull String pName, @NotNull Class<V> pPropertyType, @Nullable V pValue,
         @Nullable List<? extends Annotation> pAnnotations)
     {
       IMutablePropertyPitProvider<?, ?, ? super V> mppp = _getMutablePropertyPitProvider(pPropertyType, pName);
@@ -215,7 +220,7 @@ public class Serializer<T>
     }
 
     private void _appendFixedNode(
-        @Nonnull F pInputData, @Nonnull String pName, @Nullable Class<? extends IPropertyPitProvider> pType)
+        @NotNull F pInputData, @NotNull String pName, @Nullable Class<? extends IPropertyPitProvider> pType)
     {
       IProperty<?, IPropertyPitProvider> prop = _getProperty(pName, IPropertyPitProvider.class);
       Class<? extends IPropertyPitProvider> pppType = pType == null ? prop.getType() : pType;
@@ -224,7 +229,7 @@ public class Serializer<T>
     }
 
     public void _appendDynamicNode(
-        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+        @NotNull F pInputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
         @Nullable Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations)
     {
       Class<? extends IPropertyPitProvider> pppType = pType == null ? pPropertyType : pType;
@@ -262,7 +267,7 @@ public class Serializer<T>
           pName, pPropertyType.getSimpleName(), propertyPitProvider.getClass().getSimpleName()));
     }
 
-    @Nonnull
+    @NotNull
     private IPropertyPitProvider _getPropertyPitProvider()
     {
       Objects.requireNonNull(property);
@@ -271,7 +276,7 @@ public class Serializer<T>
       return ppp;
     }
 
-    @Nonnull
+    @NotNull
     private <T> IProperty<?, T> _getProperty(String pName, Class<T> pType)
     {
       IPropertyPitProvider ppp = _getPropertyPitProvider();
@@ -294,14 +299,14 @@ public class Serializer<T>
       type = pType;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ISerializationProvider.EChildCategory getCategory()
     {
       return category;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Class getType()
     {

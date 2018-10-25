@@ -1,6 +1,7 @@
 package de.adito.propertly.serialization.converter.impl;
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author j.boesl, 04.03.15
@@ -12,32 +13,32 @@ public class ShortStringConverter extends AbstractObjectConverter<Short>
     super(Short.class);
     registerSourceTargetConverter(new SourceTargetConverter<Short, String>(String.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public String sourceToTarget(@Nonnull Short pSource)
+      public String sourceToTarget(@NotNull Short pSource)
       {
         return pSource.toString();
       }
 
       @Nullable
       @Override
-      public Short targetToSource(@Nonnull String pTarget)
+      public Short targetToSource(@NotNull String pTarget)
       {
         return Short.parseShort(pTarget);
       }
     });
     registerSourceTargetConverter(new SourceTargetConverter<Short, Number>(Number.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public Number sourceToTarget(@Nonnull Short pSource)
+      public Number sourceToTarget(@NotNull Short pSource)
       {
         return pSource;
       }
 
       @Nullable
       @Override
-      public Short targetToSource(@Nonnull Number pTarget)
+      public Short targetToSource(@NotNull Number pTarget)
       {
         return pTarget.shortValue();
       }

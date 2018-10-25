@@ -5,9 +5,9 @@ import de.adito.propertly.core.spi.IHierarchy;
 import de.adito.propertly.core.spi.IProperty;
 import de.adito.propertly.core.spi.IPropertyDescription;
 import de.adito.propertly.core.spi.IPropertyPitEventListener;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +27,7 @@ public interface INode
    *
    * @return the assigned hierarchy.
    */
-  @Nonnull
+  @NotNull
   IHierarchy getHierarchy();
 
   /**
@@ -53,7 +53,7 @@ public interface INode
    * @return the found child node or <tt>null</tt> if a child node with the given description does not exist.
    */
   @Nullable
-  INode findNode(@Nonnull String pName);
+  INode findNode(@NotNull String pName);
 
   /**
    * Tries to find a child node.
@@ -62,7 +62,7 @@ public interface INode
    * @return the found child node or <tt>null</tt> if a child node with the given description does not exist.
    */
   @Nullable
-  INode findNode(@Nonnull IPropertyDescription pPropertyDescription);
+  INode findNode(@NotNull IPropertyDescription pPropertyDescription);
 
   /**
    * The set value.
@@ -81,7 +81,7 @@ public interface INode
    * @return the value that is set.
    */
   @Nullable
-  Object setValue(@Nullable Object pValue, @Nonnull Set<Object> pAttributes);
+  Object setValue(@Nullable Object pValue, @NotNull Set<Object> pAttributes);
 
   /**
    * In some cases it might happen that the value can not be read.
@@ -112,7 +112,7 @@ public interface INode
   /**
    * @return the IProperty object for this INode.
    */
-  @Nonnull
+  @NotNull
   IProperty getProperty();
 
   /**
@@ -122,7 +122,7 @@ public interface INode
    * @param pAttributes additional attributes describing this change.
    * @throws PropertlyRenameException in case renaming fails.
    */
-  void rename(@Nonnull String pName, @Nonnull Set<Object> pAttributes) throws PropertlyRenameException;
+  void rename(@NotNull String pName, @NotNull Set<Object> pAttributes) throws PropertlyRenameException;
 
   /**
    * Adds a new child with a dynamic property at a specified index to this node. If the index is <tt>null</tt> the child
@@ -133,7 +133,7 @@ public interface INode
    * @param pAttributes          additional attributes describing this change.
    * @return the created property's node.
    */
-  INode addProperty(@Nullable Integer pIndex, @Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
+  INode addProperty(@Nullable Integer pIndex, @NotNull IPropertyDescription pPropertyDescription, @NotNull Set<Object> pAttributes);
 
   /**
    * Removes a child from this node.
@@ -142,7 +142,7 @@ public interface INode
    * @param pAttributes          additional attributes describing this change.
    * @return whether something was removed.
    */
-  boolean removeProperty(@Nonnull IPropertyDescription pPropertyDescription, @Nonnull Set<Object> pAttributes);
+  boolean removeProperty(@NotNull IPropertyDescription pPropertyDescription, @NotNull Set<Object> pAttributes);
 
   /**
    * Removes a property at a specified index. If no exception occurs the removal was successful.
@@ -150,13 +150,13 @@ public interface INode
    * @param pIndex      the index at which the child node shall be removed.
    * @param pAttributes additional attributes describing this change.
    */
-  void removeProperty(int pIndex, @Nonnull Set<Object> pAttributes);
+  void removeProperty(int pIndex, @NotNull Set<Object> pAttributes);
 
   /**
    * @param pPropertyDescription the description for the property for which the index is looked for.
    * @return the index of an child property. '-1' in case the property is not a child of this node.
    */
-  int indexOf(@Nonnull IPropertyDescription pPropertyDescription);
+  int indexOf(@NotNull IPropertyDescription pPropertyDescription);
 
   /**
    * Reorders the child nodes using the given comparator.
@@ -164,27 +164,27 @@ public interface INode
    * @param pComparator the comparator used to order the children.
    * @param pAttributes additional attributes describing this change.
    */
-  void reorder(@Nonnull Comparator pComparator, @Nonnull Set<Object> pAttributes);
+  void reorder(@NotNull Comparator pComparator, @NotNull Set<Object> pAttributes);
 
   /**
    * Adds a weak listener.
    *
    * @param pListener the listener to be weakly added.
    */
-  void addWeakListener(@Nonnull IPropertyPitEventListener pListener);
+  void addWeakListener(@NotNull IPropertyPitEventListener pListener);
 
   /**
    * Adds a strong listener.
    *
    * @param pListener the listener to be strongly added.
    */
-  void addStrongListener(@Nonnull IPropertyPitEventListener pListener);
+  void addStrongListener(@NotNull IPropertyPitEventListener pListener);
 
   /**
    * Removes a listener.
    *
    * @param pListener the listener to be removed.
    */
-  void removeListener(@Nonnull IPropertyPitEventListener pListener);
+  void removeListener(@NotNull IPropertyPitEventListener pListener);
 
 }

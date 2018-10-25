@@ -1,8 +1,8 @@
 package de.adito.propertly.core.spi;
 
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
-
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * IProperty is the access point for a value including its metadata. That means besides getting and setting its value
@@ -19,7 +19,7 @@ public interface IProperty<S extends IPropertyPitProvider, T>
   /**
    * @return the IPropertyDescription object for this IProperty.
    */
-  @Nonnull
+  @NotNull
   IPropertyDescription<? super S, T> getDescription();
 
   /**
@@ -73,13 +73,13 @@ public interface IProperty<S extends IPropertyPitProvider, T>
    *
    * @return the type for the value.
    */
-  @Nonnull
+  @NotNull
   Class<T> getType();
 
   /**
    * @return this property's name.
    */
-  @Nonnull
+  @NotNull
   String getName();
 
   /**
@@ -92,7 +92,7 @@ public interface IProperty<S extends IPropertyPitProvider, T>
    *                                  the name is already in use at the corresponding IPropertyPitProvider or when other
    *                                  custom constraints match.
    */
-  void rename(@Nonnull String pName, @Nullable Object... pAttributes) throws PropertlyRenameException;
+  void rename(@NotNull String pName, @Nullable Object... pAttributes) throws PropertlyRenameException;
 
   /**
    * @return whether this Property is defined at runtime and can be renamed or removed.
@@ -104,20 +104,20 @@ public interface IProperty<S extends IPropertyPitProvider, T>
    *
    * @param pListener the listener to be weakly added.
    */
-  void addWeakListener(@Nonnull IPropertyEventListener<S, T> pListener);
+  void addWeakListener(@NotNull IPropertyEventListener<S, T> pListener);
 
   /**
    * Adds a strong listener.
    *
    * @param pListener the listener to be strongly added.
    */
-  void addStrongListener(@Nonnull IPropertyEventListener<S, T> pListener);
+  void addStrongListener(@NotNull IPropertyEventListener<S, T> pListener);
 
   /**
    * Removes a listener.
    *
    * @param pListener the listener to be removed.
    */
-  void removeListener(@Nonnull IPropertyEventListener<S, T> pListener);
+  void removeListener(@NotNull IPropertyEventListener<S, T> pListener);
 
 }

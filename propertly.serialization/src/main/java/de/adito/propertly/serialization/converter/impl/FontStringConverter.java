@@ -1,6 +1,8 @@
 package de.adito.propertly.serialization.converter.impl;
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.*;
 
 /**
@@ -13,16 +15,16 @@ public class FontStringConverter extends AbstractObjectConverter<Font>
     super(Font.class);
     registerSourceTargetConverter(new SourceTargetConverter<Font, String>(String.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public String sourceToTarget(@Nonnull Font pSource)
+      public String sourceToTarget(@NotNull Font pSource)
       {
         return pSource.getName();
       }
 
       @Nullable
       @Override
-      public Font targetToSource(@Nonnull String pTarget)
+      public Font targetToSource(@NotNull String pTarget)
       {
         return Font.decode(pTarget);
       }

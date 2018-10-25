@@ -2,8 +2,9 @@ package de.adito.propertly.core.common.exception;
 
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.spi.IProperty;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.util.Set;
 
 /**
@@ -18,12 +19,12 @@ public class PropertlyRenameException extends RuntimeException
   private String name;
   private Set<Object> attributes;
 
-  public PropertlyRenameException(@Nonnull IProperty<?, ?> pProperty, @Nonnull String pName, @Nullable Object... pAttributes)
+  public PropertlyRenameException(@NotNull IProperty<?, ?> pProperty, @NotNull String pName, @Nullable Object... pAttributes)
   {
     this(null, pProperty, pName, pAttributes);
   }
 
-  public PropertlyRenameException(@Nullable Throwable cause, @Nonnull IProperty<?, ?> pProperty, @Nonnull String pName, @Nullable Object... pAttributes)
+  public PropertlyRenameException(@Nullable Throwable cause, @NotNull IProperty<?, ?> pProperty, @NotNull String pName, @Nullable Object... pAttributes)
   {
     super(cause);
     property = pProperty;

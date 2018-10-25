@@ -78,7 +78,7 @@ public class Sample
     student.addStrongListener(new PropertyPitEventAdapter()
     {
       @Override
-      public void propertyValueChanged(@Nonnull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @Nonnull Set pAttributes)
+      public void propertyValueChanged(@NotNull IProperty pProperty, @Nullable Object pOldValue, @Nullable Object pNewValue, @NotNull Set pAttributes)
       {
         System.out.println(pProperty.getName() + "=" + pNewValue);
       }

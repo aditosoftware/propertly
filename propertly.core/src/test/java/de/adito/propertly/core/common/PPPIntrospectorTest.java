@@ -1,10 +1,10 @@
 package de.adito.propertly.core.common;
 
+import de.adito.propertly.core.common.exception.InitializationException;
+import de.adito.propertly.core.common.exception.WrongModifiersException;
 import de.adito.propertly.core.spi.IPropertyDescription;
 import de.adito.propertly.core.spi.IPropertyPitProvider;
 import de.adito.propertly.core.spi.extension.AbstractPPP;
-import de.adito.propertly.core.common.exception.InitializationException;
-import de.adito.propertly.core.common.exception.WrongModifiersException;
 import org.junit.Test;
 
 public class PPPIntrospectorTest

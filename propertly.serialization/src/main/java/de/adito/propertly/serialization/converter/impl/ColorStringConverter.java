@@ -1,6 +1,8 @@
 package de.adito.propertly.serialization.converter.impl;
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.*;
 
 /**
@@ -13,32 +15,32 @@ public class ColorStringConverter extends AbstractObjectConverter<Color>
     super(Color.class);
     registerSourceTargetConverter(new SourceTargetConverter<Color, String>(String.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public String sourceToTarget(@Nonnull Color pSource)
+      public String sourceToTarget(@NotNull Color pSource)
       {
         return Integer.toString(pSource.getRGB());
       }
 
       @Nullable
       @Override
-      public Color targetToSource(@Nonnull String pTarget)
+      public Color targetToSource(@NotNull String pTarget)
       {
         return new Color(Integer.parseInt(pTarget));
       }
     });
     registerSourceTargetConverter(new SourceTargetConverter<Color, Number>(Number.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public Number sourceToTarget(@Nonnull Color pSource)
+      public Number sourceToTarget(@NotNull Color pSource)
       {
         return pSource.getRGB();
       }
 
       @Nullable
       @Override
-      public Color targetToSource(@Nonnull Number pTarget)
+      public Color targetToSource(@NotNull Number pTarget)
       {
         return new Color(pTarget.intValue());
       }

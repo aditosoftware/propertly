@@ -1,8 +1,9 @@
 package de.adito.propertly.serialization;
 
 import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -14,38 +15,38 @@ import java.util.List;
 public interface ISerializationProvider<T, F>
 {
 
-  @Nonnull
+  @NotNull
   T serializeRootNode(
-      @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
-      @Nonnull IChildRunner<F> pChildRunner);
+      @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
+      @NotNull IChildRunner<F> pChildRunner);
 
   void serializeFixedNode(
-      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull IChildRunner<F> pChildRunner);
+      @NotNull F pParentOutputData, @NotNull String pName, @NotNull IChildRunner<F> pChildRunner);
 
   void serializeFixedNode(
-      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pType,
-      @Nonnull IChildRunner<F> pChildRunner);
+      @NotNull F pParentOutputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pType,
+      @NotNull IChildRunner<F> pChildRunner);
 
   void serializeDynamicNode(
-      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
-      @Nullable List<? extends Annotation> pAnnotations, @Nonnull IChildRunner<F> pChildRunner);
+      @NotNull F pParentOutputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
+      @Nullable List<? extends Annotation> pAnnotations, @NotNull IChildRunner<F> pChildRunner);
 
   void serializeDynamicNode(
-      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
-      @Nonnull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations,
-      @Nonnull IChildRunner<F> pChildRunner);
+      @NotNull F pParentOutputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
+      @NotNull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations,
+      @NotNull IChildRunner<F> pChildRunner);
 
   void serializeFixedValue(
-      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Object pValue);
+      @NotNull F pParentOutputData, @NotNull String pName, @NotNull Object pValue);
 
   <V> void serializeDynamicValue(
-      @Nonnull F pParentOutputData, @Nonnull String pName, @Nonnull Class<? super V> pPropertyType, @Nullable V pValue,
+      @NotNull F pParentOutputData, @NotNull String pName, @NotNull Class<? super V> pPropertyType, @Nullable V pValue,
       @Nullable List<? extends Annotation> pAnnotations);
 
 
-  void deserializeRoot(@Nonnull T pRootData, @Nonnull IChildAppender<F> pChildAppender);
+  void deserializeRoot(@NotNull T pRootData, @NotNull IChildAppender<F> pChildAppender);
 
-  void deserializeChild(@Nonnull F pInputData, @Nonnull IChildAppender<F> pChildAppender);
+  void deserializeChild(@NotNull F pInputData, @NotNull IChildAppender<F> pChildAppender);
 
 
   /**
@@ -53,7 +54,7 @@ public interface ISerializationProvider<T, F>
    */
   interface IChildRunner<F>
   {
-    void run(@Nonnull F pOutputData);
+    void run(@NotNull F pOutputData);
   }
 
   /**
@@ -61,37 +62,37 @@ public interface ISerializationProvider<T, F>
    */
   interface IChildAppender<F>
   {
-    @Nonnull
-    IChildDetail getChildDetail(@Nonnull String pName);
+    @NotNull
+    IChildDetail getChildDetail(@NotNull String pName);
 
     void appendFixedNode(
-        @Nonnull F pInputData, @Nonnull String pName);
+        @NotNull F pInputData, @NotNull String pName);
 
     void appendFixedNode(
-        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pType);
+        @NotNull F pInputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pType);
 
     void appendDynamicNode(
-        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
+        @NotNull F pInputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
         @Nullable List<? extends Annotation> pAnnotations);
 
     void appendDynamicNode(
-        @Nonnull F pInputData, @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
-        @Nonnull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations);
+        @NotNull F pInputData, @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
+        @NotNull Class<? extends IPropertyPitProvider> pType, @Nullable List<? extends Annotation> pAnnotations);
 
     void appendFixedValue(
-        @Nonnull String pName, @Nullable Object pValue);
+        @NotNull String pName, @Nullable Object pValue);
 
     <V> void appendDynamicValue(
-        @Nonnull String pName, @Nonnull Class<V> pPropertyType, @Nullable V pValue,
+        @NotNull String pName, @NotNull Class<V> pPropertyType, @Nullable V pValue,
         @Nullable List<? extends Annotation> pAnnotations);
   }
 
   interface IChildDetail
   {
-    @Nonnull
+    @NotNull
     EChildCategory getCategory();
 
-    @Nonnull
+    @NotNull
     Class getType();
   }
 

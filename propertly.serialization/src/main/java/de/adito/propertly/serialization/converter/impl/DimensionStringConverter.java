@@ -1,6 +1,8 @@
 package de.adito.propertly.serialization.converter.impl;
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.*;
 import java.util.StringTokenizer;
 
@@ -14,16 +16,16 @@ public class DimensionStringConverter extends AbstractObjectConverter<Dimension>
     super(Dimension.class);
     registerSourceTargetConverter(new SourceTargetConverter<Dimension, String>(String.class)
     {
-      @Nonnull
+      @NotNull
       @Override
-      public String sourceToTarget(@Nonnull Dimension pSource)
+      public String sourceToTarget(@NotNull Dimension pSource)
       {
         return pSource.width + ", " + pSource.height;
       }
 
       @Nullable
       @Override
-      public Dimension targetToSource(@Nonnull String pTarget)
+      public Dimension targetToSource(@NotNull String pTarget)
       {
         StringTokenizer stringTokenizer = new StringTokenizer(pTarget, ", ");
         if (stringTokenizer.countTokens() != 2)

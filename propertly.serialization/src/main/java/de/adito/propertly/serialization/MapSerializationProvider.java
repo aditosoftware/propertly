@@ -1,10 +1,13 @@
 package de.adito.propertly.serialization;
 
 import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A ISerializationProvider implementation that serializes IPropertyPitProviders to a Map.
@@ -14,11 +17,11 @@ import java.util.*;
 public class MapSerializationProvider implements ISerializationProvider<Map<String, Object>, Map<String, Object>>
 {
 
-  @Nonnull
+  @NotNull
   @Override
   public Map<String, Object> serializeRootNode(
-      @Nonnull String pName, @Nonnull Class<? extends IPropertyPitProvider> pPropertyType,
-      @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
+      @NotNull String pName, @NotNull Class<? extends IPropertyPitProvider> pPropertyType,
+      @NotNull IChildRunner<Map<String, Object>> pChildRunner)
   {
     LinkedHashMap<String, Object> root = new LinkedHashMap<>();
     Map<String, Object> map = new LinkedHashMap<>();
@@ -29,8 +32,8 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
 
   @Override
   public void serializeFixedNode(
-      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
-      @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
+      @NotNull Map<String, Object> pParentOutputData, @NotNull String pName,
+      @NotNull IChildRunner<Map<String, Object>> pChildRunner)
   {
     Map<String, Object> map = new LinkedHashMap<>();
     pParentOutputData.put(pName, map);
@@ -39,8 +42,8 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
 
   @Override
   public void serializeFixedNode(
-      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
-      @Nonnull Class<? extends IPropertyPitProvider> pType, @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
+      @NotNull Map<String, Object> pParentOutputData, @NotNull String pName,
+      @NotNull Class<? extends IPropertyPitProvider> pType, @NotNull IChildRunner<Map<String, Object>> pChildRunner)
   {
     Map<String, Object> map = new LinkedHashMap<>();
     pParentOutputData.put(pName, new Property(null, pType, map, null));
@@ -49,9 +52,9 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
 
   @Override
   public void serializeDynamicNode(
-      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
-      @Nonnull Class<? extends IPropertyPitProvider> pPropertyType, @Nullable List<? extends Annotation> pAnnotations,
-      @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
+      @NotNull Map<String, Object> pParentOutputData, @NotNull String pName,
+      @NotNull Class<? extends IPropertyPitProvider> pPropertyType, @Nullable List<? extends Annotation> pAnnotations,
+      @NotNull IChildRunner<Map<String, Object>> pChildRunner)
   {
     Map<String, Object> map = new LinkedHashMap<>();
     pParentOutputData.put(pName, new Property(pPropertyType, null, map, pAnnotations));
@@ -60,9 +63,9 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
 
   @Override
   public void serializeDynamicNode(
-      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName,
-      @Nonnull Class<? extends IPropertyPitProvider> pPropertyType, @Nonnull Class<? extends IPropertyPitProvider> pType,
-      @Nullable List<? extends Annotation> pAnnotations, @Nonnull IChildRunner<Map<String, Object>> pChildRunner)
+      @NotNull Map<String, Object> pParentOutputData, @NotNull String pName,
+      @NotNull Class<? extends IPropertyPitProvider> pPropertyType, @NotNull Class<? extends IPropertyPitProvider> pType,
+      @Nullable List<? extends Annotation> pAnnotations, @NotNull IChildRunner<Map<String, Object>> pChildRunner)
   {
     Map<String, Object> map = new LinkedHashMap<>();
     pParentOutputData.put(pName, new Property(pPropertyType, pType, map, pAnnotations));
@@ -71,14 +74,14 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
 
   @Override
   public void serializeFixedValue(
-      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName, @Nonnull Object pValue)
+      @NotNull Map<String, Object> pParentOutputData, @NotNull String pName, @NotNull Object pValue)
   {
     pParentOutputData.put(pName, pValue);
   }
 
   @Override
   public <V> void serializeDynamicValue(
-      @Nonnull Map<String, Object> pParentOutputData, @Nonnull String pName, @Nonnull Class<? super V> pPropertyType,
+      @NotNull Map<String, Object> pParentOutputData, @NotNull String pName, @NotNull Class<? super V> pPropertyType,
       @Nullable V pValue, @Nullable List<? extends Annotation> pAnnotations)
   {
     pParentOutputData.put(pName, new Property(pPropertyType, pValue, null, pAnnotations));
@@ -86,14 +89,14 @@ public class MapSerializationProvider implements ISerializationProvider<Map<Stri
 
 
   @Override
-  public void deserializeRoot(@Nonnull Map<String, Object> pInputData, @Nonnull IChildAppender<Map<String, Object>> pChildAppender)
+  public void deserializeRoot(@NotNull Map<String, Object> pInputData, @NotNull IChildAppender<Map<String, Object>> pChildAppender)
   {
     deserializeChild(pInputData, pChildAppender);
   }
 
   @Override
   public void deserializeChild(
-      @Nonnull Map<String, Object> pInputData, @Nonnull IChildAppender<Map<String, Object>> pChildAppender)
+      @NotNull Map<String, Object> pInputData, @NotNull IChildAppender<Map<String, Object>> pChildAppender)
   {
     for (Map.Entry<String, Object> mapEntry : pInputData.entrySet())
     {

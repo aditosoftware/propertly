@@ -1,9 +1,11 @@
 package de.adito.propertly.core.spi.extension;
 
-import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.api.PitFactory;
-
-import javax.annotation.Nonnull;
+import de.adito.propertly.core.spi.IMutablePropertyPit;
+import de.adito.propertly.core.spi.IMutablePropertyPitFactory;
+import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author PaL
@@ -27,7 +29,7 @@ public abstract class AbstractMutablePPP
     pit = pFactory.create((S) this, pAllowedChildType);
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public final IMutablePropertyPit<P, S, T> getPit()
   {

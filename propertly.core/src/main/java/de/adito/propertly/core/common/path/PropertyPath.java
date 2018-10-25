@@ -1,9 +1,12 @@
 package de.adito.propertly.core.common.path;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author j.boesl, 11.05.15
@@ -30,12 +33,12 @@ public class PropertyPath extends AbstractPropertyPath
     this(pPPP.getPit().getOwnProperty());
   }
 
-  public PropertyPath(@Nonnull String pPath)
+  public PropertyPath(@NotNull String pPath)
   {
     elements = Arrays.asList(pPath.split(DELIM));
   }
 
-  public PropertyPath(@Nonnull Iterable<String> pPathElements)
+  public PropertyPath(@NotNull Iterable<String> pPathElements)
   {
     elements = new ArrayList<>();
     for (String pathElement : pPathElements)

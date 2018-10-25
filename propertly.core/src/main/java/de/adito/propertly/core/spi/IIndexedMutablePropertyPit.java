@@ -1,6 +1,8 @@
 package de.adito.propertly.core.spi;
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Comparator;
 
 /**
@@ -24,7 +26,7 @@ public interface IIndexedMutablePropertyPit<P extends IPropertyPitProvider, S ex
    * @param pIndex the index for an IProperty.
    * @return the IProperty at the given index.
    */
-  @Nonnull
+  @NotNull
   IProperty<S, T> getProperty(int pIndex);
 
   /**
@@ -35,8 +37,8 @@ public interface IIndexedMutablePropertyPit<P extends IPropertyPitProvider, S ex
    * @param pAttributes          additional attributes describing this change.
    * @return the created IProperty.
    */
-  @Nonnull
-  IProperty<S, T> addProperty(int pIndex, @Nonnull IPropertyDescription<S, T> pPropertyDescription, @Nullable Object... pAttributes);
+  @NotNull
+  IProperty<S, T> addProperty(int pIndex, @NotNull IPropertyDescription<S, T> pPropertyDescription, @Nullable Object... pAttributes);
 
   /**
    * @param pIndex      the index for the IProperty to be removed.
@@ -50,7 +52,7 @@ public interface IIndexedMutablePropertyPit<P extends IPropertyPitProvider, S ex
    * @param pPropertyDescription the description for the property for which the index is looked for.
    * @return the index of an child property. '-1' in case the property is not a child of this pit.
    */
-  int indexOf(@Nonnull IPropertyDescription<?, ?> pPropertyDescription);
+  int indexOf(@NotNull IPropertyDescription<?, ?> pPropertyDescription);
 
   /**
    * Reorders the IProperty objects in this IIndexedMutablePropertyPit.
@@ -58,6 +60,6 @@ public interface IIndexedMutablePropertyPit<P extends IPropertyPitProvider, S ex
    * @param pComparator is used for oredering.
    * @param pAttributes additional attributes describing this change.
    */
-  void reorder(@Nonnull Comparator<IProperty<S, T>> pComparator, @Nullable Object... pAttributes);
+  void reorder(@NotNull Comparator<IProperty<S, T>> pComparator, @Nullable Object... pAttributes);
 
 }

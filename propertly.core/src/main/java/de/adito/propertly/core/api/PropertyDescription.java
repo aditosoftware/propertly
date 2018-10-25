@@ -1,8 +1,10 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.lang.annotation.Annotation;
 
 /**
@@ -13,24 +15,24 @@ import java.lang.annotation.Annotation;
 public class PropertyDescription<S extends IPropertyPitProvider, T> extends AbstractPropertyDescription<S, T>
 {
 
-  public PropertyDescription(@Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType, @Nonnull String pName,
+  public PropertyDescription(@NotNull Class<S> pSourceType, @NotNull Class<? extends T> pType, @NotNull String pName,
                              @Nullable Iterable<? extends Annotation> pAnnotations)
   {
     super(pSourceType, pType, pName, pAnnotations);
   }
 
-  public PropertyDescription(@Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType, @Nonnull String pName,
+  public PropertyDescription(@NotNull Class<S> pSourceType, @NotNull Class<? extends T> pType, @NotNull String pName,
                              @Nullable Annotation... pAnnotations)
   {
     super(pSourceType, pType, pName, pAnnotations);
   }
 
-  public PropertyDescription(@Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType, @Nonnull String pName)
+  public PropertyDescription(@NotNull Class<S> pSourceType, @NotNull Class<? extends T> pType, @NotNull String pName)
   {
     super(pSourceType, pType, pName);
   }
 
-  public PropertyDescription(@Nonnull IPropertyDescription<S, T> pPropertyDescription)
+  public PropertyDescription(@NotNull IPropertyDescription<S, T> pPropertyDescription)
   {
     super(pPropertyDescription);
   }

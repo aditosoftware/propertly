@@ -1,9 +1,15 @@
 package de.adito.propertly.core.spi.extension;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitEventListener;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author j.boesl, 30.10.14
@@ -11,7 +17,7 @@ import java.util.*;
 abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
     implements IPropertyPitProvider<P, S, T>, Iterable<IProperty<S, T>>
 {
-  @Nonnull
+  @NotNull
   public S getSource()
   {
     return getPit().getSource();
@@ -22,7 +28,7 @@ abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S
     return getPit().isValid();
   }
 
-  @Nonnull
+  @NotNull
   public IProperty<P, S> getOwnProperty()
   {
     return getPit().getOwnProperty();
@@ -41,12 +47,12 @@ abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S
   }
 
   @Nullable
-  public IProperty<S, T> findProperty(@Nonnull String pName)
+  public IProperty<S, T> findProperty(@NotNull String pName)
   {
     return getPit().findProperty(pName);
   }
 
-  @Nonnull
+  @NotNull
   public <E extends T> IProperty<S, E> getProperty(IPropertyDescription<? super S, E> pPropertyDescription)
   {
     return getPit().getProperty(pPropertyDescription);
@@ -64,13 +70,13 @@ abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S
     return getPit().setValue(pPropertyDescription, pValue);
   }
 
-  @Nonnull
+  @NotNull
   public Set<IPropertyDescription<S, T>> getPropertyDescriptions()
   {
     return getPit().getPropertyDescriptions();
   }
 
-  @Nonnull
+  @NotNull
   public List<IProperty<S, T>> getProperties()
   {
     return getPit().getProperties();
@@ -81,7 +87,7 @@ abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S
     return getPit().getChildType();
   }
 
-  @Nonnull
+  @NotNull
   public List<T> getValues()
   {
     return getPit().getValues();
@@ -98,7 +104,7 @@ abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S
    *
    * @param pListener the listener to be weakly added.
    */
-  public void addWeakListener(@Nonnull IPropertyPitEventListener pListener)
+  public void addWeakListener(@NotNull IPropertyPitEventListener pListener)
   {
     getPit().addWeakListener(pListener);
   }
@@ -108,7 +114,7 @@ abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S
    *
    * @param pListener the listener to be strongly added.
    */
-  public void addStrongListener(@Nonnull IPropertyPitEventListener pListener)
+  public void addStrongListener(@NotNull IPropertyPitEventListener pListener)
   {
     getPit().addStrongListener(pListener);
   }
@@ -118,7 +124,7 @@ abstract class AbstractPropertyPitProviderBase<P extends IPropertyPitProvider, S
    *
    * @param pListener the listener to be removed.
    */
-  public void removeListener(@Nonnull IPropertyPitEventListener pListener)
+  public void removeListener(@NotNull IPropertyPitEventListener pListener)
   {
     getPit().removeListener(pListener);
   }

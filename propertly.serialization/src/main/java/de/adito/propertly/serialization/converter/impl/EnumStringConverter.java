@@ -1,13 +1,14 @@
 package de.adito.propertly.serialization.converter.impl;
 
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author j.boesl, 04.03.15
  */
 public class EnumStringConverter extends AbstractSubTypeStringConverter<Enum>
 {
-  @Nonnull
+  @NotNull
   @Override
   public Class<Enum> getCommonType()
   {
@@ -16,16 +17,16 @@ public class EnumStringConverter extends AbstractSubTypeStringConverter<Enum>
 
   @Nullable
   @Override
-  public Enum targetToSource(@Nonnull Object pTarget, @Nonnull Class<? extends Enum> pSourceType)
+  public Enum targetToSource(@NotNull Object pTarget, @NotNull Class<? extends Enum> pSourceType)
   {
     if (pTarget instanceof String)
       return Enum.valueOf(pSourceType, (String) pTarget);
     throw new IllegalArgumentException(pTarget.getClass() + " is not convertible to " + pSourceType + ".");
   }
 
-  @Nonnull
+  @NotNull
   @Override
-  public Object sourceToTarget(@Nonnull Enum pSource, @Nonnull Class... pTargetTypes)
+  public Object sourceToTarget(@NotNull Enum pSource, @NotNull Class... pTargetTypes)
   {
     for (Class targetType : pTargetTypes)
       if (targetType == String.class)

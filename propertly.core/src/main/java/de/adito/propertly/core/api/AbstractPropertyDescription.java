@@ -1,8 +1,10 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IPropertyDescription;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
 import java.lang.annotation.Annotation;
 import java.util.*;
 
@@ -16,8 +18,8 @@ public abstract class AbstractPropertyDescription<S extends IPropertyPitProvider
   private String name;
   private Map<Class<? extends Annotation>, Annotation> annotations;
 
-  protected AbstractPropertyDescription(@Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType,
-                                        @Nonnull String pName, @Nullable Iterable<? extends Annotation> pAnnotations)
+  protected AbstractPropertyDescription(@NotNull Class<S> pSourceType, @NotNull Class<? extends T> pType,
+                                        @NotNull String pName, @Nullable Iterable<? extends Annotation> pAnnotations)
   {
     sourceType = pSourceType;
     type = pType;
@@ -31,19 +33,19 @@ public abstract class AbstractPropertyDescription<S extends IPropertyPitProvider
     }
   }
 
-  public AbstractPropertyDescription(@Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType,
-                                     @Nonnull String pName, @Nullable Annotation... pAnnotations)
+  public AbstractPropertyDescription(@NotNull Class<S> pSourceType, @NotNull Class<? extends T> pType,
+                                     @NotNull String pName, @Nullable Annotation... pAnnotations)
   {
     this(pSourceType, pType, pName, pAnnotations == null ? null : Arrays.asList(pAnnotations));
   }
 
-  public AbstractPropertyDescription(@Nonnull Class<S> pSourceType, @Nonnull Class<? extends T> pType,
-                                     @Nonnull String pName)
+  public AbstractPropertyDescription(@NotNull Class<S> pSourceType, @NotNull Class<? extends T> pType,
+                                     @NotNull String pName)
   {
     this(pSourceType, pType, pName, (Iterable<? extends Annotation>) null);
   }
 
-  public AbstractPropertyDescription(@Nonnull IPropertyDescription<S, T> pPropertyDescription)
+  public AbstractPropertyDescription(@NotNull IPropertyDescription<S, T> pPropertyDescription)
   {
     this(pPropertyDescription.getSourceType(), pPropertyDescription.getType(),
          pPropertyDescription.getName(), Arrays.asList(pPropertyDescription.getAnnotations()));

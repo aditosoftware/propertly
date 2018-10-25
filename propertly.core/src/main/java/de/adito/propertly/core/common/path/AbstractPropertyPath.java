@@ -1,10 +1,15 @@
 package de.adito.propertly.core.common.path;
 
 import de.adito.propertly.core.common.PropertlyUtility;
-import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.IHierarchy;
+import de.adito.propertly.core.spi.IProperty;
+import de.adito.propertly.core.spi.IPropertyPitProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author j.boesl, 06.10.16
@@ -39,7 +44,7 @@ public abstract class AbstractPropertyPath implements IPropertyPath
     return property;
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public IPropertyPath getParent() throws NoParentPathForRootException
   {
@@ -62,7 +67,7 @@ public abstract class AbstractPropertyPath implements IPropertyPath
     return true;
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public IPropertyPath getChild(String pName)
   {
@@ -71,14 +76,14 @@ public abstract class AbstractPropertyPath implements IPropertyPath
     return new PropertyPath(list);
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public List<String> getPathElements()
   {
     return new ArrayList<>(getInternalElements());
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public String asString()
   {

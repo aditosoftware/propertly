@@ -2,10 +2,13 @@ package de.adito.propertly.serialization.converter;
 
 import de.adito.picoservice.IPicoRegistry;
 import de.adito.propertly.serialization.converter.impl.*;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.logging.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author j.boesl, 05.03.15

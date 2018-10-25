@@ -1,10 +1,13 @@
 package de.adito.propertly.serialization.converter.impl;
 
 import de.adito.picoservice.IPicoRegistry;
-import de.adito.propertly.serialization.converter.*;
+import de.adito.propertly.serialization.converter.ConverterSubTypeProvider;
+import de.adito.propertly.serialization.converter.IObjectConverter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author j.boesl, 11.03.15
@@ -27,7 +30,7 @@ public abstract class AbstractSubTypeStringConverter<T> implements IObjectConver
     }
   }
 
-  public void register(@Nonnull Class<? extends T> pCls, @Nullable String pRepresentation)
+  public void register(@NotNull Class<? extends T> pCls, @Nullable String pRepresentation)
   {
     if (pRepresentation == null)
       pRepresentation = pCls.getSimpleName();
@@ -37,14 +40,14 @@ public abstract class AbstractSubTypeStringConverter<T> implements IObjectConver
 
   @Nullable
   @Override
-  public Class<? extends T> stringToType(@Nonnull String pTypeAsString)
+  public Class<? extends T> stringToType(@NotNull String pTypeAsString)
   {
     return reverseMap.get(pTypeAsString);
   }
 
-  @Nonnull
+  @NotNull
   @Override
-  public String typeToString(@Nonnull Class<? extends T> pType)
+  public String typeToString(@NotNull Class<? extends T> pType)
   {
     String s = map.get(pType);
     if (s == null)
