@@ -1,13 +1,10 @@
 package de.adito.propertly.core.api;
 
-import de.adito.propertly.core.spi.IIndexedMutablePropertyPit;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.spi.extension.AbstractIndexedMutablePPP;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author W.Glanzer, 10.10.2016
@@ -17,7 +14,7 @@ public class HierarchyTest
 
   private Hierarchy<MPPP> hierarchy;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception
   {
     hierarchy = new Hierarchy<>("myHierarchy", new MPPP());
@@ -28,7 +25,7 @@ public class HierarchyTest
   {
     IProperty<IPropertyPitProvider, MPPP> hierProp = hierarchy.getProperty();
     hierProp.rename("myNewName");
-    Assert.assertEquals("myNewName", hierProp.getName());
+    assertEquals("myNewName", hierProp.getName());
   }
 
   @Test
@@ -41,11 +38,11 @@ public class HierarchyTest
     IProperty<MPPP, String> copiedStringProperty = pit.getProperty(stringProp.getDescription());
 
     copiedStringProperty.rename("renamedCopiedStringProp");
-    Assert.assertEquals("stringProp", stringProp.getName());
-    Assert.assertEquals("renamedCopiedStringProp", copiedStringProperty.getName());
+    assertEquals("stringProp", stringProp.getName());
+    assertEquals("renamedCopiedStringProp", copiedStringProperty.getName());
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception
   {
     hierarchy = null;

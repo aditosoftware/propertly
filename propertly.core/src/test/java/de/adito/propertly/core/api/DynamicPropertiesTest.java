@@ -1,13 +1,11 @@
 package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.PD;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
-import de.adito.propertly.core.spi.extension.AbstractMutablePPP;
-import de.adito.propertly.core.spi.extension.AbstractPPP;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import de.adito.propertly.core.spi.*;
+import de.adito.propertly.core.spi.extension.*;
+import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author W.Glanzer, 31.03.2017
@@ -16,10 +14,10 @@ public class DynamicPropertiesTest
 {
   private Model._PropertyContainer container;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception
   {
-    // Datenmodell initialisieren
+    // Initialize Models
     Model rootModel = new Hierarchy<>("rootModel", new Model()).getValue();
     container = rootModel.getProperty(Model.myProperty).setValue(new Model._PropertyContainer());
   }
@@ -29,13 +27,15 @@ public class DynamicPropertiesTest
   {
     PropertyDescription<Model._PropertyContainer, _AbstractProperty> propDesc = new PropertyDescription<>(Model._PropertyContainer.class, _AbstractProperty.class, "property");
     container.addProperty(propDesc).setValue(new Property1());
-    Assert.assertNotNull(container.findProperty(propDesc));
+    assertNotNull(container.findProperty(propDesc));
 
-    try {
+    try
+    {
       container.addProperty(propDesc).setValue(new Property2());
-      Assert.fail(); // We expect an exception - duplicate name
+      fail(); // We expect an exception - duplicate name
     }
-    catch (Exception ignored) {
+    catch (Exception ignored)
+    {
     }
   }
 
@@ -43,16 +43,18 @@ public class DynamicPropertiesTest
   public void test_addPropertyWODescription() throws Exception
   {
     container.addProperty("property1", new Property1());
-    Assert.assertNotNull(container.findProperty("property1"));
+    assertNotNull(container.findProperty("property1"));
 
-    try {
+    try
+    {
       container.addProperty("property1", new Property2());
-      Assert.fail(); // We expect an exception - duplicate name
+      fail(); // We expect an exception - duplicate name
     }
-    catch (Exception ignored) {
+    catch (Exception ignored)
+    {
     }
 
-    Assert.assertEquals(1, container.getProperties().size());
+    assertEquals(1, container.getProperties().size());
   }
 
   public static class Model extends AbstractPPP<IPropertyPitProvider, Model, Object>
