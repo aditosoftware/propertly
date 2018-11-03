@@ -1,22 +1,18 @@
 package de.adito.propertly.test.core;
 
 import de.adito.propertly.core.api.Hierarchy;
-import de.adito.propertly.core.common.PropertlyDebug;
-import de.adito.propertly.core.common.PropertyPitEventAdapter;
+import de.adito.propertly.core.common.*;
 import de.adito.propertly.core.common.exception.InaccessibleException;
 import de.adito.propertly.core.spi.*;
-import de.adito.propertly.test.core.impl.ColoredPitProvider;
-import de.adito.propertly.test.core.impl.PropertyTestChildren;
-import de.adito.propertly.test.core.impl.TProperty;
-import de.adito.propertly.test.core.impl.VerifyingHierarchy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.junit.Assert;
-import org.junit.Test;
+import de.adito.propertly.test.core.impl.*;
+import org.jetbrains.annotations.*;
+import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author PaL
@@ -154,7 +150,7 @@ public class PropertyTest
     {
       ex = e;
     }
-    Assert.assertNotNull(ex);
+    assertNotNull(ex);
 
 
     String expected = "hierarchy propertyValueWillBeChanged: null, IndexedMutablePropertyPit, CHILD, property(CHILD, PropertyTestChildren, null), []\n" +
@@ -216,7 +212,7 @@ public class PropertyTest
         "tProperty property: property(HEIGHT, Integer, null)\n" +
         "tProperty property: property(DESCRIPTION, String, null)";
 
-    Assert.assertEquals(expected,
+    assertEquals(expected,
                         resultStringBuild.toString());
 
     expected = "/root\n" +
@@ -240,10 +236,10 @@ public class PropertyTest
         "\t HEIGHT : null\n" +
         "\t DESCRIPTION : null\n";
 
-    Assert.assertEquals(expected,
+    assertEquals(expected,
                         PropertlyDebug.toTreeString(hierarchy));
 
-    Assert.assertEquals(expected,
+    assertEquals(expected,
                         PropertlyDebug.toTreeString(sourceHierarchy));
   }
 
@@ -298,7 +294,7 @@ public class PropertyTest
 
 
     pit.setValue(ColoredPitProvider.DEFAULT_COLOR, Color.MAGENTA);
-    Assert.assertEquals(pit.getValue(ColoredPitProvider.DEFAULT_COLOR), Color.MAGENTA);
+    assertEquals(pit.getValue(ColoredPitProvider.DEFAULT_COLOR), Color.MAGENTA);
 
 
     InaccessibleException ex = null;
@@ -310,21 +306,21 @@ public class PropertyTest
     {
       ex = e;
     }
-    Assert.assertNotNull(ex);
+    assertNotNull(ex);
     ex = null;
-    Assert.assertEquals(pit.getValue(ColoredPitProvider.READ_ONLY_COLOR), null);
+    assertEquals(pit.getValue(ColoredPitProvider.READ_ONLY_COLOR), null);
 
 
     pit.setValue(ColoredPitProvider.WRITE_ONLE_COLOR, Color.YELLOW);
     try
     {
-      Assert.assertEquals(pit.getValue(ColoredPitProvider.WRITE_ONLE_COLOR), null);
+      assertEquals(pit.getValue(ColoredPitProvider.WRITE_ONLE_COLOR), null);
     }
     catch (InaccessibleException e)
     {
       ex = e;
     }
-    Assert.assertNotNull(ex);
+    assertNotNull(ex);
     ex = null;
 
 
@@ -336,17 +332,17 @@ public class PropertyTest
     {
       ex = e;
     }
-    Assert.assertNotNull(ex);
+    assertNotNull(ex);
     ex = null;
     try
     {
-      Assert.assertEquals(pit.getValue(ColoredPitProvider.INACCESSIBLE_COLOR), null);
+      assertEquals(pit.getValue(ColoredPitProvider.INACCESSIBLE_COLOR), null);
     }
     catch (InaccessibleException e)
     {
       ex = e;
     }
-    Assert.assertNotNull(ex);
+    assertNotNull(ex);
   }
 
 }

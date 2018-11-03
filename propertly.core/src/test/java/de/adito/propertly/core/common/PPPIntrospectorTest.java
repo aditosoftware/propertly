@@ -1,19 +1,21 @@
 package de.adito.propertly.core.common;
 
-import de.adito.propertly.core.common.exception.InitializationException;
-import de.adito.propertly.core.common.exception.WrongModifiersException;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.common.exception.*;
+import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.spi.extension.AbstractPPP;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PPPIntrospectorTest
 {
 
-  @Test(expected = WrongModifiersException.class)
+  @Test
   public void testWrongModifier()
   {
-    PPPIntrospector.get(WRONG_MODIFIER_PIT.class);
+    assertThrows(WrongModifiersException.class, () -> {
+      PPPIntrospector.get(WRONG_MODIFIER_PIT.class);
+    });
   }
 
   private static class WRONG_MODIFIER_PIT extends AbstractPPP<IPropertyPitProvider, WRONG_MODIFIER_PIT, Object>
@@ -21,17 +23,19 @@ public class PPPIntrospectorTest
     IPropertyDescription<WRONG_MODIFIER_PIT, String> PROPERTY = PD.create(WRONG_MODIFIER_PIT.class);
   }
 
-  @Test(expected = InitializationException.class)
+  @Test
   public void testWrongInit() throws Throwable
   {
-    try
-    {
-      PPPIntrospector.get(WRONG_INIT_PIT.class);
-    }
-    catch (ExceptionInInitializerError e)
-    {
-      throw e.getException();
-    }
+    assertThrows(InitializationException.class, () -> {
+      try
+      {
+        PPPIntrospector.get(WRONG_INIT_PIT.class);
+      }
+      catch (ExceptionInInitializerError e)
+      {
+        throw e.getException();
+      }
+    });
   }
 
   private static class WRONG_INIT_PIT extends AbstractPPP<IPropertyPitProvider, WRONG_MODIFIER_PIT, Object>
