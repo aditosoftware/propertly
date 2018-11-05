@@ -22,7 +22,7 @@ public class ListenerTest
   public void test()
   {
     PPP ppp = new Hierarchy<>("", new PPP()).getValue();
-    pel = new PropertyPitEventAdapter<>()
+    pel = new PropertyPitEventAdapter<PPP, Object>()
     {
       @Override
       public void propertyAdded(@NotNull PPP pSource, @NotNull IPropertyDescription<PPP, Object> pPropertyDescription, @NotNull Set<Object> pAttributes)
