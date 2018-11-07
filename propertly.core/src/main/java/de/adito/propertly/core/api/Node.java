@@ -79,6 +79,7 @@ public class Node extends AbstractNode
       }
       HierarchyHelper.setNode((IPropertyPitProvider) oldValue, null);
     }
+    clearListeners();
     if (pppProvider != null) {
       IPropertyPitProvider pppCopy = PropertlyUtility.create(pppProvider);
       value = pppCopy;

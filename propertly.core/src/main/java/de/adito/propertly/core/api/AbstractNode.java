@@ -2,24 +2,19 @@ package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.common.path.PropertyPath;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitEventListener;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
 import de.adito.util.weak.MixedReferences;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
  * Abstract class for INode implementations.
  *
  * @author PaL
- *         Date: 09.02.13
- *         Time: 19:36
+ * Date: 09.02.13
+ * Time: 19:36
  */
 public abstract class AbstractNode implements INode
 {
@@ -81,6 +76,11 @@ public abstract class AbstractNode implements INode
     parent = null;
     property = null;
     listeners = null;
+  }
+
+  protected void clearListeners()
+  {
+    listeners.clear();
   }
 
   @Override

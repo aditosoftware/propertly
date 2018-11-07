@@ -96,6 +96,7 @@ public class DelegatingNode extends AbstractNode
     List<Runnable> onFinish = new ArrayList<>();
     fireValueWillBeChange(oldValue, pValue, onFinish::add, pAttributes);
     delegate.setValue(pValue, pAttributes);
+    clearListeners();
     _alignToDelegate();
     Object newValue = getValueInternal();
     fireValueChange(oldValue, newValue, pAttributes);
