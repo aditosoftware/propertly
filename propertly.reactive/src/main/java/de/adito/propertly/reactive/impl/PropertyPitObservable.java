@@ -15,16 +15,19 @@ class PropertyPitObservable<P extends IPropertyPitProvider, S extends IPropertyP
     extends AbstractListenerObservable<IPropertyPitEventListener<S, T>, S, S>
 {
 
-  PropertyPitObservable(S pPropertyPitProvider)
+  private final boolean completeWhenInvalid;
+
+  PropertyPitObservable(S pPropertyPitProvider, boolean pCompleteWhenInvalid)
   {
     super(pPropertyPitProvider);
+    completeWhenInvalid = pCompleteWhenInvalid;
   }
 
   @NotNull
   @Override
   protected IPropertyPitEventListener<S, T> registerListener(@NotNull S pListenableValue, @NotNull IFireable<S> pFireable)
   {
-    IPropertyPitEventListener<S, T> listener = new _Listener<>(pFireable, pListenableValue);
+    IPropertyPitEventListener<S, T> listener = new _Listener<>(pFireable, pListenableValue, completeWhenInvalid);
     pListenableValue.getPit().addStrongListener(listener);
     return listener;
   }
@@ -45,11 +48,13 @@ class PropertyPitObservable<P extends IPropertyPitProvider, S extends IPropertyP
   {
     private final IFireable<S> fireable;
     private final IPropertyPitProvider<P, S, T> pit;
+    private final boolean completeWhenInvalid;
 
-    public _Listener(IFireable<S> pFireable, S pPit)
+    public _Listener(IFireable<S> pFireable, S pPit, boolean pCompleteWhenInvalid)
     {
       fireable = pFireable;
       pit = pPit;
+      completeWhenInvalid = pCompleteWhenInvalid;
     }
 
     @Override
@@ -73,7 +78,7 @@ class PropertyPitObservable<P extends IPropertyPitProvider, S extends IPropertyP
     @Override
     public void propertyWillBeRemoved(@NotNull IProperty<S, T> pProperty, @NotNull Consumer<Runnable> pOnRemoved, @NotNull Set<Object> pAttributes)
     {
-      if (Objects.equals(pProperty.getValue(), pit))
+      if (completeWhenInvalid && Objects.equals(pProperty.getValue(), pit))
         fireable.fireCompleted();
     }
   }

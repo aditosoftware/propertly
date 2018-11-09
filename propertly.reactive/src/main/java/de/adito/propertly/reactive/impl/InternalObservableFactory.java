@@ -4,6 +4,8 @@ import de.adito.propertly.core.spi.*;
 import io.reactivex.Observable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 /**
  * Factory to create the "real" observables - do not use this outside the impl-package!
  *
@@ -17,16 +19,28 @@ public abstract class InternalObservableFactory
   {
   }
 
-  public static <P extends IPropertyPitProvider<?, P, ?>, V> Observable<IProperty<P, V>> property(IProperty<P, V> pProperty, boolean pCompleteWhenInvalid)
+  public static <P extends IPropertyPitProvider, V> Observable<Optional<IProperty<P, V>>> property(IProperty<P, V> pProperty)
   {
-    return Observable.create(new PropertyObservable<>(pProperty, pCompleteWhenInvalid))
-        .startWith(pProperty);
+    return property(pProperty, true);
   }
 
-  public static <P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T> Observable<S> propertyPit(@NotNull S pPropertyPit)
+  public static <P extends IPropertyPitProvider, V> Observable<Optional<IProperty<P, V>>> property(IProperty<P, V> pProperty, boolean pCompleteWhenInvalid)
   {
-    return Observable.create(new PropertyPitObservable<>(pPropertyPit))
-        .startWith(pPropertyPit);
+    return Observable.create(new PropertyObservable<>(pProperty, pCompleteWhenInvalid))
+        .startWith(pProperty)
+        .map(Optional::of);
+  }
+
+  public static <P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T> Observable<Optional<S>> propertyPit(@NotNull S pPropertyPit)
+  {
+    return propertyPit(pPropertyPit, true);
+  }
+
+  public static <P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T> Observable<Optional<S>> propertyPit(@NotNull S pPropertyPit, boolean pCompleteWhenInvalid)
+  {
+    return Observable.create(new PropertyPitObservable<>(pPropertyPit, pCompleteWhenInvalid))
+        .startWith(pPropertyPit)
+        .map(Optional::of);
   }
 
 }

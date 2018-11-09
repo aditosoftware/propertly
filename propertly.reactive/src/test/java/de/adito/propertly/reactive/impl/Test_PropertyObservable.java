@@ -8,7 +8,7 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import org.junit.jupiter.api.*;
 
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -32,7 +32,7 @@ public class Test_PropertyObservable
   {
     rootPPP = new Hierarchy<>(UUID.randomUUID().toString(), new ReactivePropertyPitProvider()).getValue();
     stringProperty = rootPPP.getProperty(ReactivePropertyPitProvider.stringProperty);
-    Observable stringPropertyObservable = InternalObservableFactory.property(stringProperty, true);
+    Observable stringPropertyObservable = InternalObservableFactory.property(stringProperty, true).map(Optional::get);
     subscribedConsumer = spy(new BehaviorConsumer<>());
     disposable = stringPropertyObservable.subscribe(subscribedConsumer);
     clearInvocations(subscribedConsumer);
@@ -67,7 +67,7 @@ public class Test_PropertyObservable
     ReactivePropertyPitProvider.Properties props = rootPPP.setValue(ReactivePropertyPitProvider.stringProperties, new ReactivePropertyPitProvider.Properties());
     assert props != null;
     stringProperty = props.addProperty("myProperty1", "noValue");
-    disposable = InternalObservableFactory.property(stringProperty, true).subscribe(subscribedConsumer, e -> {}, subscribedConsumer::setCompleted);
+    disposable = InternalObservableFactory.property(stringProperty, true).map(Optional::get).subscribe(subscribedConsumer, e -> {}, subscribedConsumer::setCompleted);
     clearInvocations(subscribedConsumer);
 
     // Rename Property
@@ -84,7 +84,7 @@ public class Test_PropertyObservable
     ReactivePropertyPitProvider.Properties props = rootPPP.setValue(ReactivePropertyPitProvider.stringProperties, new ReactivePropertyPitProvider.Properties());
     assert props != null;
     stringProperty = props.addProperty("myProperty1", "noValue");
-    disposable = InternalObservableFactory.property(stringProperty, true).subscribe(subscribedConsumer, e -> {}, subscribedConsumer::setCompleted);
+    disposable = InternalObservableFactory.property(stringProperty, true).map(Optional::get).subscribe(subscribedConsumer, e -> {}, subscribedConsumer::setCompleted);
     clearInvocations(subscribedConsumer);
 
     // Remove property -> Make it invalid

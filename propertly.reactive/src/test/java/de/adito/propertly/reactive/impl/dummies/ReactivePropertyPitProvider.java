@@ -16,7 +16,7 @@ public class ReactivePropertyPitProvider extends AbstractPPP<IPropertyPitProvide
 
   public static final IPropertyDescription<ReactivePropertyPitProvider, ChildContainer1> children = PD.create(ReactivePropertyPitProvider.class);
 
-  public static class Properties extends AbstractIndexedMutablePPP<ReactivePropertyPitProvider, Properties, String>
+  public static class Properties extends AbstractIndexedMutablePPP<IPropertyPitProvider, Properties, String>
   {
     public Properties()
     {

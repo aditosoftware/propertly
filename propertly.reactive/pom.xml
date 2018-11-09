@@ -30,7 +30,7 @@
     <dependency>
       <groupId>de.adito.util</groupId>
       <artifactId>reactive</artifactId>
-      <version>1.0.2-SNAPSHOT</version>
+      <version>1.0.2</version>
     </dependency>
 
     <!-- Mockito -->
