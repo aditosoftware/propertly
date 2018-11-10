@@ -10,7 +10,7 @@ import java.util.Optional;
  * Factory to create the "real" observables - do not use this outside the impl-package!
  *
  * @author w.glanzer, 01.11.2018
- * @see de.adito.propertly.reactive.api.PropertlyObservables
+ * @see de.adito.propertly.reactive.api.builder.PropertlyObservableBuilder
  */
 public abstract class InternalObservableFactory
 {

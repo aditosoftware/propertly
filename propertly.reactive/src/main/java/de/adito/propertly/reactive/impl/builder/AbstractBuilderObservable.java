@@ -31,6 +31,7 @@ abstract class AbstractBuilderObservable<V> implements IBuilderObservable<V>
   public Observable<V> toObservableUnsafe()
   {
     return toObservable()
+        .filter(Optional::isPresent)
         .map(Optional::get);
   }
 
