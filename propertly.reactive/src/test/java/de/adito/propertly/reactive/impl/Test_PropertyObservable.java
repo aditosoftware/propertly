@@ -25,6 +25,7 @@ public class Test_PropertyObservable
   private ReactivePropertyPitProvider rootPPP;
   private IProperty<?, String> stringProperty;
   private BehaviorConsumer<IProperty<?, String>> subscribedConsumer;
+  private Observable stringPropertyObservable;
   private Disposable disposable;
 
   @BeforeEach
@@ -32,7 +33,7 @@ public class Test_PropertyObservable
   {
     rootPPP = new Hierarchy<>(UUID.randomUUID().toString(), new ReactivePropertyPitProvider()).getValue();
     stringProperty = rootPPP.getProperty(ReactivePropertyPitProvider.stringProperty);
-    Observable stringPropertyObservable = InternalObservableFactory.property(stringProperty, true).map(Optional::get);
+    stringPropertyObservable = InternalObservableFactory.property(stringProperty, true).map(Optional::get);
     subscribedConsumer = spy(new BehaviorConsumer<>());
     disposable = stringPropertyObservable.subscribe(subscribedConsumer);
     clearInvocations(subscribedConsumer);
@@ -96,4 +97,19 @@ public class Test_PropertyObservable
     verify(subscribedConsumer, times(0)).accept(any());
   }
 
+  @Test
+  void test_subscribeAfterOneDisposed()
+  {
+    // Dispose the previously subscribed consumer
+    disposable.dispose();
+
+    // Re-Subscribe it
+    disposable = stringPropertyObservable.subscribe(subscribedConsumer);
+    clearInvocations(subscribedConsumer);
+
+    // Set New Value -> Fire one time
+    stringProperty.setValue("testValue");
+    verify(subscribedConsumer).accept(any());
+    assertEquals("testValue", subscribedConsumer.getValue().getValue());
+  }
 }
