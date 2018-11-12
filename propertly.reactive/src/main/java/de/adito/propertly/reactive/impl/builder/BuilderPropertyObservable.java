@@ -27,7 +27,9 @@ public class BuilderPropertyObservable<S extends IPropertyPitProvider, V> extend
   public Observable<Optional<V>> emitValue()
   {
     return getInternalObservable()
-        .map(pOpt -> pOpt.map(IProperty::getValue));
+        .map(pOpt -> pOpt
+            .filter(IProperty::canRead)
+            .map(IProperty::getValue));
   }
 
 }

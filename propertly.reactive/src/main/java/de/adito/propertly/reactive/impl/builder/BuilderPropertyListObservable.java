@@ -30,7 +30,7 @@ public class BuilderPropertyListObservable<S extends IPropertyPitProvider, T>
           if (!pPropertyListOpt.isPresent())
             return Optional.empty();
           List<T> valueList = pPropertyListOpt.get().stream()
-              .map(IProperty::getValue)
+              .map(pProp -> pProp.canRead() ? pProp.getValue() : null)
               .filter(pValue -> pValue != null || pIncludeNullValues)
               .collect(Collectors.toList());
           return Optional.of(valueList);
