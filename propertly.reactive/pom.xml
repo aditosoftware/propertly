@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.adito.propertly</groupId>
     <artifactId>propertly.parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
   </parent>
 
   <artifactId>propertly.reactive</artifactId>
@@ -30,7 +30,7 @@
     <dependency>
       <groupId>de.adito.util</groupId>
       <artifactId>reactive</artifactId>
-      <version>1.0.2</version>
+      <version>1.0.3</version>
     </dependency>
 
     <!-- Mockito -->
