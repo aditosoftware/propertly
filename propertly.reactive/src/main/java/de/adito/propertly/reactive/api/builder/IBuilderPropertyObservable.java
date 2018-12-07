@@ -19,6 +19,23 @@ public interface IBuilderPropertyObservable<S extends IPropertyPitProvider, T> e
 {
 
   /**
+   * Casts the value of the current property to a PropertyPit and creates a new PropertyPitObservable.
+   * If the value is not an instance of IPropertyPitProvider, no specific exception will be thrown -> Runtime ClassCastException!
+   *
+   * @return the PropertyPitObservable
+   */
+  @NotNull
+  <P2 extends IPropertyPitProvider, S2 extends IPropertyPitProvider<P2, S2, T2>, T2> IBuilderPropertyPitObservable<P2, S2, T2> asPropertyPit();
+
+  /**
+   * Returns a new PropertyObservable of our hierarchy property
+   *
+   * @return the PropertyObservable
+   */
+  @NotNull
+  IBuilderPropertyObservable<IPropertyPitProvider, ?> emitHierarchyValue();
+
+  /**
    * Constructs an Observable that contains an Optional representing
    * the value of the underlying property. <br>
    * The Optional will be empty, if the property has NULL as value. <br>
@@ -28,5 +45,20 @@ public interface IBuilderPropertyObservable<S extends IPropertyPitProvider, T> e
    */
   @NotNull
   Observable<Optional<T>> emitValue();
+
+  /**
+   * Constructs an Observable that contains an Optional representing
+   * the value of the underlying property. <br>
+   * The Optional will be empty, if the property has NULL as value. <br>
+   * This Observable is will be distincted automatically.
+   *
+   * @return the Observable, not <tt>null</tt>
+   */
+  @NotNull
+  default Observable<Optional<T>> emitDistinctedValue()
+  {
+    return emitValue()
+        .distinctUntilChanged();
+  }
 
 }

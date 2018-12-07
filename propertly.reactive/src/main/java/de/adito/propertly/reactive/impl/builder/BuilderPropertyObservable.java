@@ -1,7 +1,7 @@
 package de.adito.propertly.reactive.impl.builder;
 
 import de.adito.propertly.core.spi.*;
-import de.adito.propertly.reactive.api.builder.IBuilderPropertyObservable;
+import de.adito.propertly.reactive.api.builder.*;
 import io.reactivex.Observable;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,6 +20,24 @@ public class BuilderPropertyObservable<S extends IPropertyPitProvider, V> extend
   {
     super(pProperty);
     completeWhenInvalid = pCompleteWhenInvalid;
+  }
+
+  @NotNull
+  @Override
+  public <P2 extends IPropertyPitProvider, S2 extends IPropertyPitProvider<P2, S2, T2>, T2>
+  IBuilderPropertyPitObservable<P2, S2, T2> asPropertyPit()
+  {
+    return (IBuilderPropertyPitObservable<P2, S2, T2>) new BuilderPropertyPitObservable(emitValue(), completeWhenInvalid);
+  }
+
+  @NotNull
+  @Override
+  public IBuilderPropertyObservable<IPropertyPitProvider, ?> emitHierarchyValue()
+  {
+    Observable hierarchyPropObs = getInternalObservable()
+        .map(pOpt -> pOpt.map(pProp -> pProp.getHierarchy().getProperty()))
+        .distinctUntilChanged();
+    return new BuilderPropertyObservable<>(hierarchyPropObs, completeWhenInvalid);
   }
 
   @NotNull

@@ -5,6 +5,7 @@ import io.reactivex.Observable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * a BuilderPropertyPitObservable is a Observable that
@@ -51,6 +52,14 @@ public interface IBuilderPropertyPitObservable<P extends IPropertyPitProvider, S
    */
   @NotNull
   IBuilderPropertyListObservable<S, T> emitProperties();
+
+  /**
+   * Returns a new PropertyObservable of our hierarchy property
+   *
+   * @return the PropertyObservable
+   */
+  @NotNull
+  IBuilderPropertyObservable<IPropertyPitProvider, ?> emitHierarchyValue();
 
   /**
    * Emits all values of all properties this PropertyPit has.
