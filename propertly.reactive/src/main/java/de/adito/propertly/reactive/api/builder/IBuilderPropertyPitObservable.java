@@ -5,7 +5,6 @@ import io.reactivex.Observable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * a BuilderPropertyPitObservable is a Observable that
@@ -31,6 +30,16 @@ public interface IBuilderPropertyPitObservable<P extends IPropertyPitProvider, S
    * @return the IBuilderPropertyObservable, not <tt>null</tt>
    */
   @NotNull <T2> IBuilderPropertyObservable<S, T2> emitProperty(@NotNull IPropertyDescription<? super S, T2> pDescription);
+
+  /**
+   * Emits a single Property, identified by the given Name. <br>
+   * If the property is not found in this pit, the resulting BuilderPropertyObservable will be empty. <br>
+   * The PropertyObservable will trigger, if the property will be added/changed/removed
+   *
+   * @param pName Name to identify the property to observe on
+   * @return the IBuilderPropertyObservable, not <tt>null</tt>
+   */
+  @NotNull IBuilderPropertyObservable<S, T> emitProperty(@NotNull String pName);
 
   /**
    * Emits a child PropertyPitProvider, identified by the given PropertyDescription. <br>

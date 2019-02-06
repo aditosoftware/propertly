@@ -45,6 +45,24 @@ public class BuilderPropertyPitObservable<P extends IPropertyPitProvider, S exte
 
   @NotNull
   @Override
+  public IBuilderPropertyObservable<S, T> emitProperty(@NotNull String pName)
+  {
+    Observable<Optional<IProperty<S, T>>> propertyObservable = getInternalObservable()
+        .switchMap(pS -> {
+          if (pS.isPresent())
+          {
+            IProperty<S, T> property = pS.get().getPit().findProperty(pName);
+            if (property != null)
+              return InternalObservableFactory.property(property, completeWhenInvalid);
+          }
+
+          return Observable.just(Optional.empty());
+        });
+    return new BuilderPropertyObservable<>(propertyObservable, completeWhenInvalid);
+  }
+
+  @NotNull
+  @Override
   public <P2 extends IPropertyPitProvider, S2 extends IPropertyPitProvider<P2, S2, T2>, T2> BuilderPropertyPitObservable<P2, S2, T2> emitPropertyPit(@NotNull IPropertyDescription<? super S, S2> pDescription)
   {
     Observable<Optional<S2>> propertyPitObservable = emitProperty(pDescription)
