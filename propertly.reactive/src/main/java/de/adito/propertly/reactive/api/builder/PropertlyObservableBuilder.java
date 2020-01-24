@@ -28,7 +28,20 @@ public class PropertlyObservableBuilder
   public static <P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
   IBuilderPropertyPitObservable<P, S, T> create(@NotNull IPropertyPitProvider<P, S, T> pPropertyPitProvider)
   {
-    return new BuilderPropertyPitObservable<>(InternalObservableFactory.propertyPit((S) pPropertyPitProvider, false), false);
+    return create(pPropertyPitProvider, false);
+  }
+
+  /**
+   * Creates an PropertyPitObservable from a PropertyPitProvider.
+   *
+   * @param pPropertyPitProvider Source, to start building the reactive chain
+   * @return IBuilderPropertyPitProvider, not <tt>null</tt>
+   */
+  @NotNull
+  public static <P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T>
+  IBuilderPropertyPitObservable<P, S, T> create(@NotNull IPropertyPitProvider<P, S, T> pPropertyPitProvider, boolean pCompleteOnInvalidation)
+  {
+    return new BuilderPropertyPitObservable<>(InternalObservableFactory.propertyPit((S) pPropertyPitProvider, pCompleteOnInvalidation), pCompleteOnInvalidation);
   }
 
   /**
@@ -40,7 +53,19 @@ public class PropertlyObservableBuilder
   @NotNull
   public static <P extends IPropertyPitProvider, V> IBuilderPropertyObservable<P, V> create(@NotNull IProperty<P, V> pProperty)
   {
-    return new BuilderPropertyObservable<>(InternalObservableFactory.property(pProperty, false), false);
+    return create(pProperty, false);
+  }
+
+  /**
+   * Creates an PropertyObservable from a Property.
+   *
+   * @param pProperty Source, to start building the reactive chain
+   * @return IBuilderPropertyObservable, not <tt>null</tt>
+   */
+  @NotNull
+  public static <P extends IPropertyPitProvider, V> IBuilderPropertyObservable<P, V> create(@NotNull IProperty<P, V> pProperty, boolean pCompleteOnInvalidation)
+  {
+    return new BuilderPropertyObservable<>(InternalObservableFactory.property(pProperty, pCompleteOnInvalidation), pCompleteOnInvalidation);
   }
 
 }
