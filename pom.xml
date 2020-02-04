@@ -115,6 +115,10 @@
           <version>3.0.1</version>
           <configuration>
             <failOnError>false</failOnError>
+            <additionalJOption>-Xdoclint:none</additionalJOption>
+            <jdkToolchain>
+              <version>13</version>
+            </jdkToolchain>
           </configuration>
         </plugin>
 

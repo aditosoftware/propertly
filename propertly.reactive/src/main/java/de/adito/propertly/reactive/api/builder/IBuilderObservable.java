@@ -27,7 +27,7 @@ public interface IBuilderObservable<V>
 
   /**
    * Constructs the underlying observable.
-   * The Value is the outboxed value of {@link IBuilderObservable##toObservable()},
+   * The Value is the outboxed value of {@link IBuilderObservable#toObservable()},
    * previously filtered by {@link Optional#isPresent()}.
    * Use this with care - you will not be notified with NULL-Value-Changes (e.g. propertyValueChange with newValue=NULL).
    * The returned Observable is not distincted automatically.

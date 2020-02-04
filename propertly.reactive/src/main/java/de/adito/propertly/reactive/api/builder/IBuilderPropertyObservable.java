@@ -20,7 +20,7 @@ public interface IBuilderPropertyObservable<S extends IPropertyPitProvider, T> e
 
   /**
    * Casts the value of the current property to a PropertyPit and creates a new PropertyPitObservable.
-   * If the value is not an instance of IPropertyPitProvider, no specific exception will be thrown -> Runtime ClassCastException!
+   * If the value is not an instance of IPropertyPitProvider, no specific exception will be thrown -&gt; Runtime ClassCastException!
    *
    * @return the PropertyPitObservable
    */

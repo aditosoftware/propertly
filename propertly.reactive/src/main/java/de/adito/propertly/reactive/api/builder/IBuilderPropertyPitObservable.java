@@ -48,7 +48,7 @@ public interface IBuilderPropertyPitObservable<P extends IPropertyPitProvider, S
    * the pit itself does something like propertyAdded/propertyOrderChanged/propertyRemoved.
    *
    * @param pDescription Description to identify the property (with an PropertyPitProvider as value-type) to observe on
-   * @param <S2>         Value-Type of the property -> It has to be a subtype of PropertyPitProvider!
+   * @param <S2>         Value-Type of the property -&gt; It has to be a subtype of PropertyPitProvider!
    * @return IBuilderPropertyPitObservable, not <tt>null</tt>
    */
   @NotNull <P2 extends IPropertyPitProvider, S2 extends IPropertyPitProvider<P2, S2, T2>, T2>
