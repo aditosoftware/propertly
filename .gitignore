@@ -1,9 +1,8 @@
 # IntelliJ IDEA files
-/.idea
+/.idea/*
+!/.idea/codeStyles/
 *.iml
 
 # maven
 /target
-/propertly.core/target
-/propertly.guibuilder/target
-/propertly.test/target
+/*/target
