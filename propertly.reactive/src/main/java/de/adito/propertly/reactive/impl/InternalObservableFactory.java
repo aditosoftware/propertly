@@ -1,7 +1,7 @@
 package de.adito.propertly.reactive.impl;
 
 import de.adito.propertly.core.spi.*;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -27,7 +27,7 @@ public abstract class InternalObservableFactory
   public static <P extends IPropertyPitProvider, V> Observable<Optional<IProperty<P, V>>> property(IProperty<P, V> pProperty, boolean pCompleteWhenInvalid)
   {
     return Observable.create(new PropertyObservable<>(pProperty, pCompleteWhenInvalid))
-        .startWith(pProperty)
+        .startWithItem(pProperty)
         .map(Optional::of);
   }
 
@@ -39,7 +39,7 @@ public abstract class InternalObservableFactory
   public static <P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T> Observable<Optional<S>> propertyPit(@NotNull S pPropertyPit, boolean pCompleteWhenInvalid)
   {
     return Observable.create(new PropertyPitObservable<>(pPropertyPit, pCompleteWhenInvalid))
-        .startWith(pPropertyPit)
+        .startWithItem(pPropertyPit)
         .map(Optional::of);
   }
 

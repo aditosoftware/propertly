@@ -19,18 +19,18 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!-- RxJava 2 -->
+    <!-- RxJava 3 -->
     <dependency>
-      <groupId>io.reactivex.rxjava2</groupId>
+      <groupId>io.reactivex.rxjava3</groupId>
       <artifactId>rxjava</artifactId>
-      <version>2.2.3</version>
+      <version>3.0.4</version>
     </dependency>
 
-    <!-- Utility for RxJava 2 -->
+    <!-- Utility for RxJava 3 -->
     <dependency>
       <groupId>de.adito.util</groupId>
       <artifactId>reactive</artifactId>
-      <version>1.0.3</version>
+      <version>1.1.0</version>
     </dependency>
 
     <!-- Mockito -->

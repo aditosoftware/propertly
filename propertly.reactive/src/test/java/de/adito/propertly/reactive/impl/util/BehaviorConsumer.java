@@ -1,6 +1,6 @@
 package de.adito.propertly.reactive.impl.util;
 
-import io.reactivex.functions.Consumer;
+import io.reactivex.rxjava3.functions.Consumer;
 
 import java.util.concurrent.atomic.AtomicReference;
 

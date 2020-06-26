@@ -3,7 +3,7 @@ package de.adito.propertly.reactive.impl.builder;
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.reactive.api.builder.*;
 import de.adito.propertly.reactive.impl.InternalObservableFactory;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

@@ -4,8 +4,8 @@ import de.adito.propertly.core.api.Hierarchy;
 import de.adito.propertly.core.spi.IProperty;
 import de.adito.propertly.reactive.impl.dummies.ReactivePropertyPitProvider;
 import de.adito.propertly.reactive.impl.util.BehaviorConsumer;
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
