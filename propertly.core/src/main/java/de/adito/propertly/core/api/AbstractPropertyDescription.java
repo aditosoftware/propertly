@@ -115,7 +115,7 @@ public abstract class AbstractPropertyDescription<S extends IPropertyPitProvider
   @Override
   public int hashCode()
   {
-    return Objects.hash(getSourceType(), getType(), getName(), getAnnotations());
+    return Objects.hash(getSourceType(), getType(), getName(), Arrays.hashCode(getAnnotations()));
   }
 
 }
