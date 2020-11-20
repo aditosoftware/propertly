@@ -13,10 +13,10 @@ import java.util.*;
  */
 public abstract class AbstractPropertyDescription<S extends IPropertyPitProvider, T> implements IPropertyDescription<S, T>
 {
-  private Class<S> sourceType;
-  private Class<? extends T> type;
-  private String name;
-  private Map<Class<? extends Annotation>, Annotation> annotations;
+  private final Class<S> sourceType;
+  private final Class<? extends T> type;
+  private final String name;
+  private final Map<Class<? extends Annotation>, Annotation> annotations;
 
   protected AbstractPropertyDescription(@NotNull Class<S> pSourceType, @NotNull Class<? extends T> pType,
                                         @NotNull String pName, @Nullable Iterable<? extends Annotation> pAnnotations)

@@ -123,7 +123,7 @@ public class PPPIntrospector
           }
           if (needsOverride && propertlyOverride == null)
             throw new IllegalStateException("'" + firstDescription + "' at '" + firstDescription.getSourceType()
-                                                + "' overrides another description an thus has the be annotated with @PropertlyOverride.");
+                                                + "' overrides another description an thus has to be annotated with @PropertlyOverride.");
         }
         propertyDescriptions.add(firstDescription);
       }

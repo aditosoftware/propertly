@@ -1,16 +1,12 @@
 package de.adito.propertly.core.common;
 
-import de.adito.propertly.core.api.PropertyDescription;
+import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.common.exception.InitializationException;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
-import org.jetbrains.annotations.NotNull;
+import de.adito.propertly.core.spi.*;
+import org.jetbrains.annotations.*;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -24,13 +20,11 @@ import java.util.*;
  * </p>
  * The created IPropertyDescription for <tt>X</tt> is of type <tt>Integer</tt> with name <tt>X</tt> and source <tt>MyPitProvider</tt>.
  *
- * @author PaL
- * Date: 13.11.12
- * Time: 19:23
+ * @author J.Boesl, 13.11.12
  */
 public class PD
 {
-  private static final Map<Class, List<Field>> FIELD_CACHE = new LinkedHashMap<>();
+  private static final Map<Class<?>, List<Field>> FIELD_CACHE = new LinkedHashMap<>();
 
   private PD()
   {
@@ -49,44 +43,73 @@ public class PD
   public static <S extends IPropertyPitProvider<?, ?, ?>, T> IPropertyDescription<S, T>
   create(@NotNull Class<S> pSource)
   {
-    List<Field> fields = FIELD_CACHE.get(pSource);
-    if (fields == null) {
-      fields = new ArrayList<>(Arrays.asList(pSource.getDeclaredFields()));
-      FIELD_CACHE.put(pSource, fields);
-    }
+    return _create(pSource, null);
+  }
+
+  /**
+   * Creates a IPropertyDescriptionDV object at a IPropertyPitProvider.
+   *
+   * @param pSource       the corresponding IPropertyPitProvider class that the created IPropertyDescription object will be a
+   *                      static member of.
+   * @param pDefaultValue if a default value is supplied a {@link PropertyDescriptionDV} is created.
+   * @param <S>           the type of the corresponding IPropertyPitProvider.
+   * @param <T>           the value's type this IPropertyDescription object describes.
+   * @return the fitting IPropertyDescriptionDV object for the given IPropertyPitProvider.
+   */
+  @NotNull
+  public static <S extends IPropertyPitProvider<?, ?, ?>, T> IPropertyDescriptionDV<S, T>
+  create(@NotNull Class<S> pSource, @NotNull T pDefaultValue)
+  {
+    return (IPropertyDescriptionDV<S, T>) _create(pSource, pDefaultValue);
+  }
+
+  @NotNull
+  private static <S extends IPropertyPitProvider<?, ?, ?>, T> IPropertyDescription<S, T>
+  _create(@NotNull Class<S> pSource, @Nullable T pDefaultValue)
+  {
+    List<Field> fields = FIELD_CACHE.computeIfAbsent(pSource, source -> new ArrayList<>(Arrays.asList(source.getDeclaredFields())));
     boolean isPublicClass = Modifier.isPublic(pSource.getModifiers());
 
     Iterator<Field> iterator = fields.iterator();
-    while (iterator.hasNext()) {
+    while (iterator.hasNext())
+    {
       Field field = iterator.next();
-      try {
+      try
+      {
         int modifiers = field.getModifiers();
-        if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) {
+        if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers))
+        {
           if (!Modifier.isPublic(modifiers) || !isPublicClass)
             field.setAccessible(true);
           if (field.get(null) == null) // not yet initialized
           {
-            if (IPropertyDescription.class.isAssignableFrom(field.getType())) {
+            if (IPropertyDescription.class.isAssignableFrom(field.getType()))
+            {
               iterator.remove();
-              Class type = Object.class;
+              Class<?> type = Object.class;
               Type[] types = ((ParameterizedType) field.getGenericType()).getActualTypeArguments();
-              if (types.length == 2) {
+              if (types.length == 2)
+              {
                 if (!((Class<?>) types[0]).isAssignableFrom(pSource))
                   throw new RuntimeException("invalid type: " + types[0]);
                 if (types[1] instanceof Class)
-                  type = ((Class) types[1]);
+                  type = ((Class<?>) types[1]);
                 else if (types[1] instanceof ParameterizedType)
-                  type = (Class) ((ParameterizedType) types[1]).getRawType();
+                  type = (Class<?>) ((ParameterizedType) types[1]).getRawType();
               }
               String name = field.getName();
               Annotation[] annotations = field.getDeclaredAnnotations();
+              if (pDefaultValue == null)
+                //noinspection unchecked
+                return new PropertyDescription<>(pSource, (Class<? extends T>) type, name, annotations);
               //noinspection unchecked
-              return (IPropertyDescription<S, T>) new PropertyDescription(pSource, type, name, annotations);
+              return new PropertyDescriptionDV<>(pSource, (Class<? extends T>) type, name, pDefaultValue, annotations);
             }
           }
         }
       }
-      catch (IllegalAccessException e) {
+      catch (IllegalAccessException e)
+      {
         throw new RuntimeException(e);
       }
       iterator.remove();

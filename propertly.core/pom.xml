@@ -11,6 +11,7 @@
   </parent>
 
   <artifactId>propertly.core</artifactId>
+  <version>1.0.4</version>
 
   <dependencies>
     <dependency>
