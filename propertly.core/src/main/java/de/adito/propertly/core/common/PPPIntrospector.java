@@ -82,12 +82,11 @@ public class PPPIntrospector
             boolean isParentalType = propertyDescription.getSourceType().isAssignableFrom(pPPPClass);
             if (isParentalType)
             {
-              List<IPropertyDescription> list = namePropertyMap.get(propertyDescription.getName());
+              // #8: keep superclasses position for overridden properties
+              List<IPropertyDescription> list = namePropertyMap.remove(propertyDescription.getName());
               if (list == null)
-              {
                 list = new ArrayList<>();
-                namePropertyMap.put(propertyDescription.getName(), list);
-              }
+              namePropertyMap.put(propertyDescription.getName(), list);
               list.add(propertyDescription);
             }
             assert isParentalType;

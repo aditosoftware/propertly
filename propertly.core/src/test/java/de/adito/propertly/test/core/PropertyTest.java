@@ -203,11 +203,11 @@ public class PropertyTest
         "tProperty child property: property(black, Color, java.awt.Color[r=0,g=0,b=0])\n" +
         "tProperty child property: property(color4, Color, java.awt.Color[r=255,g=0,b=255])\n" +
         "tProperty parent: IndexedMutablePropertyPit\n" +
-        "tProperty property: property(X, Integer, 123)\n" +
-        "tProperty property: property(Y, Integer, null)\n" +
         "tProperty property: property(FF, Dimension, java.awt.Dimension[width=123,height=456])\n" +
         "tProperty property: property(MAP, Map, null)\n" +
         "tProperty property: property(CHILD, PropertyTestChildren, IndexedMutablePropertyPit)\n" +
+        "tProperty property: property(X, Integer, 123)\n" +
+        "tProperty property: property(Y, Integer, null)\n" +
         "tProperty property: property(WIDTH, Integer, null)\n" +
         "tProperty property: property(HEIGHT, Integer, null)\n" +
         "tProperty property: property(DESCRIPTION, String, null)";
@@ -216,22 +216,22 @@ public class PropertyTest
                         resultStringBuild.toString());
 
     expected = "/root\n" +
-        "\t X : null\n" +
-        "\t Y : null\n" +
         "\t FF : null\n" +
         "\t MAP : null\n" +
         "\t/CHILD\n" +
         "\t\t/DynamicChildProperty\n" +
-        "\t\t\t X : 123\n" +
-        "\t\t\t Y : null\n" +
         "\t\t\t FF : java.awt.Dimension[width=123,height=456]\n" +
         "\t\t\t MAP : null\n" +
         "\t\t\t/CHILD\n" +
         "\t\t\t\t black : java.awt.Color[r=0,g=0,b=0]\n" +
         "\t\t\t\t color4 : java.awt.Color[r=255,g=0,b=255]\n" +
+        "\t\t\t X : 123\n" +
+        "\t\t\t Y : null\n" +
         "\t\t\t WIDTH : null\n" +
         "\t\t\t HEIGHT : null\n" +
         "\t\t\t DESCRIPTION : null\n" +
+        "\t X : null\n" +
+        "\t Y : null\n" +
         "\t WIDTH : null\n" +
         "\t HEIGHT : null\n" +
         "\t DESCRIPTION : null\n";
