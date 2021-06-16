@@ -45,34 +45,47 @@ public class DelegatingNode extends AbstractNode
   private void _alignToDelegate()
   {
     Object value = delegate.getValue();
-    if (value instanceof IPropertyPitProvider)
+    if (value instanceof IPropertyPitProvider && pitProvider == null)
     {
       IPropertyPitProvider ppp = (IPropertyPitProvider) value;
       ppp = PropertlyUtility.create(ppp);
       HierarchyHelper.setNode(ppp, this);
       pitProvider = ppp;
     }
-    else
+    else if (value == null)
       pitProvider = null;
-
-    if (children != null)
-    {
-      for (INode child : children)
-        child.remove();
-    }
 
     List<INode> delegateChildren = delegate.getChildren();
     if (delegateChildren != null)
     {
-      children = new NodeChildren();
-      for (INode node : delegateChildren)
+      // create children
+      if (children == null)
+        children = new NodeChildren();
+
+      Set<INode> childrenToRemove = new HashSet<>(children.asList());
+
+      // update children
+      for (INode delegateChild : delegateChildren)
       {
-        DelegatingNode child = createChild(node);
-        children.add(child);
+        IPropertyDescription<?, ?> delegateDescription = delegateChild.getProperty().getDescription();
+        DelegatingNode myChild = (DelegatingNode) children.find(delegateDescription);
+        if (myChild == null)
+          children.add(createChild(delegateChild));
+        childrenToRemove.removeIf(pNode -> pNode.getProperty().getDescription().equals(delegateDescription));
       }
+
+      // remove children
+      for (INode nodeToRemove : childrenToRemove)
+        children.remove(nodeToRemove);
     }
     else
+    {
+      // invalidate, because delegate does not have children (anymore)
+      if (children != null)
+        for (INode child : children)
+          child.remove();
       children = null;
+    }
   }
 
   protected DelegatingNode createChild(INode pDelegate)
