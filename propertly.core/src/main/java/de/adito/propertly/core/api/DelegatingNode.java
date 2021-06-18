@@ -2,17 +2,11 @@ package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.common.PropertlyUtility;
 import de.adito.propertly.core.common.exception.PropertlyRenameException;
-import de.adito.propertly.core.spi.IMutablePropertyPitProvider;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import de.adito.propertly.core.spi.*;
+import org.jetbrains.annotations.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.*;
 
 /**
  * @author PaL
@@ -39,40 +33,53 @@ public class DelegatingNode extends AbstractNode
   {
     super(pHierarchy, pParent, pPropertyDescription, pDynamic);
     delegate = pDelegate;
-    _alignToDelegate();
+    alignToDelegate();
   }
 
-  private void _alignToDelegate()
+  protected void alignToDelegate()
   {
-    Object value = delegate.getValue();
-    if (value instanceof IPropertyPitProvider)
+    Object value = executeReadOnDelegate(INode::getValue);
+    if (value instanceof IPropertyPitProvider && pitProvider == null)
     {
       IPropertyPitProvider ppp = (IPropertyPitProvider) value;
       ppp = PropertlyUtility.create(ppp);
       HierarchyHelper.setNode(ppp, this);
       pitProvider = ppp;
     }
-    else
+    else if (value == null)
       pitProvider = null;
 
-    if (children != null)
-    {
-      for (INode child : children)
-        child.remove();
-    }
-
-    List<INode> delegateChildren = delegate.getChildren();
+    List<INode> delegateChildren = executeReadOnDelegate(INode::getChildren);
     if (delegateChildren != null)
     {
-      children = new NodeChildren();
-      for (INode node : delegateChildren)
+      // create children
+      if (children == null)
+        children = new NodeChildren();
+
+      Set<INode> childrenToRemove = new HashSet<>(children.asList());
+
+      // update children
+      for (INode delegateChild : delegateChildren)
       {
-        DelegatingNode child = createChild(node);
-        children.add(child);
+        IPropertyDescription<?, ?> delegateDescription = delegateChild.getProperty().getDescription();
+        DelegatingNode myChild = (DelegatingNode) children.find(delegateDescription);
+        if (myChild == null)
+          children.add(createChild(delegateChild));
+        childrenToRemove.removeIf(pNode -> pNode.getProperty().getDescription().equals(delegateDescription));
       }
+
+      // remove children
+      for (INode nodeToRemove : childrenToRemove)
+        children.remove(nodeToRemove);
     }
     else
+    {
+      // invalidate, because delegate does not have children (anymore)
+      if (children != null)
+        for (INode child : children)
+          child.remove();
       children = null;
+    }
   }
 
   protected DelegatingNode createChild(INode pDelegate)
@@ -95,9 +102,13 @@ public class DelegatingNode extends AbstractNode
     Object oldValue = getValueInternal();
     List<Runnable> onFinish = new ArrayList<>();
     fireValueWillBeChange(oldValue, pValue, onFinish::add, pAttributes);
-    delegate.setValue(pValue, pAttributes);
-    clearListeners();
-    _alignToDelegate();
+
+    executeWriteOnDelegate(pDelegate -> {
+      pDelegate.setValue(pValue, pAttributes);
+      clearListeners();
+    });
+
+    alignToDelegate();
     Object newValue = getValueInternal();
     fireValueChange(oldValue, newValue, pAttributes);
     onFinish.forEach(Runnable::run);
@@ -113,13 +124,13 @@ public class DelegatingNode extends AbstractNode
   @Override
   public boolean canRead()
   {
-    return isValid() && delegate.canRead();
+    return isValid() && executeReadOnDelegate(INode::canRead);
   }
 
   @Override
   public boolean canWrite()
   {
-    return isValid() && delegate.canWrite();
+    return isValid() && executeReadOnDelegate(INode::canWrite);
   }
 
   @Nullable
@@ -152,9 +163,8 @@ public class DelegatingNode extends AbstractNode
     INode node = findNode(pPropertyDescription.getName());
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
-
-    INode delegateChild = delegate.addProperty(pIndex, pPropertyDescription, pAttributes);
-    DelegatingNode child = createChild(delegateChild);
+    executeWriteOnDelegate(pDelegate -> pDelegate.addProperty(pIndex, pPropertyDescription, pAttributes));
+    DelegatingNode child = createChild(executeReadOnDelegate(pDelegate -> pDelegate.findNode(pPropertyDescription)));
     if (children == null)
       children = new NodeChildren();
     children.add(pIndex, child);
@@ -178,7 +188,7 @@ public class DelegatingNode extends AbstractNode
       List<Runnable> onFinish = new ArrayList<>();
       fireNodeWillBeRemoved(description, onFinish::add, pAttributes);
       assert children != null;
-      delegate.removeProperty(pPropertyDescription, pAttributes);
+      executeWriteOnDelegate(pDelegate -> pDelegate.removeProperty(pPropertyDescription, pAttributes));
       children.remove(childNode);
       HierarchyHelper.getNode(property).remove();
       fireNodeRemoved(description, pAttributes);
@@ -200,7 +210,7 @@ public class DelegatingNode extends AbstractNode
     IPropertyDescription description = property.getDescription();
     List<Runnable> onFinish = new ArrayList<>();
     fireNodeWillBeRemoved(description, onFinish::add, pAttributes);
-    delegate.removeProperty(pIndex, pAttributes);
+    executeWriteOnDelegate(pDelegate -> pDelegate.removeProperty(pIndex, pAttributes));
     children.remove(pIndex);
     HierarchyHelper.getNode(property).remove();
     fireNodeRemoved(description, pAttributes);
@@ -222,7 +232,7 @@ public class DelegatingNode extends AbstractNode
       List<Runnable> onFinish = new ArrayList<>();
       firePropertyOrderWillBeChanged(onFinish::add, pAttributes);
       children.reorder(pComparator);
-      delegate.reorder(Comparator.<IProperty>comparingInt(p -> children.indexOf(p.getDescription())), pAttributes);
+      executeWriteOnDelegate(pDelegate -> pDelegate.reorder(Comparator.<IProperty>comparingInt(p -> children.indexOf(p.getDescription())), pAttributes));
       firePropertyOrderChanged(pAttributes);
       onFinish.forEach(Runnable::run);
     }
@@ -238,7 +248,7 @@ public class DelegatingNode extends AbstractNode
 
     try
     {
-      delegate.rename(pName, pAttributes);
+      executeWriteOnDelegate(pDelegate -> pDelegate.rename(pName, pAttributes));
 
       String oldName = property.getName();
       DelegatingNode parent = (DelegatingNode) getParent();
@@ -259,28 +269,46 @@ public class DelegatingNode extends AbstractNode
   @Override
   public boolean isValid()
   {
-    return delegate != null && delegate.isValid();
+    return executeReadOnDelegate(INode::isValid) == Boolean.TRUE;
   }
 
   @Override
   public void remove()
   {
     assert delegate != null;
-    delegate.remove();
+    executeWriteOnDelegate(INode::remove);
     if (isValid() && children != null)
     {
       for (INode child : children)
         child.remove();
     }
-    delegate.remove();
+    executeWriteOnDelegate(INode::remove);
     children = null;
     pitProvider = null;
     delegate = null;
     super.remove();
   }
 
+  protected void executeWriteOnDelegate(@NotNull Consumer<INode> pOnDelegate)
+  {
+    pOnDelegate.accept(delegate);
+  }
+
+  protected <T> T executeReadOnDelegate(@NotNull Function<INode, T> pOnDelegate)
+  {
+    if(delegate == null)
+      return null;
+
+    return pOnDelegate.apply(delegate);
+  }
+
   protected Object getValueInternal()
   {
-    return pitProvider == null && delegate != null ? delegate.getValue() : pitProvider;
+    return pitProvider == null && delegate != null ? executeReadOnDelegate(INode::getValue) : pitProvider;
+  }
+
+  protected boolean hasCreatedCopyOfValue()
+  {
+    return pitProvider != null;
   }
 }
