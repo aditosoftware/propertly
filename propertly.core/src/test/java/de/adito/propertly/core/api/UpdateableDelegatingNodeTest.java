@@ -49,6 +49,42 @@ public class UpdateableDelegatingNodeTest
   }
 
   @Test
+  void test_source_static_nestedTypeChange()
+  {
+    DummyModel.SubModelContainer container = sourceModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
+    Assertions.assertNotNull(container);
+    SubModel subModel = container.addProperty(new SubModel()).getValue();
+    Assertions.assertNotNull(subModel);
+    SubModel subSubModel = (SubModel) subModel.setValue(SubModel.staticSubModel, new SubModel());
+    Assertions.assertNotNull(subSubModel);
+    DummyModel.SubModelContainer subSubSubModelContainer = subSubModel.setValue(SubModel.subModels, new DummyModel.SubModelContainer());
+    Assertions.assertNotNull(subSubSubModelContainer);
+    subSubSubModelContainer.addProperty(new SubModel());
+    subSubSubModelContainer.addProperty(new SubModel());
+
+    // change type of submodel with predefined data
+    OtherSubModel otherSubSubModelTmp = new Hierarchy<>("dummy", new OtherSubModel()).getValue();
+    DummyModel.SubModelContainer otherSubSubSubModelContainer = otherSubSubModelTmp.setValue(OtherSubModel.subModels, new DummyModel.SubModelContainer());
+    Assertions.assertNotNull(otherSubSubSubModelContainer);
+    otherSubSubSubModelContainer.addProperty("newModel", new SubModel());
+    subModel.setValue(SubModel.staticSubModel, otherSubSubModelTmp);
+
+    // validate, that the static-subSubModel has the correct, recalculated, children
+    IProperty<?, ?> subModelProp = new PropertyPath(subModel).find(updateableModel.getPit().getHierarchy());
+    Assertions.assertNotNull(subModelProp);
+    SubModel updatedSubModel = (SubModel) subModelProp.getValue();
+    Assertions.assertNotNull(updatedSubModel);
+    ISubModel<?> updatedSubSubModel = updatedSubModel.getValue(SubModel.staticSubModel);
+    Assertions.assertNotNull(updatedSubSubModel);
+    Assertions.assertEquals(OtherSubModel.class, updatedSubSubModel.getClass());
+    DummyModel.SubModelContainer updatedSubSubSubModelContainer = ((OtherSubModel) updatedSubSubModel).getValue(OtherSubModel.subModels);
+    Assertions.assertNotNull(updatedSubSubSubModelContainer);
+    Assertions.assertEquals(1, updatedSubSubSubModelContainer.getValues().size());
+    Assertions.assertNotNull(updatedSubSubSubModelContainer.findProperty("newModel"));
+    Assertions.assertTrue(Objects.requireNonNull(updatedSubSubSubModelContainer.findProperty("newModel")).isValid());
+  }
+
+  @Test
   void test_source_dynamic_addRemove()
   {
     DummyModel.SubModelContainer container = sourceModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());

@@ -45,6 +45,9 @@ public class DelegatingNode extends AbstractNode
       ppp = PropertlyUtility.create(ppp);
       HierarchyHelper.setNode(ppp, this);
       pitProvider = ppp;
+
+      // invalidate children, because we have to fully recalculate again
+      _invalidateChildren();
     }
     else if (value == null)
       pitProvider = null;
@@ -75,10 +78,7 @@ public class DelegatingNode extends AbstractNode
     else
     {
       // invalidate, because delegate does not have children (anymore)
-      if (children != null)
-        for (INode child : children)
-          child.remove();
-      children = null;
+      _invalidateChildren();
     }
   }
 
@@ -310,5 +310,13 @@ public class DelegatingNode extends AbstractNode
   protected boolean hasCreatedCopyOfValue()
   {
     return pitProvider != null;
+  }
+
+  private void _invalidateChildren()
+  {
+    if (children != null)
+      for (INode child : children)
+        child.remove();
+    children = null;
   }
 }
