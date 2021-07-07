@@ -4,11 +4,9 @@ import de.adito.propertly.core.common.PD;
 import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.spi.extension.*;
-import org.jetbrains.annotations.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * @author w.glanzer, 17.06.2021
@@ -17,8 +15,8 @@ public class UpdateableDelegatingNodeTest
 {
   private DummyModel sourceModel;
   private DummyModel updateableModel;
-  private _ReadableListener sourceHierarchyListener;
-  private _ReadableListener updateableHierarchyListener;
+  private ReadablePropertyPitEventListener sourceHierarchyListener;
+  private ReadablePropertyPitEventListener updateableHierarchyListener;
 
   @BeforeEach
   void setUp()
@@ -37,8 +35,8 @@ public class UpdateableDelegatingNodeTest
     Assertions.assertNotNull(updateableModel);
 
     // add listeners
-    sourceHierarchyListener = new _ReadableListener();
-    updateableHierarchyListener = new _ReadableListener();
+    sourceHierarchyListener = new ReadablePropertyPitEventListener();
+    updateableHierarchyListener = new ReadablePropertyPitEventListener();
     sourceHierarchy.addWeakListener(sourceHierarchyListener);
     updateableHierarchy.addWeakListener(updateableHierarchyListener);
   }
@@ -135,11 +133,11 @@ public class UpdateableDelegatingNodeTest
 
     public static final IPropertyDescription<DummyModel, SubModelContainer> subModels = PD.create(DummyModel.class);
 
-    public static class SubModelContainer extends AbstractMutablePPP<DummyModel, SubModelContainer, SubModel>
+    public static class SubModelContainer extends AbstractMutablePPP<IPropertyPitProvider<?, ?, ?>, SubModelContainer, ISubModel<?>>
     {
       public SubModelContainer()
       {
-        super(SubModel.class);
+        super((Class) SubModel.class);
       }
 
       @Override
@@ -156,107 +154,20 @@ public class UpdateableDelegatingNodeTest
     }
   }
 
-  public static class SubModel extends AbstractPPP<DummyModel.SubModelContainer, SubModel, Object>
+  public interface ISubModel<S extends IPropertyPitProvider<DummyModel.SubModelContainer, S, Object>>
+      extends IPropertyPitProvider<DummyModel.SubModelContainer, S, Object>
   {
-    public static final IPropertyDescription<SubModel, String> subModelProperty = PD.create(SubModel.class);
+    IPropertyDescription<ISubModel, String> subModelProperty = PD.create(ISubModel.class);
+  }
+
+  public static class SubModel extends AbstractPPP<DummyModel.SubModelContainer, SubModel, Object> implements ISubModel<SubModel>
+  {
+    public static final IPropertyDescription<SubModel, DummyModel.SubModelContainer> subModels = PD.create(SubModel.class);
 
     @Override
     public String toString()
     {
       return getClass().getName();
-    }
-  }
-
-  private static class _ReadableListener implements IPropertyPitEventListener<IPropertyPitProvider<?, ?, ?>, Object>
-  {
-    private final StringBuilder builder = new StringBuilder();
-
-    @Override
-    public void propertyValueWillBeChanged(@NotNull IProperty<IPropertyPitProvider<?, ?, ?>, Object> pProperty,
-                                           @Nullable Object pOldValue, @Nullable Object pNewValue, @NotNull Consumer<Runnable> pOnChanged,
-                                           @NotNull Set<Object> pAttributes)
-    {
-      builder.append("propertyValueWillBeChanged")
-          .append(" ").append(new PropertyPath(pProperty).asString())
-          .append(" ").append(pOldValue)
-          .append(" ").append(pNewValue)
-          .append('\n');
-    }
-
-    @Override
-    public void propertyValueChanged(@NotNull IProperty<IPropertyPitProvider<?, ?, ?>, Object> pProperty, @Nullable Object pOldValue,
-                                     @Nullable Object pNewValue, @NotNull Set<Object> pAttributes)
-    {
-      builder.append("propertyValueChanged")
-          .append(" ").append(new PropertyPath(pProperty).asString())
-          .append(" ").append(pOldValue)
-          .append(" ").append(pNewValue)
-          .append('\n');
-    }
-
-    @Override
-    public void propertyNameChanged(@NotNull IProperty<IPropertyPitProvider<?, ?, ?>, Object> pProperty, @NotNull String pOldName,
-                                    @NotNull String pNewName, @NotNull Set<Object> pAttributes)
-    {
-      builder.append("propertyNameChanged")
-          .append(" ").append(new PropertyPath(pProperty).asString())
-          .append(" ").append(pOldName)
-          .append(" ").append(pNewName)
-          .append('\n');
-    }
-
-    @Override
-    public void propertyWillBeRemoved(@NotNull IProperty<IPropertyPitProvider<?, ?, ?>, Object> pProperty, @NotNull Consumer<Runnable> pOnRemoved,
-                                      @NotNull Set<Object> pAttributes)
-    {
-      builder.append("propertyWillBeRemoved")
-          .append(" ").append(new PropertyPath(pProperty).asString())
-          .append('\n');
-    }
-
-    @Override
-    public void propertyRemoved(@NotNull IPropertyPitProvider<?, ?, ?> pSource,
-                                @NotNull IPropertyDescription<IPropertyPitProvider<?, ?, ?>, Object> pPropertyDescription,
-                                @NotNull Set<Object> pAttributes)
-    {
-      builder.append("propertyRemoved")
-          .append(" ").append(new PropertyPath(pSource).asString())
-          .append(" ").append(pPropertyDescription.getName())
-          .append('\n');
-    }
-
-    @Override
-    public void propertyAdded(@NotNull IPropertyPitProvider<?, ?, ?> pSource,
-                              @NotNull IPropertyDescription<IPropertyPitProvider<?, ?, ?>, Object> pPropertyDescription,
-                              @NotNull Set<Object> pAttributes)
-    {
-      builder.append("propertyAdded")
-          .append(" ").append(new PropertyPath(pSource).asString())
-          .append(" ").append(pPropertyDescription.getName())
-          .append('\n');
-    }
-
-    @Override
-    public void propertyOrderWillBeChanged(@NotNull IPropertyPitProvider<?, ?, ?> pSource, @NotNull Consumer<Runnable> pOnChanged,
-                                           @NotNull Set<Object> pAttributes)
-    {
-      builder.append("propertyOrderWillBeChanged")
-          .append(" ").append(new PropertyPath(pSource).asString())
-          .append('\n');
-    }
-
-    @Override
-    public void propertyOrderChanged(@NotNull IPropertyPitProvider<?, ?, ?> pSource, @NotNull Set<Object> pAttributes)
-    {
-      builder.append("propertyOrderChanged")
-          .append(" ").append(new PropertyPath(pSource).asString())
-          .append('\n');
-    }
-
-    @NotNull
-    public String asString()
-    {
-      return builder.toString();
     }
   }
 
