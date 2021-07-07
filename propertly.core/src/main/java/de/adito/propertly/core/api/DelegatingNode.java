@@ -39,7 +39,7 @@ public class DelegatingNode extends AbstractNode
   protected void alignToDelegate()
   {
     Object value = executeReadOnDelegate(INode::getValue);
-    if (value instanceof IPropertyPitProvider && pitProvider == null)
+    if (value instanceof IPropertyPitProvider && (pitProvider == null || value.getClass() != pitProvider.getClass()))
     {
       IPropertyPitProvider ppp = (IPropertyPitProvider) value;
       ppp = PropertlyUtility.create(ppp);

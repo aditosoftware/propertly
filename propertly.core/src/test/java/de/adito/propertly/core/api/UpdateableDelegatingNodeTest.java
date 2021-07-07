@@ -79,6 +79,54 @@ public class UpdateableDelegatingNodeTest
   }
 
   @Test
+  void test_source_dynamic_initWithPPP()
+  {
+    //precreate a model to add afterwards
+    List<String> addedModelNames = new ArrayList<>();
+    SubModel preSubModel = new Hierarchy<>(UUID.randomUUID().toString(), new SubModel()).getValue();
+    DummyModel.SubModelContainer preSubSubModels = preSubModel.setValue(SubModel.subModels, new DummyModel.SubModelContainer());
+    Assertions.assertNotNull(preSubSubModels);
+    for(int i = 0; i < 20; i++)
+      addedModelNames.add(preSubSubModels.addProperty(UUID.randomUUID().toString(), new SubModel()).getName());
+
+    DummyModel.SubModelContainer container = sourceModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
+    Assertions.assertNotNull(container);
+    SubModel subModel = container.addProperty(preSubModel).getValue();
+    Assertions.assertNotNull(subModel);
+    DummyModel.SubModelContainer subSubModels = subModel.setValue(SubModel.subModels, preSubSubModels);
+    Assertions.assertNotNull(subSubModels);
+
+    for (String name : addedModelNames)
+    {
+      Assertions.assertNotNull(subSubModels.findProperty(name));
+      Assertions.assertTrue(Objects.requireNonNull(subSubModels.findProperty(name)).isValid());
+    }
+  }
+
+  @Test
+  void test_source_dynamic_nestedChange()
+  {
+    DummyModel.SubModelContainer container = sourceModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
+    Assertions.assertNotNull(container);
+    SubModel subModel = container.addProperty(new SubModel()).getValue();
+    Assertions.assertNotNull(subModel);
+    DummyModel.SubModelContainer subSubModels = subModel.setValue(SubModel.subModels, new DummyModel.SubModelContainer());
+    Assertions.assertNotNull(subSubModels);
+
+
+    List<String> addedModelNames = new ArrayList<>();
+    for(int i = 0; i < 20; i++)
+      addedModelNames.add(subSubModels.addProperty(new SubModel()).getName());
+
+    Assertions.assertEquals(sourceHierarchyListener.asString(), updateableHierarchyListener.asString());
+    for (String name : addedModelNames)
+    {
+      Assertions.assertNotNull(subSubModels.findProperty(name));
+      Assertions.assertTrue(Objects.requireNonNull(subSubModels.findProperty(name)).isValid());
+    }
+  }
+
+  @Test
   void test_source_dynamic_rename()
   {
     DummyModel.SubModelContainer container = sourceModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
@@ -163,6 +211,19 @@ public class UpdateableDelegatingNodeTest
   public static class SubModel extends AbstractPPP<DummyModel.SubModelContainer, SubModel, Object> implements ISubModel<SubModel>
   {
     public static final IPropertyDescription<SubModel, DummyModel.SubModelContainer> subModels = PD.create(SubModel.class);
+
+    public static final IPropertyDescription<SubModel, ISubModel> staticSubModel = PD.create(SubModel.class);
+
+    @Override
+    public String toString()
+    {
+      return getClass().getName();
+    }
+  }
+
+  public static class OtherSubModel extends AbstractPPP<DummyModel.SubModelContainer, OtherSubModel, Object> implements ISubModel<OtherSubModel>
+  {
+    public static final IPropertyDescription<OtherSubModel, DummyModel.SubModelContainer> subModels = PD.create(OtherSubModel.class);
 
     @Override
     public String toString()
