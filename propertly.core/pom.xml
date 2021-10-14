@@ -15,6 +15,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>25.1-jre</version>
+    </dependency>
+    <dependency>
       <groupId>de.adito.util</groupId>
       <artifactId>weak</artifactId>
       <version>1.0.1</version>
@@ -38,6 +43,10 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
+            <Import-Package>
+              com.google.common.cache;version="[25.1,99)",
+              *
+            </Import-Package>
             <Export-Package>
               de.adito.propertly.core.spi,
               de.adito.propertly.core.spi.extension,

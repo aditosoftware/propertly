@@ -1,5 +1,6 @@
 package de.adito.propertly.core.common;
 
+import com.google.common.cache.*;
 import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.common.exception.InitializationException;
 import de.adito.propertly.core.spi.*;
@@ -26,7 +27,16 @@ import java.util.logging.*;
 public class PD
 {
   private static final Logger _LOGGER = Logger.getLogger(PD.class.getName());
-  private static final Map<Class<?>, List<Field>> FIELD_CACHE = new LinkedHashMap<>();
+  private static final LoadingCache<Class<?>, List<Field>> FIELD_CACHE = CacheBuilder.newBuilder()
+      .build(new CacheLoader<Class<?>, List<Field>>()
+      {
+        @NotNull
+        @Override
+        public List<Field> load(@NotNull Class<?> pClass)
+        {
+          return new ArrayList<>(Arrays.asList(pClass.getDeclaredFields()));
+        }
+      });
 
   private PD()
   {
@@ -85,7 +95,7 @@ public class PD
   private static <S extends IPropertyPitProvider<?, ?, ?>, T> IPropertyDescription<S, T>
   _create(@NotNull Class<S> pSource, @Nullable T pDefaultValue)
   {
-    List<Field> fields = FIELD_CACHE.computeIfAbsent(pSource, source -> new ArrayList<>(Arrays.asList(source.getDeclaredFields())));
+    List<Field> fields = FIELD_CACHE.getUnchecked(pSource);
     boolean isPublicClass = Modifier.isPublic(pSource.getModifiers());
 
     Iterator<Field> iterator = fields.iterator();
