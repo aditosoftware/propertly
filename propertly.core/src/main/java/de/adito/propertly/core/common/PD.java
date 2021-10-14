@@ -8,6 +8,7 @@ import org.jetbrains.annotations.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * PD is used to create IPropertyDescription objects on IPropertyPitProvider objects.<br/>
@@ -24,6 +25,7 @@ import java.util.*;
  */
 public class PD
 {
+  private static final Logger _LOGGER = Logger.getLogger(PD.class.getName());
   private static final Map<Class<?>, List<Field>> FIELD_CACHE = new LinkedHashMap<>();
 
   private PD()
@@ -43,7 +45,15 @@ public class PD
   public static <S extends IPropertyPitProvider<?, ?, ?>, T> IPropertyDescription<S, T>
   create(@NotNull Class<S> pSource)
   {
-    return _create(pSource, null);
+    try
+    {
+      return _create(pSource, null);
+    }
+    catch(Throwable t)
+    {
+      _LOGGER.log(Level.WARNING, "", t);
+      throw t;
+    }
   }
 
   /**
@@ -60,7 +70,15 @@ public class PD
   public static <S extends IPropertyPitProvider<?, ?, ?>, T> IPropertyDescriptionDV<S, T>
   create(@NotNull Class<S> pSource, @NotNull T pDefaultValue)
   {
-    return (IPropertyDescriptionDV<S, T>) _create(pSource, pDefaultValue);
+    try
+    {
+      return (IPropertyDescriptionDV<S, T>) _create(pSource, pDefaultValue);
+    }
+    catch(Throwable t)
+    {
+      _LOGGER.log(Level.WARNING, "", t);
+      throw t;
+    }
   }
 
   @NotNull
