@@ -66,8 +66,19 @@ public class DelegatingNode extends AbstractNode
       {
         IPropertyDescription<?, ?> delegateDescription = delegateChild.getProperty().getDescription();
         DelegatingNode myChild = (DelegatingNode) children.find(delegateDescription);
+
+        // there was no child -> create
         if (myChild == null)
           children.add(createChild(delegateChild));
+
+        // If there is a child, but it is invalid -> remove from children list and recreate
+        else if(!myChild.isValid())
+        {
+          int idx = children.indexOf(delegateDescription);
+          children.remove(myChild);
+          children.add(idx, createChild(delegateChild));
+        }
+
         childrenToRemove.removeIf(pNode -> pNode.getProperty().getDescription().equals(delegateDescription));
       }
 

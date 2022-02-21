@@ -211,9 +211,26 @@ public class UpdateableDelegatingNodeTest
     Assertions.assertEquals(updateableHierarchyListener.asString(), sourceHierarchyListener.asString());
   }
 
+  @Test
+  void test_delegate_static_override()
+  {
+    SubModel submodel = updateableModel.setValue(DummyModel.staticSubModel, new SubModel());
+    Assertions.assertNotNull(submodel);
+    submodel.setValue(SubModel.subModelProperty, "something");
+    Assertions.assertEquals("something", submodel.getValue(SubModel.subModelProperty));
+
+    submodel = updateableModel.setValue(DummyModel.staticSubModel, new SubModel());
+    Assertions.assertNotNull(submodel);
+    Assertions.assertNull(submodel.getValue(SubModel.subModelProperty));
+    submodel.setValue(SubModel.subModelProperty, "something");
+    Assertions.assertEquals("something", submodel.getValue(SubModel.subModelProperty));
+  }
+
   public static class DummyModel extends AbstractPPP<IPropertyPitProvider<?, ?, ?>, DummyModel, Object>
   {
     public static final IPropertyDescription<DummyModel, String> simpleStringProperty = PD.create(DummyModel.class);
+
+    public static final IPropertyDescription<DummyModel, SubModel> staticSubModel = PD.create(DummyModel.class);
 
     public static final IPropertyDescription<DummyModel, SubModelContainer> subModels = PD.create(DummyModel.class);
 
