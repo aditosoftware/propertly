@@ -198,7 +198,7 @@ public class UpdateableDelegatingNode extends DelegatingNode
                                             " (original: " + new PropertyPath(getProperty()) + ")");
 
       _runWithoutWriteThrough(() -> executeReadOnDelegate(pDelegate -> {
-        reorder(Comparator.<INode>comparingInt(pNode -> pDelegate.indexOf(pNode.getProperty().getDescription())), pAttributes);
+        reorder(Comparator.<IProperty>comparingInt(pProperty -> pDelegate.indexOf(pProperty.getDescription())), pAttributes);
         return null;
       }));
     }
