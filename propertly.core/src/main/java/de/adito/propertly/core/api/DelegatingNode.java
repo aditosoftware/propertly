@@ -160,6 +160,13 @@ public class DelegatingNode extends AbstractNode
 
   @Nullable
   @Override
+  public INode findNodeIgnoringCase(@NotNull String pName)
+  {
+    return children == null ? null : children.findIgnoringCase(pName);
+  }
+
+  @Nullable
+  @Override
   public INode findNode(@NotNull IPropertyDescription pPropertyDescription)
   {
     return children == null ? null : children.find(pPropertyDescription);
