@@ -47,23 +47,12 @@ public interface IPropertyPit<P extends IPropertyPitProvider, S extends IPropert
 
   /**
    * Finds an IProperty at this IPropertyPit.
-   * This method will ignore the case. If the name matches ignoring the case, then a property will be returned.
    *
    * @param pName the name of the searched IProperty.
    * @return the IProperty if available otherwise <tt>null</tt>.
    */
   @Nullable
   IProperty<S, T> findProperty(@NotNull String pName);
-
-  /**
-   * Finds an IProperty at this IPropertyPit.
-   * This method will strictly check the case. If the case does not match, it will find no results.
-   *
-   * @param pName the name of the searched IProperty.
-   * @return the IProperty if available otherwise <tt>null</tt>.
-   */
-  @Nullable
-  IProperty<S, T> findPropertyWithCase(@NotNull String pName);
 
   /**
    * Finds an IProperty at this IPropertyPit. In contrast to #getProperty this method can return <tt>null</tt> because

@@ -30,7 +30,6 @@ class PropertyPitTest
     pit = hierarchy.getValue().getPit();
   }
 
-
   /**
    * Tests the method findProperty.
    */
@@ -45,52 +44,22 @@ class PropertyPitTest
     void shouldFindProperty()
     {
       IPropertyDescription<ColoredPitProvider, Color> defaultColor = ColoredPitProvider.DEFAULT_COLOR;
-
-      assertAll(() -> assertNotNull(pit.getProperty(defaultColor), "property for description is there"),
-                () -> assertNotNull(pit.findProperty(defaultColor), "property for description is found"),
-                () -> assertNotNull(pit.findProperty(defaultColor.getName().toLowerCase()), "property for name in lower case is found"),
-                () -> assertNotNull(pit.findProperty(defaultColor.getName().toUpperCase()), "property for name in upper case is found"),
-                () -> assertNotNull(pit.findProperty("dEfAuLt_CoLoR"), "property for name in weird case is found"));
-    }
-
-    /**
-     * Tests that no property will be found, if the name used for searching does not exist.
-     */
-    @Test
-    void shouldNotFindProperty()
-    {
-      assertNull(pit.findProperty("not_existing"));
-    }
-  }
-
-  /**
-   * Tests the method findPropertyWithCase.
-   */
-  @Nested
-  class FindPropertyWithCase
-  {
-
-    /**
-     * Tests that a property will be found by searching with {@link IPropertyDescription} and name (in given case and lower and upper case).
-     */
-    @Test
-    void shouldFindProperty()
-    {
-      IPropertyDescription<ColoredPitProvider, Color> defaultColor = ColoredPitProvider.DEFAULT_COLOR;
       assertEquals(defaultColor.getName(), defaultColor.getName().toUpperCase(), "check that the property is full upper case");
 
       assertAll(() -> assertNotNull(pit.getProperty(defaultColor), "property for description is there"),
-                () -> assertNotNull(pit.findPropertyWithCase(defaultColor.getName()), "property for name in upper case is found"));
+                () -> assertNotNull(pit.findProperty(defaultColor), "property for description is there"),
+                () -> assertNotNull(pit.findProperty(defaultColor.getName()), "property for name in upper case is found"));
     }
 
     /**
      * Tests that no property will be found, if the name used for searching does not exist.
+     * @param pName the name that should be used for search
      */
     @ParameterizedTest
     @ValueSource(strings = {"default_color", "dEfAuLt_CoLoR", "not_existing"})
     void shouldNotFindProperty(@NotNull String pName)
     {
-      assertNull(pit.findPropertyWithCase(pName));
+      assertNull(pit.findProperty(pName));
     }
   }
 

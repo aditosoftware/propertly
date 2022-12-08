@@ -56,15 +56,6 @@ public interface INode
   INode findNode(@NotNull String pName);
 
   /**
-   * Tries to find a child node ignoring the case.
-   *
-   * @param pName the name of the searched child. This can be in any case.
-   * @return the found child node or <tt>null</tt> if a child node with the given description does not exist.
-   */
-  @Nullable
-  INode findNodeIgnoringCase(@NotNull String pName);
-
-  /**
    * Tries to find a child node.
    *
    * @param pPropertyDescription describes the search children.

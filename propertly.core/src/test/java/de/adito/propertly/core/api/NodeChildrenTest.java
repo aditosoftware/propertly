@@ -74,40 +74,4 @@ class NodeChildrenTest
       assertNull(nodeChildren.find(pName));
     }
   }
-
-  /**
-   * Tests the method findIgnoringCase.
-   */
-  @Nested
-  class FindIgnoringCase
-  {
-
-    /**
-     * The given arguments (names in normal, upper and lower case) should find an element.
-     *
-     * @param pName the name of the element
-     */
-    @ParameterizedTest
-    @ValueSource(strings = {"MyFirstNode", "myfirstnode", "MYFIRSTNODE",
-                            "AnotherNode", "anothernode", "ANOTHERNODE"})
-    void shouldFind(@NotNull String pName)
-    {
-      assertNotNull(nodeChildren.findIgnoringCase(pName));
-    }
-
-    /**
-     * The given arguments (other values, null and empty) should not find an element.
-     *
-     * @param pName the name of the element
-     */
-    @ParameterizedTest
-    @EmptySource
-    @ValueSource(strings = {"SomeOtherNode", "DEFAULT_COLOR"})
-    void shouldNotFind(@NotNull String pName)
-    {
-      assertNull(nodeChildren.findIgnoringCase(pName));
-    }
-  }
-
-
 }

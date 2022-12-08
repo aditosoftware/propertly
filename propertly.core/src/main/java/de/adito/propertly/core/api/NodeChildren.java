@@ -2,7 +2,6 @@ package de.adito.propertly.core.api;
 
 import de.adito.propertly.core.spi.IProperty;
 import de.adito.propertly.core.spi.IPropertyDescription;
-import org.jetbrains.annotations.*;
 
 import java.util.*;
 
@@ -86,22 +85,6 @@ class NodeChildren implements Iterable<INode>
   public List<INode> asList()
   {
     return Collections.unmodifiableList(childrenList);
-  }
-
-  /**
-   * Finds the nodes ignoring the case of the given name
-   *
-   * @param pName the name for searching
-   * @return the found node or {@code null}
-   */
-  @Nullable
-  public INode findIgnoringCase(@NotNull String pName)
-  {
-    return childrenMap.entrySet().stream()
-        .filter(pEntry -> pEntry.getKey().equalsIgnoreCase(pName))
-        .map(Map.Entry::getValue)
-        .findFirst()
-        .orElse(null);
   }
 
   public INode find(String pName)

@@ -70,15 +70,6 @@ class PropertyPit<P extends IPropertyPitProvider, S extends IPropertyPitProvider
   @Override
   public IProperty<S, T> findProperty(@NotNull String pName)
   {
-    INode childNode = getNode().findNodeIgnoringCase(pName);
-    //noinspection unchecked
-    return childNode == null ? null : childNode.getProperty();
-  }
-
-  @Nullable
-  @Override
-  public IProperty<S, T> findPropertyWithCase(@NotNull String pName)
-  {
     INode childNode = getNode().findNode(pName);
     //noinspection unchecked
     return childNode == null ? null : childNode.getProperty();
