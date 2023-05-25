@@ -1,8 +1,8 @@
 package de.adito.propertly.core.common;
 
-import de.adito.propertly.core.spi.IHierarchy;
-import de.adito.propertly.core.spi.IProperty;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
+
+import java.util.*;
 
 /**
  * Little helper class for debugging.
@@ -56,6 +56,20 @@ public class PropertlyDebug
     if (isPitProvider && value == null)
       return;
 
+    String valueStringRep;
+    if (pProperty.getType().isArray())
+    {
+      // We need to wrap the value in an array, so that we can use "deepToString" for
+      // nested arrays inside our "value", if it is an array too
+      valueStringRep = Arrays.deepToString(new Object[]{value});
+      if (valueStringRep.length() >= 2)
+        // cut off the first and last bracket, because this comes from our wrapping
+        valueStringRep = valueStringRep.substring(1, valueStringRep.length() - 1);
+    }
+    else
+      // fallback to default toString() handling
+      valueStringRep = String.valueOf(value);
+
     pStr.append(pLevel);
     if (isPitProvider)
       pStr.append("/");
@@ -63,7 +77,7 @@ public class PropertlyDebug
       pStr.append(" ");
     pStr.append(pProperty.getName());
     if (!isPitProvider)
-      pStr.append(" : ").append(value);
+      pStr.append(" : ").append(valueStringRep);
     pStr.append("\n");
     if (isPitProvider)
     {
