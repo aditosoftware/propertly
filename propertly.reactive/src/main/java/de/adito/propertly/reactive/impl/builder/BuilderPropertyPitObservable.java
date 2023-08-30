@@ -31,7 +31,7 @@ public class BuilderPropertyPitObservable<P extends IPropertyPitProvider, S exte
   {
     Observable<Optional<IProperty<S, T2>>> propertyObservable = getInternalObservable()
         .switchMap(pS -> {
-          if (pS.isPresent())
+          if (pS.isPresent() && pS.get().getPit().isValid())
           {
             IProperty<S, T2> property = pS.get().getPit().findProperty(pDescription);
             if (property != null)
@@ -49,7 +49,7 @@ public class BuilderPropertyPitObservable<P extends IPropertyPitProvider, S exte
   {
     Observable<Optional<IProperty<S, T>>> propertyObservable = getInternalObservable()
         .switchMap(pS -> {
-          if (pS.isPresent())
+          if (pS.isPresent() && pS.get().getPit().isValid())
           {
             IProperty<S, T> property = pS.get().getPit().findProperty(pName);
             if (property != null)
@@ -68,7 +68,7 @@ public class BuilderPropertyPitObservable<P extends IPropertyPitProvider, S exte
     Observable<Optional<S2>> propertyPitObservable = emitProperty(pDescription)
         .emitValue()
         .switchMap(pPitOpt -> {
-          if (!pPitOpt.isPresent())
+          if (!pPitOpt.isPresent() || !pPitOpt.get().getPit().isValid())
             return Observable.just(Optional.empty());
           S2 ppp = pPitOpt.get();
           return InternalObservableFactory.propertyPit(ppp, completeWhenInvalid);
@@ -82,7 +82,7 @@ public class BuilderPropertyPitObservable<P extends IPropertyPitProvider, S exte
   {
     Observable<Optional<List<IProperty<S, T>>>> propertyList = getInternalObservable()
         .switchMap(pS -> {
-          if(!pS.isPresent())
+          if (!pS.isPresent() || !pS.get().getPit().isValid())
             return Observable.just(Optional.empty());
           List<Observable<Optional<IProperty<S, T>>>> properties = pS.get().getPit().getProperties().stream()
               .map(pProp -> emitProperty(pProp.getDescription()).getInternalObservable())
@@ -105,7 +105,9 @@ public class BuilderPropertyPitObservable<P extends IPropertyPitProvider, S exte
   public IBuilderPropertyObservable<IPropertyPitProvider, ?> emitHierarchyValue()
   {
     Observable hierarchyPropObs = getInternalObservable()
-        .map(pOpt -> pOpt.map(pProp -> pProp.getPit().getHierarchy().getProperty()))
+        .map(pOpt -> pOpt
+            .filter(pPPP -> pPPP.getPit().isValid())
+            .map(pProp -> pProp.getPit().getHierarchy().getProperty()))
         .distinctUntilChanged();
     return new BuilderPropertyObservable<>(hierarchyPropObs, completeWhenInvalid);
   }

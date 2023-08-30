@@ -4,6 +4,7 @@ import de.adito.propertly.core.api.Hierarchy;
 import de.adito.propertly.core.spi.IProperty;
 import de.adito.propertly.reactive.impl.dummies.ReactivePropertyPitProvider;
 import de.adito.propertly.reactive.impl.util.BehaviorConsumer;
+import io.reactivex.rxjava3.functions.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -47,6 +48,95 @@ public class Test_BuilderPropertyPitObservable
     // Invalidate children-Property
     rootPPP.setValue(ReactivePropertyPitProvider.children, null);
     verify(spiedConsumer).accept(optionalEmpty());
+  }
+
+  @Test
+  void test_emitPropertiesFromInvalidPropertyPit() throws Throwable
+  {
+    // init mocks
+    Consumer onNextConsumer = mock(Consumer.class);
+    Consumer onErrorConsumer = mock(Consumer.class);
+    Action onComplete = mock(Action.class);
+
+    // init mutable PropertyPitProvider
+    ReactivePropertyPitProvider.ChildContainer1 staticContainer = rootPPP.getValue(ReactivePropertyPitProvider.children);
+    assertNotNull(staticContainer);
+
+    // invalidate container, so we got an invalid provider
+    rootPPP.setValue(ReactivePropertyPitProvider.children, new ReactivePropertyPitProvider.ChildContainer1());
+
+    // init observable with invalid container
+    PropertlyObservableBuilder.create(staticContainer)
+        .emitPropertyPit(ReactivePropertyPitProvider.ChildContainer1.children)
+        .emitPropertyValues()
+        .subscribe(onNextConsumer, onErrorConsumer, onComplete);
+
+    // verify that nothing happened
+    verify(onNextConsumer).accept(optionalEmpty());
+    verifyNoMoreInteractions(onNextConsumer);
+    verifyZeroInteractions(onErrorConsumer);
+    verify(onComplete).run();
+    verifyNoMoreInteractions(onComplete);
+  }
+
+  @Test
+  void test_emitDynamicProperties() throws Throwable
+  {
+    // init mocks
+    Consumer onNextConsumer = mock(Consumer.class);
+    Consumer onErrorConsumer = mock(Consumer.class);
+    Action onComplete = mock(Action.class);
+
+    // init mutable PropertyPitProvider
+    ReactivePropertyPitProvider.ChildContainer1 staticContainer = rootPPP.getValue(ReactivePropertyPitProvider.children);
+    assertNotNull(staticContainer);
+    ReactivePropertyPitProvider.ChildContainer2 mutableContainer = staticContainer.setValue(ReactivePropertyPitProvider.ChildContainer1.children,
+                                                                                            new ReactivePropertyPitProvider.ChildContainer2());
+    assertNotNull(mutableContainer);
+
+    // init observable
+    PropertlyObservableBuilder.create(staticContainer)
+        .emitPropertyPit(ReactivePropertyPitProvider.ChildContainer1.children)
+        .emitPropertyValues()
+        .subscribe(onNextConsumer, onErrorConsumer, onComplete);
+
+    // check, if we got the initial value
+    verify(onNextConsumer).accept(optionalWithValue(new ArrayList<>()));
+    verifyNoMoreInteractions(onNextConsumer);
+    verifyZeroInteractions(onErrorConsumer);
+    verifyZeroInteractions(onComplete);
+    clearInvocations(onNextConsumer, onErrorConsumer, onComplete);
+
+    // add some children
+    IProperty<ReactivePropertyPitProvider.ChildContainer2, ReactivePropertyPitProvider.Child1> prop = mutableContainer.addProperty(new ReactivePropertyPitProvider.Child1());
+    IProperty<ReactivePropertyPitProvider.ChildContainer2, ReactivePropertyPitProvider.Child1> prop2 = mutableContainer.addProperty(new ReactivePropertyPitProvider.Child1());
+
+    // check, if we got the new children
+    verify(onNextConsumer).accept(optionalWithValue(new ArrayList<>()));
+    verify(onNextConsumer, times(2)).accept(optionalWithValue(Collections.singletonList(prop.getValue())));
+    verify(onNextConsumer).accept(optionalWithValue(Arrays.asList(prop.getValue(), prop2.getValue())));
+    verifyNoMoreInteractions(onNextConsumer);
+    verifyZeroInteractions(onErrorConsumer);
+    verifyZeroInteractions(onComplete);
+    clearInvocations(onNextConsumer, onErrorConsumer, onComplete);
+
+    // remove a child
+    mutableContainer.removeProperty(prop);
+
+    // check, if we received, that a child was removed
+    verify(onNextConsumer).accept(optionalWithValue(Collections.singletonList(prop2.getValue())));
+    verifyNoMoreInteractions(onNextConsumer);
+    verifyZeroInteractions(onErrorConsumer);
+    verifyZeroInteractions(onComplete);
+    clearInvocations(onNextConsumer, onErrorConsumer, onComplete);
+
+    // invalidate the whole property pit provider by setting a new children object
+    rootPPP.setValue(ReactivePropertyPitProvider.children, new ReactivePropertyPitProvider.ChildContainer1());
+
+    // check, if we receive nothing anymore
+    verifyZeroInteractions(onNextConsumer);
+    verifyZeroInteractions(onErrorConsumer);
+    verifyZeroInteractions(onComplete);
   }
 
   @Test

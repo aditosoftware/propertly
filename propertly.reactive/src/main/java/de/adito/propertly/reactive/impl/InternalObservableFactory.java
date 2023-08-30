@@ -26,6 +26,9 @@ public abstract class InternalObservableFactory
 
   public static <P extends IPropertyPitProvider, V> Observable<Optional<IProperty<P, V>>> property(IProperty<P, V> pProperty, boolean pCompleteWhenInvalid)
   {
+    if (!pProperty.isValid())
+      return Observable.just(Optional.empty());
+
     return Observable.create(new PropertyObservable<>(pProperty, pCompleteWhenInvalid))
         .startWithItem(pProperty)
         .map(Optional::of);
@@ -38,6 +41,9 @@ public abstract class InternalObservableFactory
 
   public static <P extends IPropertyPitProvider, S extends IPropertyPitProvider<P, S, T>, T> Observable<Optional<S>> propertyPit(@NotNull S pPropertyPit, boolean pCompleteWhenInvalid)
   {
+    if (!pPropertyPit.getPit().isValid())
+      return Observable.just(Optional.empty());
+
     return Observable.create(new PropertyPitObservable<>(pPropertyPit, pCompleteWhenInvalid))
         .startWithItem(pPropertyPit)
         .map(Optional::of);
