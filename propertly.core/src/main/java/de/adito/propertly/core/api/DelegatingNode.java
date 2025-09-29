@@ -243,18 +243,7 @@ public class DelegatingNode extends AbstractNode
       List<Runnable> onFinish = new ArrayList<>();
       firePropertyOrderWillBeChanged(onFinish::add, pAttributes);
       children.reorder(pComparator);
-      executeWriteOnDelegate(pDelegate -> {
-        // extract indices from the current children first, to improve performance on large models
-        List<INode> childrenList = children.asList();
-        Map<IPropertyDescription<?, ?>, Integer> childrenIndices = new HashMap<>(childrenList.size());
-        for (int i = 0; i < childrenList.size(); i++)
-          childrenIndices.put(childrenList.get(i).getProperty().getDescription(), i);
-
-        // Compare the delegate's children to our own indices, to align the correct order.
-        // We should not use the given comparator again, because the delegate may not contain all
-        // children and the comparator could therefore give different results than before.
-        pDelegate.reorder(Comparator.<IProperty>comparingInt(pProperty -> childrenIndices.getOrDefault(pProperty.getDescription(), -1)), pAttributes);
-      });
+      executeWriteOnDelegate(pDelegate -> pDelegate.reorder(Comparator.<IProperty>comparingInt(p -> children.indexOf(p.getDescription())), pAttributes));
       firePropertyOrderChanged(pAttributes);
       onFinish.forEach(Runnable::run);
     }
