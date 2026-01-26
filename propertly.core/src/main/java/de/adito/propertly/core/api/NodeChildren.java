@@ -4,30 +4,24 @@ import de.adito.propertly.core.spi.*;
 import org.jetbrains.annotations.*;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author j.boesl, 09.11.14
  */
 class NodeChildren implements Iterable<INode>
 {
-  private final Map<String, Integer> childrenIndexMap = new HashMap<>();
-  private final AtomicBoolean childrenIndexMapDirty = new AtomicBoolean(true);
-
+  private final Map<String, INode> childrenMap = new HashMap<>();
   private final List<INode> childrenList = new ArrayList<>();
 
   /**
-   * Clears the internal state of child nodes by removing all entries from
-   * the mapping of child node indices and the list of child nodes.
-   * <p>
-   * After invoking this method, the NodeChildren object will be in an empty state,
-   * with no child nodes or index mappings remaining.
+   * Removes all elements from the underlying data structures, effectively clearing
+   * the collection of child nodes. After calling this method, both the internal
+   * map and list of child nodes will be empty.
    */
   public void clear()
   {
-    childrenIndexMap.clear();
+    childrenMap.clear();
     childrenList.clear();
-    childrenIndexMapDirty.set(true);
   }
 
   /**
@@ -52,15 +46,13 @@ class NodeChildren implements Iterable<INode>
   public void add(@Nullable Integer pIndex, @NotNull INode pNode)
   {
     String name = pNode.getProperty().getName();
-    if (!childrenIndexMap.containsKey(name))
+    if (!childrenMap.containsKey(name))
     {
       if (pIndex == null)
         childrenList.add(pNode);
       else
         childrenList.add(pIndex, pNode);
-
-      childrenIndexMap.put(name, pIndex == null ? childrenList.size() - 1 : pIndex);
-      childrenIndexMapDirty.set(true);
+      childrenMap.put(name, pNode);
     }
   }
 
@@ -73,10 +65,9 @@ class NodeChildren implements Iterable<INode>
   public boolean remove(@NotNull INode pNode)
   {
     IProperty property = pNode.getProperty();
-    boolean wasRemoved = childrenIndexMap.remove(property.getName()) != null;
+    boolean wasRemoved = childrenMap.remove(property.getName()) != null;
     if (wasRemoved)
       childrenList.remove(pNode);
-    childrenIndexMapDirty.set(true);
     return wasRemoved;
   }
 
@@ -88,8 +79,7 @@ class NodeChildren implements Iterable<INode>
   public void remove(int pIndex)
   {
     INode removedNode = childrenList.remove(pIndex);
-    childrenIndexMap.remove(removedNode.getProperty().getName());
-    childrenIndexMapDirty.set(true);
+    childrenMap.remove(removedNode.getProperty().getName());
   }
 
   /**
@@ -102,45 +92,25 @@ class NodeChildren implements Iterable<INode>
    */
   public void rename(@NotNull IPropertyDescription pPropertyDescription, @NotNull String pName)
   {
-    if (childrenIndexMap.containsKey(pName))
+    if (childrenMap.containsKey(pName))
       throw new RuntimeException("property with name '" + pName + "' already exists.");
-    Integer index = childrenIndexMap.remove(pPropertyDescription.getName());
-    assert index != null;
-    childrenIndexMap.put(pName, index);
+    INode node = childrenMap.remove(pPropertyDescription.getName());
+    assert node != null;
+    childrenMap.put(pName, node);
   }
 
   /**
-   * Returns the index of a child node that corresponds to the given property description.
-   * If the internal index mapping is outdated, it recalculates the index map before performing the lookup.
+   * Determines the index of a child node associated with the given property
+   * description. This method locates the node corresponding to the given
+   * property description and retrieves its position from the internal children list.
    *
-   * @param pPropertyDescription the property description used to locate the index of the corresponding child node
-   * @return the index of the child node that matches the given property description, or -1 if no matching child exists
+   * @param pPropertyDescription the property description used to locate the associated child node
+   * @return the index of the child node in the children list, or -1 if the node is not found
    */
   public int indexOf(@NotNull IPropertyDescription pPropertyDescription)
   {
-    return indexOf(pPropertyDescription.getName());
-  }
-
-  /**
-   * Returns the index of the child node with the specified name.
-   * If the mapping is outdated, it recalculates the index map of child nodes before performing the lookup.
-   *
-   * @param pName the name of the child node whose index is to be retrieved
-   * @return the index of the child node with the specified name, or -1 if no such child exists
-   */
-  private int indexOf(@NotNull String pName)
-  {
-    if (childrenIndexMapDirty.getAndSet(false))
-    {
-      childrenIndexMap.clear();
-      for (int i = 0; i < childrenList.size(); i++)
-      {
-        INode node = childrenList.get(i);
-        childrenIndexMap.put(node.getProperty().getName(), i);
-      }
-    }
-
-    return childrenIndexMap.getOrDefault(pName, -1);
+    INode node = find(pPropertyDescription);
+    return childrenList.indexOf(node);
   }
 
   /**
@@ -155,8 +125,6 @@ class NodeChildren implements Iterable<INode>
       //noinspection unchecked
       return pComparator.compare(o1.getProperty(), o2.getProperty());
     });
-
-    childrenIndexMapDirty.set(true);
   }
 
   /**
@@ -180,8 +148,7 @@ class NodeChildren implements Iterable<INode>
   @Nullable
   public INode find(@NotNull String pName)
   {
-    int idx = indexOf(pName);
-    return idx == -1 ? null : get(idx);
+    return childrenMap.get(pName);
   }
 
   /**
@@ -194,7 +161,7 @@ class NodeChildren implements Iterable<INode>
   @Nullable
   public INode find(@NotNull IPropertyDescription<?, ?> pPropertyDescription)
   {
-    INode node = find(pPropertyDescription.getName());
+    INode node = childrenMap.get(pPropertyDescription.getName());
     if (node == null)
       return null;
     boolean fittingTypeAndSourceType = pPropertyDescription.getType().isAssignableFrom(node.getProperty().getType()) &&
