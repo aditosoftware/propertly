@@ -10,10 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -113,9 +110,9 @@ public class PropertlyUtility
       return false;
     Object o1 = p1.getValue();
     Object o2 = p2.getValue();
-    return o1 == o2 || o1 != null && o1.equals(o2)
-        || o1 instanceof IPropertyPitProvider && o2 instanceof IPropertyPitProvider
-        && isEqual((IPropertyPitProvider) o1, (IPropertyPitProvider) o2);
+    return o1 instanceof IPropertyPitProvider && o2 instanceof IPropertyPitProvider
+        && isEqual((IPropertyPitProvider) o1, (IPropertyPitProvider) o2)
+        || Objects.deepEquals(o1, o2);
   }
 
 }
