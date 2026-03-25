@@ -45,41 +45,31 @@ public class UpdateableDelegatingNode extends DelegatingNode
   @Override
   public INode addProperty(@Nullable Integer pIndex, @NotNull IPropertyDescription pPropertyDescription, @NotNull Set<Object> pAttributes)
   {
-    pAttributes = new HashSet<>(pAttributes);
-    pAttributes.add(_EVENT_BY_DELEGATINGNODE);
-    return super.addProperty(pIndex, pPropertyDescription, pAttributes);
+    return super.addProperty(pIndex, pPropertyDescription, addAttribute(pAttributes, _EVENT_BY_DELEGATINGNODE));
   }
 
   @Override
   public boolean removeProperty(@NotNull IPropertyDescription pPropertyDescription, @NotNull Set<Object> pAttributes)
   {
-    pAttributes = new HashSet<>(pAttributes);
-    pAttributes.add(_EVENT_BY_DELEGATINGNODE);
-    return super.removeProperty(pPropertyDescription, pAttributes);
+    return super.removeProperty(pPropertyDescription, addAttribute(pAttributes, _EVENT_BY_DELEGATINGNODE));
   }
 
   @Override
   public void removeProperty(int pIndex, @NotNull Set<Object> pAttributes)
   {
-    pAttributes = new HashSet<>(pAttributes);
-    pAttributes.add(_EVENT_BY_DELEGATINGNODE);
-    super.removeProperty(pIndex, pAttributes);
+    super.removeProperty(pIndex, addAttribute(pAttributes, _EVENT_BY_DELEGATINGNODE));
   }
 
   @Override
   public void reorder(@NotNull Comparator pComparator, @NotNull Set<Object> pAttributes)
   {
-    pAttributes = new HashSet<>(pAttributes);
-    pAttributes.add(_EVENT_BY_DELEGATINGNODE);
-    super.reorder(pComparator, pAttributes);
+    super.reorder(pComparator, addAttribute(pAttributes, _EVENT_BY_DELEGATINGNODE));
   }
 
   @Override
   public void rename(@NotNull String pName, @NotNull Set<Object> pAttributes) throws PropertlyRenameException
   {
-    pAttributes = new HashSet<>(pAttributes);
-    pAttributes.add(_EVENT_BY_DELEGATINGNODE);
-    super.rename(pName, pAttributes);
+    super.rename(pName, addAttribute(pAttributes, _EVENT_BY_DELEGATINGNODE));
   }
 
   @Override
@@ -92,7 +82,14 @@ public class UpdateableDelegatingNode extends DelegatingNode
     });
 
     delegateListener = null;
-    super.remove();
+    // If the delegate was already removed (e.g. because a parent node reacted to the
+    // delegate being removed and triggered this node's removal in turn), suppress
+    // the write-through inside DelegatingNode.remove() to avoid calling remove() on
+    // an already-invalidated delegate whose internal state (delegate field) is null.
+    if (executeReadOnDelegate(INode::isValid) != Boolean.TRUE)
+      _runWithoutWriteThrough(super::remove);
+    else
+      super.remove();
     writeOnDelegate = null;
   }
 
@@ -157,7 +154,7 @@ public class UpdateableDelegatingNode extends DelegatingNode
                                 @NotNull IPropertyDescription<IPropertyPitProvider<?, ?, ?>, Object> pPropertyDescription,
                                 @NotNull Set<Object> pAttributes)
     {
-      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE))
+      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE) && pAttributes.contains(WRITING_TO_DELEGATE))
         return;
 
       if (!pSource.getPit().getOwnProperty().getDescription().equals(getProperty().getDescription()))
@@ -172,7 +169,7 @@ public class UpdateableDelegatingNode extends DelegatingNode
                               @NotNull IPropertyDescription<IPropertyPitProvider<?, ?, ?>, Object> pPropertyDescription,
                               @NotNull Set<Object> pAttributes)
     {
-      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE))
+      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE) && pAttributes.contains(WRITING_TO_DELEGATE))
         return;
 
       if (!pSource.getPit().getOwnProperty().getDescription().equals(getProperty().getDescription()))
@@ -190,7 +187,7 @@ public class UpdateableDelegatingNode extends DelegatingNode
     @Override
     public void propertyOrderChanged(@NotNull IPropertyPitProvider<?, ?, ?> pSource, @NotNull Set<Object> pAttributes)
     {
-      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE))
+      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE) && pAttributes.contains(WRITING_TO_DELEGATE))
         return;
 
       if (!pSource.getPit().getOwnProperty().getDescription().equals(getProperty().getDescription()))
@@ -207,7 +204,7 @@ public class UpdateableDelegatingNode extends DelegatingNode
     public void propertyValueWillBeChanged(@NotNull IProperty<IPropertyPitProvider<?, ?, ?>, Object> pProperty, @Nullable Object pOldValue,
                                            @Nullable Object pNewValue, @NotNull Consumer<Runnable> pOnChanged, @NotNull Set<Object> pAttributes)
     {
-      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE))
+      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE) && pAttributes.contains(WRITING_TO_DELEGATE))
         return;
 
       UpdateableDelegatingNode node = (UpdateableDelegatingNode) findNode(pProperty.getDescription());
@@ -222,7 +219,7 @@ public class UpdateableDelegatingNode extends DelegatingNode
     public void propertyValueChanged(@NotNull IProperty<IPropertyPitProvider<?, ?, ?>, Object> pProperty, @Nullable Object pOldValue,
                                      @Nullable Object pNewValue, @NotNull Set<Object> pAttributes)
     {
-      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE))
+      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE) && pAttributes.contains(WRITING_TO_DELEGATE))
         return;
 
       UpdateableDelegatingNode node = (UpdateableDelegatingNode) findNode(pProperty.getDescription());
@@ -238,7 +235,7 @@ public class UpdateableDelegatingNode extends DelegatingNode
     public void propertyNameChanged(@NotNull IProperty<IPropertyPitProvider<?, ?, ?>, Object> pProperty, @NotNull String pOldName,
                                     @NotNull String pNewName, @NotNull Set<Object> pAttributes)
     {
-      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE))
+      if (pAttributes.contains(_EVENT_BY_DELEGATINGNODE) && pAttributes.contains(WRITING_TO_DELEGATE))
         return;
 
       if (!pProperty.getDescription().equals(getProperty().getDescription().copy(pNewName)))
