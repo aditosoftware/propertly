@@ -88,7 +88,51 @@ public class UpdateableDelegatingNode extends DelegatingNode
   protected void executeWriteOnDelegate(@NotNull Set<Object> pAttributes, @NotNull Function<Set<Object>, Consumer<INode>> pOnDelegate)
   {
     if (writeOnDelegate == null || writeOnDelegate.get() != Boolean.FALSE)
-      super.executeWriteOnDelegate(addAttribute(pAttributes, _EVENT_BY_DELEGATINGNODE), pOnDelegate);
+    {
+      /*
+      This flag is set here because otherwise it would block too much.
+      Before this flag was set here, it was set in the overrides of the Operational Methods (addProperty, removeProperty, reorder and rename) before the super variant was called.
+      e.g. for the removeProperty:
+      ---------------------------
+        removeProperty(pPropertyDescription, pAttributes)
+        {
+          pAttributes = new HashSet<>(pAttributes);
+          pAttributes.add(_EVENT_BY_DELEGATINGNODE);
+          return super.removeProperty(pPropertyDescription, pAttributes);
+        }
+
+      This causes the flag to be set before the super method runs.
+      Crucially, this means all the listeners will be fired with the flag already in place therefore,
+      no Listener will update any DelegatingNode that has us as its delegate.
+
+      for example, the (simplified) super method that was called before:
+      ----------------------
+         public boolean removeProperty(IPropertyDescription pPropertyDescription,Set<Object> pAttributes)
+         {
+            fireNodeWillBeRemoved(description, onFinish::add, pAttributes);
+            executeWriteOnDelegate(pAttributes, pAttr -> pDelegate -> pDelegate.removeProperty(pPropertyDescription, pAttr));
+            fireNodeRemoved(description, pAttributes);
+         }
+      this is a very simplivied version of the removeProperty of our super class (DelegatingNode)
+
+      Now we can see that if the attribute is set before super is called (as was the case before),
+      both fireNodeWillBeRemoved and fireNodeRemoved will fire with the attribute already in place.
+      This means all the listeners waiting for this exact event will
+      immediately return without doing anything because the flag told them to do so.
+
+      In the above example for the super method you can already see that the new 'executeWriteOnDelegate' variant,
+      that now gets the attribute as a separate Parameter and then gives them to the lambda method containing the actual operation.
+
+      This lets us set the '_EVENT_BY_DELEGATINGNODE' flag here instead of before the super, meaning only the delegates know of the flag,
+      and there it blocks their listeners from writing back up to us.
+
+      At the same time, our Listeners will never hear of the flag and can still notify any DelegatingNodes, for whom we are their delegate.
+      */
+      Set<Object> attributes = new HashSet<>(pAttributes);
+      attributes.add(_EVENT_BY_DELEGATINGNODE);
+
+      super.executeWriteOnDelegate(attributes, pOnDelegate);
+    }
   }
 
   /**

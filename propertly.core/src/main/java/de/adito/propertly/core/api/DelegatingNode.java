@@ -308,21 +308,6 @@ public class DelegatingNode extends AbstractNode
   }
 
   /**
-   * Helper method that adds the given attribute to the set of attributes
-   *
-   * @param pAttributes the attributes to add to
-   * @param pAttribute  the attribute to add
-   * @return the attributes with the given attribute added
-   */
-  @NotNull
-  protected Set<Object> addAttribute(@NotNull Set<Object> pAttributes, @NotNull Object pAttribute)
-  {
-    Set<Object> localAttributes = new HashSet<>(pAttributes);
-    localAttributes.add(pAttribute);
-    return localAttributes;
-  }
-
-  /**
    * Executes the given write operation on the delegate.
    *
    * @param pAttributes the attributes to pass to the delegate
@@ -330,6 +315,8 @@ public class DelegatingNode extends AbstractNode
    *                    It is important to use the function parameter for the attributes,
    *                    even though Set given to this method could also be used directly.
    *                    This is because the function might add its own attributes to the set in different implementations.
+   *                    For example, UpdateableDelegatingNode adds the '_EVENT_BY_DELEGATINGNODE' flag to the set.
+   *                    Why that is necessary is better explained in that override.
    */
   protected void executeWriteOnDelegate(@NotNull Set<Object> pAttributes, @NotNull Function<Set<Object>, Consumer<INode>> pOnDelegate)
   {

@@ -4,6 +4,7 @@ import de.adito.propertly.core.common.PD;
 import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.spi.extension.*;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -257,7 +258,8 @@ public class UpdateableDelegatingNodeTest
   {
     test_twoLevel_indexed_operation(
         pContainer -> pContainer.removeProperty(0),
-        pContainer -> assertEquals(0, pContainer.getValues().size(),
+        // we expect one value to still be there since test_twoLevel_indexed_operation adds two models
+        pContainer -> assertEquals(1, pContainer.getValues().size(),
                                    "levelB should reflect the removal of the dynamic SubModel")
     );
   }
@@ -269,8 +271,8 @@ public class UpdateableDelegatingNodeTest
   @Test
   void test_twoLevel_delegation_rename()
   {
-    test_twoLevel_indexed_operation(
-        pContainer -> pContainer.getOwnProperty().rename("renamedModel"),
+    test_twoLevel_operation(
+        (pSubModel, pContainer) -> pSubModel.getOwnProperty().rename("renamedModel"),
         pContainer -> assertNotNull(pContainer.findProperty("renamedModel"),
                                     "levelB should reflect the rename of the dynamic SubModel")
     );
@@ -306,7 +308,9 @@ public class UpdateableDelegatingNodeTest
    * @param pOperationToCheck the operation to check
    * @param pAssertion        the assertion that checks if it was done correctly
    */
-  void test_twoLevel_indexed_operation(Consumer<DummyModel.SubModelIndexedContainer> pOperationToCheck, Consumer<DummyModel.SubModelIndexedContainer> pAssertion)
+  private void test_twoLevel_indexed_operation(
+      @NotNull Consumer<DummyModel.SubModelIndexedContainer> pOperationToCheck,
+      @NotNull Consumer<DummyModel.SubModelIndexedContainer> pAssertion)
   {
     test_twoLevel(
         (pSrcModel, pLevelBModel) -> {
@@ -334,7 +338,7 @@ public class UpdateableDelegatingNodeTest
    * @param pOperationToCheck the operation to check
    * @param pAssertion        the assertion that checks if it was done correctly
    */
-  void test_twoLevel_operation(BiConsumer<SubModel, DummyModel.SubModelContainer> pOperationToCheck, Consumer<DummyModel.SubModelContainer> pAssertion)
+  private void test_twoLevel_operation(@NotNull BiConsumer<SubModel, DummyModel.SubModelContainer> pOperationToCheck, @NotNull Consumer<DummyModel.SubModelContainer> pAssertion)
   {
     test_twoLevel(
         (pSrcModel, pLevelBModel) -> {
@@ -358,7 +362,7 @@ public class UpdateableDelegatingNodeTest
    *
    * @param pCheck the check to perform
    */
-  void test_twoLevel(BiConsumer<DummyModel, DummyModel> pCheck)
+  private void test_twoLevel(@NotNull BiConsumer<DummyModel, DummyModel> pCheck)
   {
     Hierarchy<DummyModel> sourceHierarchy = new Hierarchy<>("dummy", new DummyModel());
     Hierarchy<DummyModel> levelAHierarchy = new DelegatingHierarchy<DummyModel>(
