@@ -15,12 +15,6 @@ import java.util.function.*;
  */
 public class DelegatingNode extends AbstractNode
 {
-  /**
-   * Marker if the writing operation is writing downwards (to its delegate)
-   * as opposed to writing upwards (through the listeners)
-   */
-  protected static final String WRITING_TO_DELEGATE = "writing_to_delegate";
-
   private INode delegate;
   private IPropertyPitProvider pitProvider;
   @Nullable
@@ -120,8 +114,8 @@ public class DelegatingNode extends AbstractNode
     List<Runnable> onFinish = new ArrayList<>();
     fireValueWillBeChange(oldValue, pValue, onFinish::add, pAttributes);
 
-    executeWriteOnDelegate(pDelegate -> {
-      pDelegate.setValue(pValue, addAttribute(pAttributes, WRITING_TO_DELEGATE));
+    executeWriteOnDelegate(pAttributes, pAttr -> pDelegate -> {
+      pDelegate.setValue(pValue, pAttr);
       clearListeners();
     });
 
@@ -180,7 +174,7 @@ public class DelegatingNode extends AbstractNode
     INode node = findNode(pPropertyDescription.getName());
     if (node != null)
       throw new IllegalStateException("name already exists: " + pPropertyDescription);
-    executeWriteOnDelegate(pDelegate -> pDelegate.addProperty(pIndex, pPropertyDescription, addAttribute(pAttributes, WRITING_TO_DELEGATE)));
+    executeWriteOnDelegate(pAttributes, pAttr -> pDelegate -> pDelegate.addProperty(pIndex, pPropertyDescription, pAttr));
     DelegatingNode child = createChild(executeReadOnDelegate(pDelegate -> pDelegate.findNode(pPropertyDescription)));
     if (children == null)
       children = new NodeChildren();
@@ -205,7 +199,7 @@ public class DelegatingNode extends AbstractNode
       List<Runnable> onFinish = new ArrayList<>();
       fireNodeWillBeRemoved(description, onFinish::add, pAttributes);
       assert children != null;
-      executeWriteOnDelegate(pDelegate -> pDelegate.removeProperty(pPropertyDescription, addAttribute(pAttributes, WRITING_TO_DELEGATE)));
+      executeWriteOnDelegate(pAttributes, pAttr -> pDelegate -> pDelegate.removeProperty(pPropertyDescription, pAttr));
       children.remove(childNode);
       HierarchyHelper.getNode(property).remove();
       fireNodeRemoved(description, pAttributes);
@@ -227,7 +221,7 @@ public class DelegatingNode extends AbstractNode
     IPropertyDescription description = property.getDescription();
     List<Runnable> onFinish = new ArrayList<>();
     fireNodeWillBeRemoved(description, onFinish::add, pAttributes);
-    executeWriteOnDelegate(pDelegate -> pDelegate.removeProperty(pIndex, addAttribute(pAttributes, WRITING_TO_DELEGATE)));
+    executeWriteOnDelegate(pAttributes, pAttr -> pDelegate -> pDelegate.removeProperty(pIndex, pAttr));
     children.remove(pIndex);
     HierarchyHelper.getNode(property).remove();
     fireNodeRemoved(description, pAttributes);
@@ -250,10 +244,11 @@ public class DelegatingNode extends AbstractNode
       firePropertyOrderWillBeChanged(onFinish::add, pAttributes);
       children.reorder(pComparator);
       executeWriteOnDelegate(
-          pDelegate ->
+          pAttributes,
+          pAttr -> pDelegate ->
               pDelegate.reorder(
                   Comparator.<IProperty>comparingInt(p -> children.indexOf(p.getDescription())),
-                  addAttribute(pAttributes, WRITING_TO_DELEGATE)
+                  pAttr
               )
       );
       firePropertyOrderChanged(pAttributes);
@@ -271,7 +266,7 @@ public class DelegatingNode extends AbstractNode
 
     try
     {
-      executeWriteOnDelegate(pDelegate -> pDelegate.rename(pName, pAttributes));
+      executeWriteOnDelegate(pAttributes, pAttr -> pDelegate -> pDelegate.rename(pName, pAttr));
 
       String oldName = property.getName();
       DelegatingNode parent = (DelegatingNode) getParent();
@@ -299,13 +294,13 @@ public class DelegatingNode extends AbstractNode
   public void remove()
   {
     assert delegate != null;
-    executeWriteOnDelegate(INode::remove);
+    executeWriteOnDelegate(new HashSet<>(), pAttr -> INode::remove);
     if (isValid() && children != null)
     {
       for (INode child : children)
         child.remove();
     }
-    executeWriteOnDelegate(INode::remove);
+    executeWriteOnDelegate(new HashSet<>(), pAttr -> INode::remove);
     children = null;
     pitProvider = null;
     delegate = null;
@@ -319,6 +314,7 @@ public class DelegatingNode extends AbstractNode
    * @param pAttribute  the attribute to add
    * @return the attributes with the given attribute added
    */
+  @NotNull
   protected Set<Object> addAttribute(@NotNull Set<Object> pAttributes, @NotNull Object pAttribute)
   {
     Set<Object> localAttributes = new HashSet<>(pAttributes);
@@ -326,9 +322,18 @@ public class DelegatingNode extends AbstractNode
     return localAttributes;
   }
 
-  protected void executeWriteOnDelegate(@NotNull Consumer<INode> pOnDelegate)
+  /**
+   * Executes the given write operation on the delegate.
+   *
+   * @param pAttributes the attributes to pass to the delegate
+   * @param pOnDelegate the method to execute on the delegate,
+   *                    It is important to use the function parameter for the attributes,
+   *                    even though Set given to this method could also be used directly.
+   *                    This is because the function might add its own attributes to the set in different implementations.
+   */
+  protected void executeWriteOnDelegate(@NotNull Set<Object> pAttributes, @NotNull Function<Set<Object>, Consumer<INode>> pOnDelegate)
   {
-    pOnDelegate.accept(delegate);
+    pOnDelegate.apply(pAttributes).accept(delegate);
   }
 
   protected <T> T executeReadOnDelegate(@NotNull Function<INode, T> pOnDelegate)
