@@ -36,7 +36,6 @@ public class UpdateableDelegatingNode extends DelegatingNode
     if ((!hasCreatedCopyOfValue() && delegateValue instanceof IPropertyPitProvider) || (hasCreatedCopyOfValue() && delegateValue == null))
       alignToDelegate();
 
-    pAttributes = new HashSet<>(pAttributes);
     return super.setValue(pValue, pAttributes);
   }
 
