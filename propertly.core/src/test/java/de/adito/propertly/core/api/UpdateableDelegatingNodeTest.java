@@ -4,9 +4,14 @@ import de.adito.propertly.core.common.PD;
 import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.spi.extension.*;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
+import java.util.function.*;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author w.glanzer, 17.06.2021
@@ -24,15 +29,15 @@ public class UpdateableDelegatingNodeTest
     // prepare hierarchies
     Hierarchy<DummyModel> sourceHierarchy = new Hierarchy<>("dummy", new DummyModel());
     Hierarchy<DummyModel> updateableHierarchy = new DelegatingHierarchy<DummyModel>(sourceHierarchy,
-                                                              (pHierarchy, pSourceNode) -> new UpdateableDelegatingNode(pHierarchy, null, pSourceNode))
+                                                                                    (pHierarchy, pSourceNode) -> new UpdateableDelegatingNode(pHierarchy, null, pSourceNode))
     {
     };
 
     // prepare models
     sourceModel = sourceHierarchy.getValue();
     updateableModel = updateableHierarchy.getValue();
-    Assertions.assertNotNull(sourceModel);
-    Assertions.assertNotNull(updateableModel);
+    assertNotNull(sourceModel);
+    assertNotNull(updateableModel);
 
     // add listeners
     sourceHierarchyListener = new ReadablePropertyPitEventListener();
@@ -45,42 +50,42 @@ public class UpdateableDelegatingNodeTest
   void test_source_static_change()
   {
     sourceModel.getProperty(DummyModel.simpleStringProperty).setValue("simpleStringValue");
-    Assertions.assertEquals(sourceHierarchyListener.asString(), updateableHierarchyListener.asString());
+    assertEquals(sourceHierarchyListener.asString(), updateableHierarchyListener.asString());
   }
 
   @Test
   void test_source_static_nestedTypeChange()
   {
     DummyModel.SubModelContainer container = sourceModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(container);
+    assertNotNull(container);
     SubModel subModel = container.addProperty(new SubModel()).getValue();
-    Assertions.assertNotNull(subModel);
+    assertNotNull(subModel);
     SubModel subSubModel = (SubModel) subModel.setValue(SubModel.staticSubModel, new SubModel());
-    Assertions.assertNotNull(subSubModel);
+    assertNotNull(subSubModel);
     DummyModel.SubModelContainer subSubSubModelContainer = subSubModel.setValue(SubModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(subSubSubModelContainer);
+    assertNotNull(subSubSubModelContainer);
     subSubSubModelContainer.addProperty(new SubModel());
     subSubSubModelContainer.addProperty(new SubModel());
 
     // change type of submodel with predefined data
     OtherSubModel otherSubSubModelTmp = new Hierarchy<>("dummy", new OtherSubModel()).getValue();
     DummyModel.SubModelContainer otherSubSubSubModelContainer = otherSubSubModelTmp.setValue(OtherSubModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(otherSubSubSubModelContainer);
+    assertNotNull(otherSubSubSubModelContainer);
     otherSubSubSubModelContainer.addProperty("newModel", new SubModel());
     subModel.setValue(SubModel.staticSubModel, otherSubSubModelTmp);
 
     // validate, that the static-subSubModel has the correct, recalculated, children
     IProperty<?, ?> subModelProp = new PropertyPath(subModel).find(updateableModel.getPit().getHierarchy());
-    Assertions.assertNotNull(subModelProp);
+    assertNotNull(subModelProp);
     SubModel updatedSubModel = (SubModel) subModelProp.getValue();
-    Assertions.assertNotNull(updatedSubModel);
+    assertNotNull(updatedSubModel);
     ISubModel<?> updatedSubSubModel = updatedSubModel.getValue(SubModel.staticSubModel);
-    Assertions.assertNotNull(updatedSubSubModel);
-    Assertions.assertEquals(OtherSubModel.class, updatedSubSubModel.getClass());
+    assertNotNull(updatedSubSubModel);
+    assertEquals(OtherSubModel.class, updatedSubSubModel.getClass());
     DummyModel.SubModelContainer updatedSubSubSubModelContainer = ((OtherSubModel) updatedSubSubModel).getValue(OtherSubModel.subModels);
-    Assertions.assertNotNull(updatedSubSubSubModelContainer);
-    Assertions.assertEquals(1, updatedSubSubSubModelContainer.getValues().size());
-    Assertions.assertNotNull(updatedSubSubSubModelContainer.findProperty("newModel"));
+    assertNotNull(updatedSubSubSubModelContainer);
+    assertEquals(1, updatedSubSubSubModelContainer.getValues().size());
+    assertNotNull(updatedSubSubSubModelContainer.findProperty("newModel"));
     Assertions.assertTrue(Objects.requireNonNull(updatedSubSubSubModelContainer.findProperty("newModel")).isValid());
   }
 
@@ -88,30 +93,30 @@ public class UpdateableDelegatingNodeTest
   void test_source_dynamic_addRemove()
   {
     DummyModel.SubModelContainer container = sourceModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(container);
+    assertNotNull(container);
     SubModel subModel = container.addProperty(new SubModel()).getValue();
-    Assertions.assertNotNull(subModel);
+    assertNotNull(subModel);
 
     container.removeProperty(subModel.getOwnProperty());
 
     container.addProperty(new SubModel());
     container.addProperty(new SubModel());
 
-    Assertions.assertEquals(sourceHierarchyListener.asString(), updateableHierarchyListener.asString());
+    assertEquals(sourceHierarchyListener.asString(), updateableHierarchyListener.asString());
   }
 
   @Test
   void test_source_dynamic_change()
   {
     DummyModel.SubModelContainer container = sourceModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(container);
+    assertNotNull(container);
     SubModel subModel = container.addProperty(new SubModel()).getValue();
-    Assertions.assertNotNull(subModel);
+    assertNotNull(subModel);
 
-    for(int i = 0; i < 50; i++)
+    for (int i = 0; i < 50; i++)
       subModel.setValue(SubModel.subModelProperty, UUID.randomUUID().toString());
 
-    Assertions.assertEquals(sourceHierarchyListener.asString(), updateableHierarchyListener.asString());
+    assertEquals(sourceHierarchyListener.asString(), updateableHierarchyListener.asString());
   }
 
   @Test
@@ -121,20 +126,20 @@ public class UpdateableDelegatingNodeTest
     List<String> addedModelNames = new ArrayList<>();
     SubModel preSubModel = new Hierarchy<>(UUID.randomUUID().toString(), new SubModel()).getValue();
     DummyModel.SubModelContainer preSubSubModels = preSubModel.setValue(SubModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(preSubSubModels);
-    for(int i = 0; i < 20; i++)
+    assertNotNull(preSubSubModels);
+    for (int i = 0; i < 20; i++)
       addedModelNames.add(preSubSubModels.addProperty(UUID.randomUUID().toString(), new SubModel()).getName());
 
     DummyModel.SubModelContainer container = sourceModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(container);
+    assertNotNull(container);
     SubModel subModel = container.addProperty(preSubModel).getValue();
-    Assertions.assertNotNull(subModel);
+    assertNotNull(subModel);
     DummyModel.SubModelContainer subSubModels = subModel.setValue(SubModel.subModels, preSubSubModels);
-    Assertions.assertNotNull(subSubModels);
+    assertNotNull(subSubModels);
 
     for (String name : addedModelNames)
     {
-      Assertions.assertNotNull(subSubModels.findProperty(name));
+      assertNotNull(subSubModels.findProperty(name));
       Assertions.assertTrue(Objects.requireNonNull(subSubModels.findProperty(name)).isValid());
     }
   }
@@ -143,21 +148,21 @@ public class UpdateableDelegatingNodeTest
   void test_source_dynamic_nestedChange()
   {
     DummyModel.SubModelContainer container = sourceModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(container);
+    assertNotNull(container);
     SubModel subModel = container.addProperty(new SubModel()).getValue();
-    Assertions.assertNotNull(subModel);
+    assertNotNull(subModel);
     DummyModel.SubModelContainer subSubModels = subModel.setValue(SubModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(subSubModels);
+    assertNotNull(subSubModels);
 
 
     List<String> addedModelNames = new ArrayList<>();
-    for(int i = 0; i < 20; i++)
+    for (int i = 0; i < 20; i++)
       addedModelNames.add(subSubModels.addProperty(new SubModel()).getName());
 
-    Assertions.assertEquals(sourceHierarchyListener.asString(), updateableHierarchyListener.asString());
+    assertEquals(sourceHierarchyListener.asString(), updateableHierarchyListener.asString());
     for (String name : addedModelNames)
     {
-      Assertions.assertNotNull(subSubModels.findProperty(name));
+      assertNotNull(subSubModels.findProperty(name));
       Assertions.assertTrue(Objects.requireNonNull(subSubModels.findProperty(name)).isValid());
     }
   }
@@ -166,64 +171,289 @@ public class UpdateableDelegatingNodeTest
   void test_source_dynamic_rename()
   {
     DummyModel.SubModelContainer container = sourceModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(container);
+    assertNotNull(container);
     SubModel subModel = container.addProperty(new SubModel()).getValue();
-    Assertions.assertNotNull(subModel);
+    assertNotNull(subModel);
 
     subModel.getOwnProperty().rename("myNewName");
 
-    Assertions.assertNotNull(new PropertyPath(subModel).find(updateableModel.getPit().getHierarchy()));
-    Assertions.assertEquals(sourceHierarchyListener.asString(), updateableHierarchyListener.asString());
+    assertNotNull(new PropertyPath(subModel).find(updateableModel.getPit().getHierarchy()));
+    assertEquals(sourceHierarchyListener.asString(), updateableHierarchyListener.asString());
   }
 
   @Test
   void test_delegate_static_writeThrough()
   {
     updateableModel.setValue(DummyModel.simpleStringProperty, "setFromUpdateable");
-    Assertions.assertEquals(updateableModel.getValue(DummyModel.simpleStringProperty), sourceModel.getValue(DummyModel.simpleStringProperty));
-    Assertions.assertEquals(updateableHierarchyListener.asString(), sourceHierarchyListener.asString());
+    assertEquals(updateableModel.getValue(DummyModel.simpleStringProperty), sourceModel.getValue(DummyModel.simpleStringProperty));
+    assertEquals(updateableHierarchyListener.asString(), sourceHierarchyListener.asString());
   }
 
   @Test
   void test_delegate_dynamic_writeThrough()
   {
     DummyModel.SubModelContainer container = updateableModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(container);
+    assertNotNull(container);
     SubModel subModel = container.addProperty(new SubModel()).getValue();
-    Assertions.assertNotNull(subModel);
+    assertNotNull(subModel);
     IProperty<SubModel, String> subModelProperty = subModel.getProperty(SubModel.subModelProperty);
     subModelProperty.setValue("subModel_setFromUpdateable");
 
     IProperty<?, ?> sourceProperty = new PropertyPath(subModelProperty).find(sourceModel.getPit().getHierarchy());
-    Assertions.assertNotNull(sourceProperty);
-    Assertions.assertEquals(subModelProperty.getValue(), sourceProperty.getValue());
-    Assertions.assertEquals(updateableHierarchyListener.asString(), sourceHierarchyListener.asString());
+    assertNotNull(sourceProperty);
+    assertEquals(subModelProperty.getValue(), sourceProperty.getValue());
+    assertEquals(updateableHierarchyListener.asString(), sourceHierarchyListener.asString());
   }
 
   @Test
   void test_delegate_dynamic_remove()
   {
     DummyModel.SubModelContainer container = updateableModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
-    Assertions.assertNotNull(container);
+    assertNotNull(container);
     SubModel subModel = container.addProperty(new SubModel()).getValue();
-    Assertions.assertNotNull(subModel);
+    assertNotNull(subModel);
     container.removeProperty(subModel.getOwnProperty());
-    Assertions.assertEquals(updateableHierarchyListener.asString(), sourceHierarchyListener.asString());
+    assertEquals(updateableHierarchyListener.asString(), sourceHierarchyListener.asString());
+  }
+
+  /**
+   * Verifies that in a two-level UpdateableDelegatingNode stack (source → levelA → levelB),
+   * a dynamic property added to the source container is reflected in levelB,
+   * and that subsequently setting a value on that property also propagates correctly to levelB.
+   */
+  @Test
+  void test_twoLevel_delegation_dynamicAddThenSetValue()
+  {
+    test_twoLevel_operation(
+        // nothing to do here, everything we need is already done in the test_twoLevel_operation method
+        (pSubModel, pContainer) -> {
+        },
+        // just check if it was done correctly
+        pContainer -> assertEquals(1, pContainer.getValues().size(),
+                                   "levelB should have the dynamically added SubModel in its container")
+    );
+  }
+
+  /**
+   * Verifies that a dynamic property removed in the source is also removed in levelB of a
+   * two-level (source → levelA → levelB) UpdateableDelegatingNode stack.
+   */
+  @Test
+  void test_twoLevel_delegation_dynamicRemove()
+  {
+    test_twoLevel_operation(
+        (pSubModel, pContainer) -> pContainer.removeProperty(pSubModel.getOwnProperty()),
+        pContainer -> assertEquals(0, pContainer.getValues().size(),
+                                   "levelB should reflect the removal of the dynamic SubModel")
+    );
+  }
+
+
+  /**
+   * Verifies that a property removed by index in the source is also removed in levelB of a
+   * two-level (source → levelA → levelB) UpdateableDelegatingNode stack.
+   */
+  @Test
+  void test_twoLevel_delegation_remove_by_index()
+  {
+    test_twoLevel_indexed_operation(
+        pContainer -> pContainer.removeProperty(0),
+        // we expect one value to still be there since test_twoLevel_indexed_operation adds two models
+        pContainer -> assertEquals(1, pContainer.getValues().size(),
+                                   "levelB should reflect the removal of the dynamic SubModel")
+    );
+  }
+
+  /**
+   * Verifies that renaming a dynamic property in the source is reflected in levelB of a
+   * two-level (source → levelA → levelB) UpdateableDelegatingNode stack.
+   */
+  @Test
+  void test_twoLevel_delegation_rename()
+  {
+    test_twoLevel_operation(
+        (pSubModel, pContainer) -> pSubModel.getOwnProperty().rename("renamedModel"),
+        pContainer -> assertNotNull(pContainer.findProperty("renamedModel"),
+                                    "levelB should reflect the rename of the dynamic SubModel")
+    );
+  }
+
+  /**
+   * Verifies that a reorder operation in the source is also removed in levelB of a
+   * two-level (source → levelA → levelB) UpdateableDelegatingNode stack.
+   */
+  @Test
+  void test_twoLevel_delegation_reorder()
+  {
+    List<String> expectedOrder = new ArrayList<>();
+    expectedOrder.add("firstModel");
+    expectedOrder.add("secondModel");
+
+    test_twoLevel_indexed_operation(
+        pContainer -> pContainer.reorder(Comparator.comparing(IProperty::getName)),
+        pContainerToCheck -> {
+          assertEquals(
+              expectedOrder,
+              pContainerToCheck.getValues().stream()
+                  .map(pISubModel -> pISubModel.getPit().getOwnProperty().getName()).collect(Collectors.toList())
+          );
+        }
+
+    );
+  }
+
+  /**
+   * Helper method for testing operations on a two-Level UpdateableDelegatingNode stack, while using an {@link AbstractIndexedMutablePPP}.
+   *
+   * @param pOperationToCheck the operation to check
+   * @param pAssertion        the assertion that checks if it was done correctly
+   */
+  private void test_twoLevel_indexed_operation(
+      @NotNull Consumer<DummyModel.SubModelIndexedContainer> pOperationToCheck,
+      @NotNull Consumer<DummyModel.SubModelIndexedContainer> pAssertion)
+  {
+    test_twoLevel(
+        (pSrcModel, pLevelBModel) -> {
+          DummyModel.SubModelIndexedContainer container = pSrcModel.setValue(DummyModel.subModelsIndexed, new DummyModel.SubModelIndexedContainer());
+          assertNotNull(container);
+          SubModel subModel = container.addProperty(new SubModel()).getValue();
+          assertNotNull(subModel);
+          subModel.getOwnProperty().rename("secondModel");
+          SubModel subModel2 = container.addProperty(new SubModel()).getValue();
+          assertNotNull(subModel2);
+          subModel2.getOwnProperty().rename("firstModel");
+
+          assertDoesNotThrow(() -> pOperationToCheck.accept(container));
+
+          DummyModel.SubModelIndexedContainer levelBContainerIndexed = pLevelBModel.getValue(DummyModel.subModelsIndexed);
+          assertNotNull(levelBContainerIndexed);
+          pAssertion.accept(levelBContainerIndexed);
+        }
+    );
+  }
+
+  /**
+   * Helper method for testing operations on a two-Level UpdateableDelegatingNode stack, while using an {@link AbstractMutablePPP}.
+   *
+   * @param pOperationToCheck the operation to check
+   * @param pAssertion        the assertion that checks if it was done correctly
+   */
+  private void test_twoLevel_operation(@NotNull BiConsumer<SubModel, DummyModel.SubModelContainer> pOperationToCheck, @NotNull Consumer<DummyModel.SubModelContainer> pAssertion)
+  {
+    test_twoLevel(
+        (pSrcModel, pLevelBModel) -> {
+          DummyModel.SubModelContainer container = pSrcModel.setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
+          assertNotNull(container);
+          IProperty<DummyModel.SubModelContainer, SubModel> dynProp = container.addProperty(new SubModel());
+          SubModel subModel = dynProp.getValue();
+          assertNotNull(subModel);
+
+          assertDoesNotThrow(() -> pOperationToCheck.accept(subModel, container));
+
+          DummyModel.SubModelContainer levelBContainer = pLevelBModel.getValue(DummyModel.subModels);
+          assertNotNull(levelBContainer);
+          pAssertion.accept(levelBContainer);
+        }
+    );
+  }
+
+  /**
+   * Helper method for testing operations on a two-Level UpdateableDelegatingNode stack.
+   *
+   * @param pCheck the check to perform
+   */
+  private void test_twoLevel(@NotNull BiConsumer<DummyModel, DummyModel> pCheck)
+  {
+    Hierarchy<DummyModel> sourceHierarchy = new Hierarchy<>("dummy", new DummyModel());
+    Hierarchy<DummyModel> levelAHierarchy = new DelegatingHierarchy<DummyModel>(
+        sourceHierarchy,
+        (pHierarchy, pSourceNode) -> new UpdateableDelegatingNode(pHierarchy, null, pSourceNode)
+    )
+    {
+    };
+    Hierarchy<DummyModel> levelBHierarchy = new DelegatingHierarchy<DummyModel>(
+        levelAHierarchy,
+        (pHierarchy, pSourceNode) -> new UpdateableDelegatingNode(pHierarchy, null, pSourceNode)
+    )
+    {
+    };
+
+    DummyModel srcModel = sourceHierarchy.getValue();
+    DummyModel levelBModel = levelBHierarchy.getValue();
+    assertNotNull(srcModel);
+    assertNotNull(levelBModel);
+
+    ReadablePropertyPitEventListener srcListener = new ReadablePropertyPitEventListener();
+    ReadablePropertyPitEventListener levelBListener = new ReadablePropertyPitEventListener();
+    sourceHierarchy.addWeakListener(srcListener);
+    levelBHierarchy.addWeakListener(levelBListener);
+
+    pCheck.accept(srcModel, levelBModel);
+
+    assertEquals(srcListener.asString(), levelBListener.asString());
+  }
+
+  /**
+   * Verifies that changes are propagated correctly in both directions,
+   * both to the delegate and up to a node that contains the operated on object as a delegate.
+   */
+  @Test
+  void test_threeLevel_delegation_dynamicAddThenSetValue()
+  {
+    // source → levelA (UpdateableDelegatingNode) → levelB (UpdateableDelegatingNode)
+    Hierarchy<DummyModel> sourceHierarchy = new Hierarchy<>("dummy", new DummyModel());
+    sourceHierarchy.getValue().getPit().setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
+
+    Hierarchy<DummyModel> levelAHierarchy = new DelegatingHierarchy<DummyModel>(
+        sourceHierarchy,
+        (pHierarchy, pSourceNode) -> new UpdateableDelegatingNode(pHierarchy, null, pSourceNode)
+    )
+    {
+    };
+    Hierarchy<DummyModel> levelBHierarchy = new DelegatingHierarchy<DummyModel>(
+        levelAHierarchy,
+        (pHierarchy, pSourceNode) -> new UpdateableDelegatingNode(pHierarchy, null, pSourceNode)
+    )
+    {
+    };
+    Hierarchy<DummyModel> levelCHierarchy = new DelegatingHierarchy<DummyModel>(
+        levelBHierarchy,
+        (pHierarchy, pSourceNode) -> new UpdateableDelegatingNode(pHierarchy, null, pSourceNode)
+    )
+    {
+    };
+
+    DummyModel srcModel = sourceHierarchy.getValue();
+    DummyModel levelBModel = levelBHierarchy.getValue();
+    DummyModel levelCModel = levelCHierarchy.getValue();
+
+    IProperty<DummyModel.SubModelContainer, SubModel> levelBContainer = levelBModel.getValue(DummyModel.subModels).addProperty("prop", new SubModel());
+    assertNotNull(levelBContainer);
+
+    DummyModel.SubModelContainer levelCContainer = levelCModel.getValue(DummyModel.subModels);
+    assertNotNull(levelCContainer);
+    assertEquals(1, levelCContainer.getValues().size(),
+                 "levelC should have the dynamically added SubModel in its container");
+
+    DummyModel.SubModelContainer srcContainer = srcModel.getValue(DummyModel.subModels);
+    assertNotNull(srcContainer);
+    assertEquals(1, srcContainer.getValues().size(),
+                 "Source should have the dynamically added SubModel in its container");
   }
 
   @Test
   void test_delegate_static_override()
   {
     SubModel submodel = updateableModel.setValue(DummyModel.staticSubModel, new SubModel());
-    Assertions.assertNotNull(submodel);
+    assertNotNull(submodel);
     submodel.setValue(SubModel.subModelProperty, "something");
-    Assertions.assertEquals("something", submodel.getValue(SubModel.subModelProperty));
+    assertEquals("something", submodel.getValue(SubModel.subModelProperty));
 
     submodel = updateableModel.setValue(DummyModel.staticSubModel, new SubModel());
-    Assertions.assertNotNull(submodel);
+    assertNotNull(submodel);
     Assertions.assertNull(submodel.getValue(SubModel.subModelProperty));
     submodel.setValue(SubModel.subModelProperty, "something");
-    Assertions.assertEquals("something", submodel.getValue(SubModel.subModelProperty));
+    assertEquals("something", submodel.getValue(SubModel.subModelProperty));
   }
 
   public static class DummyModel extends AbstractPPP<IPropertyPitProvider<?, ?, ?>, DummyModel, Object>
@@ -234,9 +464,25 @@ public class UpdateableDelegatingNodeTest
 
     public static final IPropertyDescription<DummyModel, SubModelContainer> subModels = PD.create(DummyModel.class);
 
+    public static final IPropertyDescription<DummyModel, SubModelIndexedContainer> subModelsIndexed = PD.create(DummyModel.class);
+
     public static class SubModelContainer extends AbstractMutablePPP<IPropertyPitProvider<?, ?, ?>, SubModelContainer, ISubModel<?>>
     {
       public SubModelContainer()
+      {
+        super((Class) SubModel.class);
+      }
+
+      @Override
+      public String toString()
+      {
+        return getClass().getName();
+      }
+    }
+
+    public static class SubModelIndexedContainer extends AbstractIndexedMutablePPP<IPropertyPitProvider<?, ?, ?>, SubModelIndexedContainer, ISubModel<?>>
+    {
+      public SubModelIndexedContainer()
       {
         super((Class) SubModel.class);
       }
