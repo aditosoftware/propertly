@@ -69,6 +69,11 @@ public class UpdateableDelegatingNode extends DelegatingNode
   @Override
   protected void alignToDelegate()
   {
+    // before we add any listeners, we need to align to the delegate
+    // otherwise listeners can be triggered that would work on an unfinished version of ourselves
+    _runWithoutWriteThrough(super::alignToDelegate);
+
+    // after we are aligned, we can add our listeners
     executeReadOnDelegate(pDelegate -> {
       if (pDelegate != null && pDelegate.isValid())
       {
@@ -79,8 +84,6 @@ public class UpdateableDelegatingNode extends DelegatingNode
       }
       return null;
     });
-
-    _runWithoutWriteThrough(super::alignToDelegate);
   }
 
   @Override
