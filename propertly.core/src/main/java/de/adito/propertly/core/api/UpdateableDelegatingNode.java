@@ -1,5 +1,6 @@
 package de.adito.propertly.core.api;
 
+import com.google.common.annotations.VisibleForTesting;
 import de.adito.propertly.core.common.PropertyPitEventAdapter;
 import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
@@ -142,7 +143,8 @@ public class UpdateableDelegatingNode extends DelegatingNode
    *
    * @param pRunnable Runnable that will be executed
    */
-  private void _runWithoutWriteThrough(@NotNull Runnable pRunnable)
+  @VisibleForTesting
+  void _runWithoutWriteThrough(@NotNull Runnable pRunnable)
   {
     if (writeOnDelegate == null)
       writeOnDelegate = new ThreadLocal<>();
