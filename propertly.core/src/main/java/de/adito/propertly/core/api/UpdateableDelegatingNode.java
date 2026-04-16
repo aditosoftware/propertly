@@ -1,5 +1,6 @@
 package de.adito.propertly.core.api;
 
+import com.google.common.annotations.VisibleForTesting;
 import de.adito.propertly.core.common.PropertyPitEventAdapter;
 import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
@@ -69,6 +70,11 @@ public class UpdateableDelegatingNode extends DelegatingNode
   @Override
   protected void alignToDelegate()
   {
+    // before we add any listeners, we need to align to the delegate
+    // otherwise listeners can be triggered that would work on an unfinished version of ourselves
+    _runWithoutWriteThrough(super::alignToDelegate);
+
+    // after we are aligned, we can add our listeners
     executeReadOnDelegate(pDelegate -> {
       if (pDelegate != null && pDelegate.isValid())
       {
@@ -79,8 +85,6 @@ public class UpdateableDelegatingNode extends DelegatingNode
       }
       return null;
     });
-
-    _runWithoutWriteThrough(super::alignToDelegate);
   }
 
   @Override
@@ -139,7 +143,8 @@ public class UpdateableDelegatingNode extends DelegatingNode
    *
    * @param pRunnable Runnable that will be executed
    */
-  private void _runWithoutWriteThrough(@NotNull Runnable pRunnable)
+  @VisibleForTesting
+  void _runWithoutWriteThrough(@NotNull Runnable pRunnable)
   {
     if (writeOnDelegate == null)
       writeOnDelegate = new ThreadLocal<>();

@@ -4,7 +4,7 @@ import de.adito.propertly.core.common.PD;
 import de.adito.propertly.core.common.path.PropertyPath;
 import de.adito.propertly.core.spi.*;
 import de.adito.propertly.core.spi.extension.*;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -394,6 +394,87 @@ public class UpdateableDelegatingNodeTest
   }
 
   /**
+   * Verifies that after constructing an outer hierarchy over a lazy middle hierarchy,
+   * value changes in the source still propagate correctly through to the outer hierarchy.
+   */
+  @Test
+  void test_valueChangeDuringAlignToDelegate_sourceChangePropagatesAfterConstruction()
+  {
+    checkWithLazyLoadingNode((pSrcModel, pOuterModel) -> {
+      pSrcModel.setValue(DummyModel.simpleStringProperty, "hello");
+      assertEquals("hello", pOuterModel.getValue(DummyModel.simpleStringProperty));
+    });
+  }
+
+  /**
+   * Verifies that after constructing an outer hierarchy over a lazy middle hierarchy,
+   * writes to the outer hierarchy propagate back through the lazy middle layer to the source.
+   */
+  @Test
+  void test_valueChangeDuringAlignToDelegate_writeThroughAfterConstruction()
+  {
+    checkWithLazyLoadingNode((pSrcModel, pOuterModel) -> {
+      pOuterModel.setValue(DummyModel.simpleStringProperty, "fromOuter");
+      assertEquals("fromOuter", pSrcModel.getValue(DummyModel.simpleStringProperty));
+    });
+  }
+
+  /**
+   * Verifies that after construction over a lazy middle hierarchy with pre-existing dynamic
+   * children, those children are accessible and valid in the outer hierarchy.
+   */
+  @Test
+  void test_valueChangeDuringAlignToDelegate_dynamicChildrenAccessibleAfterConstruction()
+  {
+    checkWithLazyLoadingNode((pSrcModel, pOuterModel) -> {
+      DummyModel.SubModelContainer outerContainer = pOuterModel.getValue(DummyModel.subModels);
+      assertNotNull(outerContainer);
+      assertEquals(2, outerContainer.getValues().size());
+      assertNotNull(outerContainer.findProperty("child1"));
+      assertNotNull(outerContainer.findProperty("child2"));
+      Assertions.assertTrue(Objects.requireNonNull(outerContainer.findProperty("child1")).isValid());
+      Assertions.assertTrue(Objects.requireNonNull(outerContainer.findProperty("child2")).isValid());
+    });
+  }
+
+  /**
+   * Helper method that creates a Node hierarchy with 3 levels: a source level contained in a lazy loading level that in itself is contained in a
+   * third level
+   *
+   * @param pCheck the check to perform on the structure described above,
+   *               the first parameter is the model source level, while the second parameter is the model at the third level
+   */
+  private void checkWithLazyLoadingNode(@NotNull BiConsumer<DummyModel, DummyModel> pCheck)
+  {
+    Hierarchy<DummyModel> sourceHierarchy = new Hierarchy<>("source", new DummyModel());
+    DummyModel.SubModelContainer srcContainer = sourceHierarchy.getValue()
+        .setValue(DummyModel.subModels, new DummyModel.SubModelContainer());
+    assertNotNull(srcContainer);
+    srcContainer.addProperty("child1", new SubModel());
+    srcContainer.addProperty("child2", new SubModel());
+
+    Hierarchy<DummyModel> middleHierarchy = new DelegatingHierarchy<DummyModel>(
+        sourceHierarchy,
+        (pHierarchy, pSourceNode) -> new _LazyLoadDelegatingNode(pHierarchy, null, pSourceNode))
+    {
+    };
+    // Check creation of a hierarchy with a lazy loading node does not throw an exception
+    Hierarchy<DummyModel> outerHierarchy = assertDoesNotThrow(() -> new DelegatingHierarchy<DummyModel>(
+        middleHierarchy,
+        (pHierarchy, pSourceNode) -> new UpdateableDelegatingNode(pHierarchy, null, pSourceNode))
+    {
+    });
+
+    DummyModel srcModel = sourceHierarchy.getValue();
+    DummyModel outerModel = outerHierarchy.getValue();
+    assertNotNull(srcModel);
+    assertNotNull(outerModel);
+
+    pCheck.accept(srcModel, outerModel);
+  }
+
+
+  /**
    * Verifies that changes are propagated correctly in both directions,
    * both to the delegate and up to a node that contains the operated on object as a delegate.
    */
@@ -454,6 +535,44 @@ public class UpdateableDelegatingNodeTest
     Assertions.assertNull(submodel.getValue(SubModel.subModelProperty));
     submodel.setValue(SubModel.subModelProperty, "something");
     assertEquals("something", submodel.getValue(SubModel.subModelProperty));
+  }
+
+  /**
+   * An UpdateableDelegatingNode that calls setValue() from getValue() on the first invocation,
+   * simulating a lazy loading pattern that might trigger Listeners before the node causing the setValue() (by calling getValue())
+   * is fully crated
+   */
+  private static class _LazyLoadDelegatingNode extends UpdateableDelegatingNode
+  {
+    private boolean valueRetrieved = false;
+
+    protected _LazyLoadDelegatingNode(@NotNull DelegatingHierarchy pHierarchy, AbstractNode pParent, @NotNull INode pDelegate)
+    {
+      super(pHierarchy, pParent, pDelegate);
+    }
+
+    @Override
+    @Nullable
+    public Object getValue()
+    {
+      Object value = super.getValue();
+      if (!valueRetrieved)
+      {
+        valueRetrieved = true;
+        // the _runWithoutWriteThrough() call is necessary since it makes sure that
+        // DelegatingNode#setValue doesn't clear all the listeners and therefore
+        // prevent the issue of triggering listeners while creating the object
+        _runWithoutWriteThrough(() -> setValue(value, new HashSet<>()));
+      }
+      return value;
+    }
+
+    @Override
+    @NotNull
+    protected DelegatingNode createChild(@NotNull INode pDelegate)
+    {
+      return new _LazyLoadDelegatingNode(getHierarchy(), this, pDelegate);
+    }
   }
 
   public static class DummyModel extends AbstractPPP<IPropertyPitProvider<?, ?, ?>, DummyModel, Object>
