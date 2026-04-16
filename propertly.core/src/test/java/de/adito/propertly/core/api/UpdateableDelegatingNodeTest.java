@@ -544,7 +544,7 @@ public class UpdateableDelegatingNodeTest
    */
   private static class _LazyLoadDelegatingNode extends UpdateableDelegatingNode
   {
-    private boolean _valueRetrieved = false;
+    private boolean valueRetrieved = false;
 
     protected _LazyLoadDelegatingNode(@NotNull DelegatingHierarchy pHierarchy, AbstractNode pParent, @NotNull INode pDelegate)
     {
@@ -556,9 +556,9 @@ public class UpdateableDelegatingNodeTest
     public Object getValue()
     {
       Object value = super.getValue();
-      if (!_valueRetrieved)
+      if (!valueRetrieved)
       {
-        _valueRetrieved = true;
+        valueRetrieved = true;
         // the _runWithoutWriteThrough() call is necessary since it makes sure that
         // DelegatingNode#setValue doesn't clear all the listeners and therefore
         // prevent the issue of triggering listeners while creating the object
