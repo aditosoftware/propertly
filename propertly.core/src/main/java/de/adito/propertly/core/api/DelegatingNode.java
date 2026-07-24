@@ -18,7 +18,7 @@ public class DelegatingNode extends AbstractNode
   private INode delegate;
   private IPropertyPitProvider pitProvider;
   @Nullable
-  private NodeChildren children;
+  private AbstractNodeChildren children;
 
 
   protected DelegatingNode(@NotNull DelegatingHierarchy pHierarchy, @Nullable AbstractNode pParent,
@@ -55,9 +55,8 @@ public class DelegatingNode extends AbstractNode
     List<INode> delegateChildren = executeReadOnDelegate(INode::getChildren);
     if (delegateChildren != null)
     {
-      // create children
-      if (children == null)
-        children = new NodeChildren();
+      // create children - always use mutable NodeChildren for delegating nodes
+      children = new NodeChildren();
 
       Set<INode> childrenToRemove = new HashSet<>(children.asList());
 

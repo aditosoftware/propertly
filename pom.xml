@@ -97,19 +97,6 @@
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.apache.felix</groupId>
-          <artifactId>maven-bundle-plugin</artifactId>
-          <version>4.1.0</version>
-          <extensions>true</extensions>
-          <configuration>
-            <instructions>
-              <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-              <Bundle-Name>${project.artifactId}</Bundle-Name>
-              <Bundle-Version>${project.version}</Bundle-Version>
-            </instructions>
-          </configuration>
-        </plugin>
 
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
@@ -143,7 +130,6 @@
           <configuration>
             <archive>
               <index>true</index>
-              <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
               <manifest>
                 <useUniqueVersions>true</useUniqueVersions>
                 <addClasspath>true</addClasspath>
@@ -213,19 +199,6 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>bundle-manifest</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>manifest</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
 
   </build>

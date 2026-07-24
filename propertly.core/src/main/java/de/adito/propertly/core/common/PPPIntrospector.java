@@ -1,29 +1,42 @@
 package de.adito.propertly.core.common;
 
+import de.adito.propertly.core.api.*;
 import de.adito.propertly.core.common.annotations.PropertlyOverride;
 import de.adito.propertly.core.common.exception.WrongModifiersException;
-import de.adito.propertly.core.spi.IPropertyDescription;
-import de.adito.propertly.core.spi.IPropertyPitProvider;
+import de.adito.propertly.core.spi.*;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
  * PPPIntrospector supplies all IPropertyDescriptions for a class inherited from IPropertyPitProvider.
  *
  * @author PaL
- *         Date: 29.01.13
- *         Time: 23:48
+ * Date: 29.01.13
+ * Time: 23:48
  */
 public class PPPIntrospector
 {
 
   private static final Map<Class, Set<IPropertyDescription>> ALREADY_KNOWN = new LinkedHashMap<>();
   private static final Map<Class<? extends IPropertyPitProvider>, Class> CHILD_TYPES = new HashMap<>();
+  private static final Map<Class<? extends IPropertyPitProvider>, Class<? extends AbstractNodeChildren>> GENERATED_NODES = new HashMap<>();
 
   private PPPIntrospector()
   {
+  }
+
+  /**
+   * Clears the cache of generated NodeChildren classes.
+   * Useful for testing and recovery after generator updates.
+   */
+  public static void clearGeneratedClassCache()
+  {
+    synchronized (PPPIntrospector.class)
+    {
+      GENERATED_NODES.clear();
+    }
   }
 
   /**
@@ -55,6 +68,33 @@ public class PPPIntrospector
       CHILD_TYPES.put(pCls, childType);
     }
     return childType;
+  }
+
+  /**
+   * Returns (or generates and caches) a memory-efficient NodeChildren subclass for the given
+   * static PropertyPit provider class.
+   *
+   * @param pCls the IPropertyPitProvider implementation class
+   * @return a Class extending NodeChildren optimized for static properties
+   */
+  @NotNull
+  public static Class<? extends AbstractNodeChildren> getGeneratedClass(Class<? extends IPropertyPitProvider> pCls)
+  {
+    Class<? extends AbstractNodeChildren> cls = GENERATED_NODES.get(pCls);
+    if (cls == null)
+    {
+      synchronized (PPPIntrospector.class)
+      {
+        cls = GENERATED_NODES.get(pCls);
+        if (cls == null)
+        {
+          Set<IPropertyDescription> descriptions = get(pCls);
+          cls = NodeChildrenGenerator.generate(descriptions);
+          GENERATED_NODES.put(pCls, cls);
+        }
+      }
+    }
+    return cls;
   }
 
   /**

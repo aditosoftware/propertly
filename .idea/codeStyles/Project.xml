@@ -20,7 +20,6 @@
       <option name="XML_ATTRIBUTE_WRAP" value="0" />
       <option name="XML_TEXT_WRAP" value="0" />
       <option name="XML_ALIGN_ATTRIBUTES" value="false" />
-      <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
     </XML>
     <codeStyleSettings language="CFML">
       <option name="BRACE_STYLE" value="2" />
@@ -95,7 +94,6 @@
       <option name="FINALLY_ON_NEW_LINE" value="true" />
       <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
       <option name="ALIGN_MULTILINE_ARRAY_INITIALIZER_EXPRESSION" value="true" />
-      <option name="PARENT_SETTINGS_INSTALLED" value="true" />
     </codeStyleSettings>
     <codeStyleSettings language="TypeScript">
       <option name="BRACE_STYLE" value="2" />
@@ -107,7 +105,6 @@
       <option name="FINALLY_ON_NEW_LINE" value="true" />
       <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
       <option name="ALIGN_MULTILINE_ARRAY_INITIALIZER_EXPRESSION" value="true" />
-      <option name="PARENT_SETTINGS_INSTALLED" value="true" />
     </codeStyleSettings>
     <codeStyleSettings language="XML">
       <indentOptions>

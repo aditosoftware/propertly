@@ -28,7 +28,7 @@ public class Node extends AbstractNode
   @Nullable
   private Object value;
   @Nullable
-  private NodeChildren children;
+  private AbstractNodeChildren children;
 
 
   public Node(@NotNull Hierarchy pHierarchy, @Nullable AbstractNode pParent, @NotNull IPropertyDescription pPropertyDescription,
@@ -89,6 +89,8 @@ public class Node extends AbstractNode
         INode node = HierarchyHelper.getNode(pppProvider);
         List<INode> childNodes = node.getChildren();
         assert childNodes != null;
+        if (children != null && !(children instanceof NodeChildren))
+          children = new NodeChildren();
         if (children == null)
           children = new NodeChildren();
         else
@@ -103,12 +105,30 @@ public class Node extends AbstractNode
       }
       else {
         Set<IPropertyDescription> descriptions = PPPIntrospector.get(pppProvider.getClass());
-        if (children == null)
-          children = new NodeChildren();
-        else
-          children.clear();
-        for (IPropertyDescription description : descriptions)
-          children.add(createChild(description, false));
+        if (!(pppProvider instanceof IMutablePropertyPitProvider)) {
+          try {
+            Class<? extends AbstractNodeChildren> generatedClass = PPPIntrospector.getGeneratedClass(pppProvider.getClass());
+            List<INode> childNodes = new ArrayList<>(descriptions.size());
+            for (IPropertyDescription description : descriptions) {
+              INode child = createChild(description, false);
+              childNodes.add(child);
+            }
+            children = generatedClass.getConstructor(INode[].class).newInstance((Object) childNodes.toArray(new INode[0]));
+          }
+          catch (Exception e) {
+            children = new NodeChildren();
+            for (IPropertyDescription description : descriptions)
+              children.add(createChild(description, false));
+          }
+        }
+        else {
+          if (children == null)
+            children = new NodeChildren();
+          else
+            children.clear();
+          for (IPropertyDescription description : descriptions)
+            children.add(createChild(description, false));
+        }
       }
     }
     else {

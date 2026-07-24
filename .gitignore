@@ -1,8 +1,14 @@
-# IntelliJ IDEA files
-/.idea/*
-!/.idea/codeStyles/
-*.iml
+# exclude hidden files and directories
+.*
+
+# idea
+!/.idea/codeStyleSettings.xml
+!/.idea/projectCodeStyle.xml
+!/.idea/vcs.xml
 
 # maven
-/target
-/*/target
+**/target/
+
+# misc
+!.mvn
+!.gitignore
